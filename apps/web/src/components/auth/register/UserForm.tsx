@@ -72,9 +72,9 @@ export default function UserForm({ register, errors }: RegisterFormProps) {
       <Field className="col-span-2">
         <FieldLabel htmlFor="password">Password</FieldLabel>
         <FieldDescription>Must be at least 8 characters long.</FieldDescription>
-        <Input id="password" type="password" placeholder="••••••••"{...register("email", {
-            required: "Email is required and must be valid",
-            pattern: { value: /^\S+@\S+$/i, message: "Invalid email" },
+        <Input id="password" type="password" placeholder="••••••••"{...register("password", {
+            required: "Password is required and must be valid",
+            //pattern: {  },
           })} />
       </Field>
     </FieldGroup>
