@@ -52,25 +52,42 @@ export default function NavBarSheet() {
 
   return (
     <Sheet onOpenChange={setOpen} open={open}>
-      <SheetTrigger render={<Button variant="outline">Open</Button>} />
+      <SheetTrigger render={<Button><img src="/MobileMenuIcon.png"  className="invert w-10 mr-3"/> </Button>} />
       <SheetContent className="data-[side=right]:w-full  bg-black">
         <SheetHeader>
-          <SheetTitle>Edit profile</SheetTitle>
+          <SheetTitle className="text-white">Anoynomous User</SheetTitle>
           <SheetDescription>
             Make changes to your profile here. Click save when you&apos;re done.
           </SheetDescription>
           <hr />
         </SheetHeader>
-        <div className="grid flex-1 auto-rows-min gap-6 px-4 justify-center">
+        <div className="grid flex-1 auto-rows-min gap-6 px-4 justify-start">
            
           <NavBarMenuItem name="Home" link="/" onClick={()=>setOpen(false)} />
           <NavBarShopSheetTrigger/>
           <NavBarMenuItem name="About" link="/about" onClick={()=>setOpen(false)} />
 
-           {/* do the user setting and stuff */}
+          {
+          true ?
+            <div className="grid auto-rows-min gap-6 ">
+              <NavBarMenuItem name="Profile" link="/" onClick={()=>setOpen(false)} />
+              <NavBarMenuItem name="Settings" link="/" onClick={()=>setOpen(false)} />
+              <NavBarMenuItem name="Logout" link="/" onClick={()=>setOpen(false)} />
+            </div>
+          :
+          <div>
+              <NavBarMenuItem name="Login" link="/" onClick={()=>setOpen(false)} />
+              <NavBarMenuItem name="Register" link="/" onClick={()=>setOpen(false)} />
+             
+            </div>
 
-
+         }
+        
         </div>
+         
+         
+
+
       </SheetContent>
     </Sheet>
   );

@@ -12,7 +12,7 @@ import NavBarMenuItem from "./NavBarMenuItem";
 import NavBarUserDropDown from "./NavBarUserDropDown"
 import NavBarSheet from "./NavBarSheet"; 
 
-import {collections} from "../data/collections"
+import {productCategoryCollections} from "../data/ProductCategoryCollections"
 
 export default function NavBar() {
   return (
@@ -34,7 +34,7 @@ export default function NavBar() {
             <NavigationMenuContent className={"bg-black"}>
               <ul className="grid w-[100px] lg:w-[200px">
                 <li>
-                  {collections.map((collection) => (
+                  {productCategoryCollections.map((collection) => (
                     <NavBarMenuItem
                       key={collection.href}
                       name={collection.title}
@@ -55,7 +55,7 @@ export default function NavBar() {
           <NavBarUserDropDown ></NavBarUserDropDown> 
         </div>                   
        
-       {/* Mobile Nav Bar */}
+       {/* Mobile Nav Bar Sheet */}
        <div className="block md:hidden">
             <NavBarSheet></NavBarSheet>
        </div>

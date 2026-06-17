@@ -1,4 +1,4 @@
-export const collections: { title: string; href: string }[] = [
+export const productCategoryCollections: { title: string; href: string }[] = [
    {
     title: "All product",
     href: "/collections",

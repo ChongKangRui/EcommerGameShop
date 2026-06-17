@@ -14,7 +14,7 @@ import {
 import { useState, useEffect } from "react";
 
 import NavBarMenuItem from "./NavBarMenuItem";
-import {collections} from "../data/collections"
+import {productCategoryCollections} from "../data/ProductCategoryCollections"
 
 export default function NavBarShopSheetTrigger() {
   const [isDesktop, setIsDesktop] = useState(false);
@@ -61,9 +61,13 @@ export default function NavBarShopSheetTrigger() {
         </SheetHeader>
         <div className="grid flex-1 auto-rows-min gap-6 px-4 justify-center">
            
-          <NavBarMenuItem name="Home" link="/" onClick={()=>setOpen(false)} />
-          <NavBarMenuItem name="About" link="/about" onClick={()=>setOpen(false)} />
-
+{productCategoryCollections.map((collection) => (
+                    <NavBarMenuItem
+                      key={collection.href}
+                      name={collection.title}
+                      link={collection.href}
+                    />
+                  ))}
          
         </div>
       </SheetContent>

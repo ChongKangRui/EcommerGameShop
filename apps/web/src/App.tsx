@@ -4,7 +4,9 @@ import { Route , Routes } from 'react-router'
 import Home from './pages/Home'
 import Layout from './components/Layout'
 import About from './pages/About'
-import { LogIn } from 'lucide-react'
+
+import Login from "./pages/Login"
+import Register from './pages/Register'
 
 
 
@@ -20,7 +22,8 @@ function App() {
             <Route path='/about' element={<About/>}></Route>
           </Route>
 
-          <Route path='/login' element={<LogIn/>}></Route>
+          <Route path='/login' element={<Login/>}></Route>
+          <Route path='/register' element={<Register/>}></Route>
 
 
         </Routes>
