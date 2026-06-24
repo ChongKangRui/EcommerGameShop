@@ -11,7 +11,7 @@ export default function About() {
         <p className="px-4 md:px-10 lg:px-20">
           Here at Redfield Gaming, we equip our players (YOU LEGENDS) with the
           hottest drops, exclusive gear, and pro-level peripherals without
-          draining your wallet! We’re also live on Lazada. Your true home base
+          draining your wallet! We’re also live on Lazada and Shopee. Your true home base
           and battleground for gamers.
         </p>
       </div>

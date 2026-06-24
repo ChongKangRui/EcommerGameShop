@@ -9,9 +9,11 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { type RegisterFormProps } from "@/lib/utils";
+import { type ValidationFormProps } from "@/lib/utils";
 
-export default function UserForm({ register, errors }: RegisterFormProps) {
+import {registerDataSchema} from "@ecom/shared/src/registerDataSchema"
+
+export default function UserForm({ register, errors, disableInput = false }: ValidationFormProps) {
   return (
     <FieldGroup className="grid max-w-sm grid-cols-2 col-span-full">
       {/* first name */}
@@ -22,7 +24,8 @@ export default function UserForm({ register, errors }: RegisterFormProps) {
         <Input
           id="first-name"
           placeholder="Jordan"
-          {...register("firstName", { required: "First name is required" })}
+          {...register("firstName")}
+          disabled={disableInput}
         />
         {errors.firstName && (
           <p className="text-destructive text-sm mt-1">
@@ -39,7 +42,8 @@ export default function UserForm({ register, errors }: RegisterFormProps) {
         <Input
           id="last-name"
           placeholder="Lee"
-          {...register("lastName", { required: "Last name is required" })}
+           disabled={disableInput}
+          {...register("lastName")}
         />
         {errors.lastName && (
           <p className="text-destructive text-sm mt-1">
@@ -55,12 +59,10 @@ export default function UserForm({ register, errors }: RegisterFormProps) {
         </FieldLabel>
         <Input
           id="form-email"
-          type="email"
+          type="text"
           placeholder="john@example.com"
-          {...register("email", {
-            required: "Email is required and must be valid",
-            pattern: { value: /^\S+@\S+$/i, message: "Invalid email" },
-          })}
+           disabled={disableInput}
+          {...register("email")}
         />
         {errors.email && (
           <p className="text-destructive text-sm mt-1">
@@ -70,12 +72,14 @@ export default function UserForm({ register, errors }: RegisterFormProps) {
       </Field>
       {/* password */}
       <Field className="col-span-2">
-        <FieldLabel htmlFor="password">Password</FieldLabel>
+        <FieldLabel htmlFor="password">Password <span className="text-destructive">*</span></FieldLabel>
         <FieldDescription>Must be at least 8 characters long.</FieldDescription>
-        <Input id="password" type="password" placeholder="••••••••"{...register("password", {
-            required: "Password is required and must be valid",
-            //pattern: {  },
-          })} />
+        <Input id="password" type="password" placeholder="••••••••"  disabled={disableInput} {...register("password")} />
+         {errors.password && (
+          <p className="text-destructive text-sm mt-1">
+            {errors.password.message as string}
+          </p>
+        )}
       </Field>
     </FieldGroup>
   );

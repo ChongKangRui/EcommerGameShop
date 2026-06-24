@@ -1,10 +1,11 @@
-
+import HomeCarousell from "@/components/home/HomeCarousell"
 
 export default function Home(){
     return(
         <div>
            
-            <h1>This is Home</h1>
+           <HomeCarousell></HomeCarousell>
+           <hr className="mt-5"/>
             
         </div>
     )

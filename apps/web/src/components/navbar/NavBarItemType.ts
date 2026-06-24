@@ -1,6 +1,6 @@
 export type NavBarLinkProps = {
     name: string,
-    link: string,
+    link?: string,
     onClick?: ()=> void
 
 }

@@ -6,7 +6,8 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export interface RegisterFormProps {
+export interface ValidationFormProps {
   register: UseFormRegister<any>;
   errors: FieldErrors;
+  disableInput?: boolean;
 }
