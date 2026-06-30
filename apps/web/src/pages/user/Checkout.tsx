@@ -1,8 +1,8 @@
 import CartContent from "@/components/checkout/CartContent";
-import { Button } from "../components/ui/button";
+import { Button } from "../../components/ui/button";
 import { useState } from "react";
-import CartProduct from "../components/checkout/CartProduct";
-import { useCartStore } from "../components/checkout/CartStore";
+import CartProduct from "../../components/checkout/CartProduct";
+import { useCartStore } from "../../components/checkout/CartStore";
 
 export default function Cart() {
   const [totalPrice, setTotalPrice] = useState(0);

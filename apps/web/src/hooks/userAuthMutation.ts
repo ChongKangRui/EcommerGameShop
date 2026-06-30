@@ -10,9 +10,7 @@ export function useRegister() {
         const res = await api.post("/register", data);
         return res.data;
       } catch (err: any) {
-        // console.log("Status:", err.response?.status);
-        // console.log("Data:", err.response?.data);
-        // console.log("Headers:", err.response?.headers);
+       
 
         const message =
           axios.isAxiosError(err) && err.response?.data?.error
@@ -31,10 +29,7 @@ export function useLogin() {
         const res = await api.post("/login", data);
         return res.data;
       } catch (err: any) {
-        // console.log("Status:", err.response?.status);
-        // console.log("Data:", err.response?.data);
-        // console.log("Headers:", err.response?.headers);
-
+       
         const message =
           axios.isAxiosError(err) && err.response?.data?.error
             ? err.response?.data?.error

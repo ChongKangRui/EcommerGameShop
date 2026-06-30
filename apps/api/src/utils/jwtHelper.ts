@@ -4,8 +4,8 @@ const SECRET = process.env.JWT_SECRET || "dev-secret-change-me";
 const EXPIRY = "1h";
 const EXPIRY_REMEMBER = "14d";
 
-export function generateToken(userId: number, rememberMe: boolean = false) {
-  return jwt.sign({ userId}, SECRET, {
+export function generateToken(userId: number, role:string, rememberMe: boolean = false) {
+  return jwt.sign({ userId, role}, SECRET, {
     expiresIn: rememberMe ? EXPIRY_REMEMBER : EXPIRY,
   });
 }

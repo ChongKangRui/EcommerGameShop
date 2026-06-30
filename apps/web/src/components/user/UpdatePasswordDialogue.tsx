@@ -20,8 +20,10 @@ import {
 
 import { useForm, type FieldValues } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePasswordUpdate } from "@/hooks/userAuth";
+import { usePasswordUpdate } from "@/hooks/userAuthMutation";
 import { useNavigate } from "react-router";
+import { useState } from "react";
+import { flashMessage_Failed, flashMessage_Success } from "@/lib/flash";
 
 export default function UpdatePasswordDialogue() {
   const {
@@ -36,31 +38,40 @@ export default function UpdatePasswordDialogue() {
   const updatePasswordMutation = usePasswordUpdate();
   const navigate = useNavigate();
 
+  const [dialogueOpen, setDialogueOpen] = useState(false);
+
   const handleUpdate = (data: FieldValues) => {
     updatePasswordMutation.mutate(data, {
       onSuccess: () => {
         // navigate("/login");
-        navigate("/profile");
+        //navigate("/profile");
+        flashMessage_Success("Profile Update Success");
+        onOpenChange(false);
+
       },
       onError: (error) => {
         console.log("showing error");
         console.log(error.message);
+        flashMessage_Failed(error.message);
         // console.error(error.message);
       },
     });
   };
 
-  const resetValue = (open: boolean) => {
+  const onOpenChange = (open: boolean) => {
     if (!open) {
       reset({
         oldPassword: "",
         newPassword: "",
       });
     }
+    setDialogueOpen(open);
   };
 
+  
+
   return (
-    <Dialog onOpenChange={resetValue}>
+    <Dialog onOpenChange={onOpenChange} open={dialogueOpen}>
       <DialogTrigger>
         <Button className="cursor-pointer min-w-20">Update Password</Button>
       </DialogTrigger>
@@ -96,7 +107,7 @@ export default function UpdatePasswordDialogue() {
               )}
             </Field>
           </FieldGroup>
-          <DialogFooter>
+          <DialogFooter className="mt-5">
             <DialogClose>
               <Button
                 variant="outline"

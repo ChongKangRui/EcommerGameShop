@@ -10,77 +10,69 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { type ValidationFormProps } from "@/lib/utils";
+import FormField from "../../FormField";
 
-import {registerDataSchema} from "@ecom/shared/src/registerDataSchema"
+import { registerDataSchema } from "@ecom/shared/src/registerDataSchema";
 
-export default function UserForm({ register, errors, disableInput = false }: ValidationFormProps) {
+export default function UserForm({
+  register,
+  errors,
+  disableInput = false,
+}: ValidationFormProps) {
   return (
     <FieldGroup className="grid max-w-sm grid-cols-2 col-span-full">
       {/* first name */}
-      <Field>
-        <FieldLabel htmlFor="first-name">
-          First Name <span className="text-destructive">*</span>
-        </FieldLabel>
-        <Input
-          id="first-name"
-          placeholder="Jordan"
-          {...register("firstName")}
-          disabled={disableInput}
-        />
-        {errors.firstName && (
-          <p className="text-destructive text-sm mt-1">
-            {errors.firstName.message as string}
-          </p>
-        )}
-      </Field>
+      <FormField
+        className=""
+        id="register-first-name"
+        label="First Name"
+        type="text"
+        placeholder="Jordan"
+        disabled={disableInput}
+        register={register("firstName")}
+        error={errors.firstName}
+        required={true}
+      ></FormField>
 
       {/* last name */}
-      <Field>
-        <FieldLabel htmlFor="last-name">
-          Last Name <span className="text-destructive">*</span>
-        </FieldLabel>
-        <Input
-          id="last-name"
-          placeholder="Lee"
-           disabled={disableInput}
-          {...register("lastName")}
-        />
-        {errors.lastName && (
-          <p className="text-destructive text-sm mt-1">
-            {errors.lastName.message as string}
-          </p>
-        )}
-      </Field>
+      <FormField
+        className=""
+        id="register-last-name"
+        label="Last Name"
+        type="text"
+        placeholder="Lee"
+        disabled={disableInput}
+        register={register("lastName")}
+        error={errors.lastName}
+        required={true}
+      ></FormField>
 
       {/* Email */}
-      <Field className="col-span-2">
-        <FieldLabel htmlFor="form-email">
-          Email <span className="text-destructive">*</span>
-        </FieldLabel>
-        <Input
-          id="form-email"
-          type="text"
-          placeholder="john@example.com"
-           disabled={disableInput}
-          {...register("email")}
-        />
-        {errors.email && (
-          <p className="text-destructive text-sm mt-1">
-            {errors.email.message as string}
-          </p>
-        )}
-      </Field>
+<FormField
+        className="col-span-2"
+        id="register-email"
+        label="Email"
+        type="text"
+        placeholder="john@example.com"
+        disabled={disableInput}
+        register={register("email")}
+        error={errors.email}
+        required={true}
+      ></FormField>
+
       {/* password */}
-      <Field className="col-span-2">
-        <FieldLabel htmlFor="password">Password <span className="text-destructive">*</span></FieldLabel>
-        <FieldDescription>Must be at least 8 characters long.</FieldDescription>
-        <Input id="password" type="password" placeholder="••••••••"  disabled={disableInput} {...register("password")} />
-         {errors.password && (
-          <p className="text-destructive text-sm mt-1">
-            {errors.password.message as string}
-          </p>
-        )}
-      </Field>
+      <FormField
+        className="col-span-2"
+        id="register-password"
+        label="Password"
+        type="password"
+        placeholder="john@example.com"
+        disabled={disableInput}
+        register={register("password")}
+        error={errors.password}
+        required={true}
+      ></FormField>
+
     </FieldGroup>
   );
 }

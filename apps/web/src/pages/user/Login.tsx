@@ -1,10 +1,9 @@
 import { useForm, type FieldValues } from "react-hook-form";
 
-import LoginForm from "../components/auth/login/LoginForm";
-import AddressForm from "../components/auth/register/AddressForm";
+import LoginForm from "../../components/auth/login/LoginForm";
 import { Link } from "react-router";
-import { Button } from "../components/ui/button";
-import { useLogin } from "@/hooks/userAuth";
+import { Button } from "../../components/ui/button";
+import { useLogin } from "@/hooks/userAuthMutation";
 import { useState } from "react";
 import {
   loginDataSchema,
@@ -15,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthProvider";
+import { flashMessage_Failed } from "@/lib/flash";
+
 
 export default function Register() {
   const {
@@ -37,18 +38,16 @@ export default function Register() {
     setDisableInput(true);
     loginMutation.mutate({...data, rememberMe}, {
       onSuccess: (res: any) => {
-      
-        login(res.token, res.user);
-
-        if(res.user.role === "customer"){
-          navigate("/");
-        }
+    
+        console.log(res.user);
+         login(res.token, res.user);
        
       },
       onError: (error) => {
         console.log("Error", error.message);
         // console.error(error.message);
         setDisableInput(false);
+        flashMessage_Failed(loginMutation.error?.message || "Something went wrong");
       },
     });
   };
@@ -89,11 +88,11 @@ export default function Register() {
           </div>
 
           {/* error message */}
-          {loginMutation.isError && (
+          {/* {loginMutation.isError && (
             <p className="text-center text-destructive mt-4">
               {loginMutation.error?.message || "Something went wrong"}
             </p>
-          )}
+          )} */}
         </form>
       </div>
     </div>

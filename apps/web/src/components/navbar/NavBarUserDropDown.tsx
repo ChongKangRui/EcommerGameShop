@@ -12,6 +12,16 @@ import {
 import NavBarUserDropDownItem from "./NavBarUserDropDownItem";
 import { useAuth } from "@/context/AuthProvider";
 
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  PanelLeft,
+  Plus,
+  User,
+} from "lucide-react";
+
+
 export default function NavBarUserDropDown() {
 
 const {isAuthenticated, user, logout} = useAuth();
@@ -21,7 +31,8 @@ const {isAuthenticated, user, logout} = useAuth();
       <DropdownMenuTrigger
         render={
           <Button className="bg-black hover:text-red-500 cursor-pointer">
-            <img src="/UserIcon.png" alt="" className="w-7 h-7 invert" />
+            <User className="size-6 "></User>
+           
           </Button>
         }
       />

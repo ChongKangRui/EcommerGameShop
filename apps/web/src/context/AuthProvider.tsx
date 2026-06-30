@@ -53,6 +53,7 @@ export function AuthProvider({ children }: ChildrenOnlyProps) {
   const login = (token: string, userData: UserType) => {
     localStorage.setItem("token", token);
     setUser(userData);
+    console.log(JSON.stringify(userData));
   };
 
   const logout = () => {

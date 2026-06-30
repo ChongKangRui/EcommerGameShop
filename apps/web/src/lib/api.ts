@@ -8,10 +8,11 @@ import axios, {
 const api = axios.create({
   baseURL:
     import.meta.env.MODE === "production"
-      ? import.meta.env.VITE_API_URL // set this in your production env
-      : "http://localhost:3000", // your Express dev port
+      ? import.meta.env.VITE_API_URL // set this in production env
+      : "http://localhost:3000", // my local express port
 });
 
+// this include the jwt token everytime it sent a request to the endpoint
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -20,6 +21,7 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   return config;
 });
 
+// this remove the token and back to login page whenever the the status is unauthorized
 api.interceptors.response.use(
   (res: AxiosResponse) => res,
   (error: AxiosError) => {

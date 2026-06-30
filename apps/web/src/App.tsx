@@ -1,20 +1,26 @@
 import { useState } from "react";
-import "./App.css";
+//import "./App.css";
 import { Route, Routes } from "react-router";
-import Home from "./pages/Home";
-import Layout from "./components/Layout";
-import About from "./pages/About";
+import Home from "./pages/shop/Home";
+import Layout from "./components/ShopLayout";
+import About from "./pages/shop/About";
 
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Shop from "./pages/Shop";
-import Cart from "./pages/Checkout";
-import Product from "./pages/Product";
+import Login from "./pages/user/Login";
+import Register from "./pages/user/Register";
+import Shop from "./pages/shop/Shop";
+import Cart from "./pages/user/Checkout";
+import Product from "./pages/shop/Product";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./context/AuthProvider";
 import { PublicOnlyRoute } from "./route/PublicOnlyRoute";
-import Profile from "./pages/Profile";
+import Profile from "./pages/user/Profile";
 import { PrivateOnlyRoute } from "./route/PrivateOnlyRoute";
+import { AdminOnlyRoute } from "./route/AdminOnlyRoute";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminLayout from "./components/admin/AdminLayout";
+import AddProductForm from "./components/admin/product/add/AddProductForm";
+import AddProduct from "./pages/admin/AddProduct";
+import AdminProductList from "./pages/admin/AdminProductList";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,7 +49,8 @@ function App() {
               <Route path="/carts" element={<Cart />}></Route>
             </Route>
 
-              <Route
+            {/* Profile */}
+            <Route
               path="/profile"
               element={
                 <PrivateOnlyRoute>
@@ -51,7 +58,7 @@ function App() {
                 </PrivateOnlyRoute>
               }
             ></Route>
-
+            {/* Login */}
             <Route
               path="/login"
               element={
@@ -60,7 +67,7 @@ function App() {
                 </PublicOnlyRoute>
               }
             ></Route>
-
+            {/* Register */}
             <Route
               path="/register"
               element={
@@ -70,6 +77,24 @@ function App() {
               }
             ></Route>
 
+            {/* Admin */}
+            <Route
+              path="/admin"
+              element={
+                <AdminOnlyRoute>
+                  <AdminLayout />
+                </AdminOnlyRoute>
+              }
+            >
+              <Route index element={<AdminDashboard />} />
+              <Route path="/admin/addproduct" element={<AddProduct />} /> 
+               <Route path="/admin/products" element={<AdminProductList />} /> 
+              {/* index = default child */}
+              {/* future routes */}
+              {/* <Route path="products" element={<AdminProductsPage />} /> */}
+              {/* <Route path="orders" element={<AdminOrdersPage />} /> */}
+            </Route>
+            
           </Routes>
         </AuthProvider>
       </QueryClientProvider>

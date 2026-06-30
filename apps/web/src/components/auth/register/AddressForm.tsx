@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { type ValidationFormProps } from "@/lib/utils";
+import FormField from "../../FormField";
 
 export default function AddressForm({ register, errors, disableInput = false }: ValidationFormProps) {
   return (
@@ -19,53 +20,46 @@ export default function AddressForm({ register, errors, disableInput = false }: 
         We need your address to deliver your order.
       </FieldDescription>
       <FieldGroup>
-        <Field>
-          <FieldLabel htmlFor="street">Street Address <span className="text-destructive">*</span></FieldLabel>
-          <Input
-            id="street"
-            type="text"
-            placeholder="123 Main St"
-             disabled={disableInput}
-            {...register("streetAddress")}
-          />
-          {errors.streetAddress && (
-            <p className="text-destructive text-sm mt-1">
-              {errors.streetAddress.message as string}
-            </p>
-          )}
-        </Field>
+         <FormField
+                className=""
+                id="register-street"
+                label="Street Address"
+                type="text"
+                disabled={disableInput}
+                register={register("streetAddress")}
+                error={errors.streetAddress}
+                required={true}
+              ></FormField>
+       
         <div className="grid grid-cols-2 gap-4">
-          <Field>
-            <FieldLabel htmlFor="city">City <span className="text-destructive">*</span></FieldLabel>
-            <Input
-              id="city"
-              type="text"
-              placeholder="New York"
-               disabled={disableInput}
-              {...register("city")}
-              
-            />
-            {errors.city && (
-              <p className="text-destructive text-sm mt-1">
-                {errors.city.message as string}
-              </p>
-            )}
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="zip">Postal Code <span className="text-destructive">*</span></FieldLabel>
-            <Input
-              id="zip"
-              type="text"
-              placeholder="90502"
-               disabled={disableInput}
-              {...register("postalCode")}
-            />
-            {errors.postalCode && (
-              <p className="text-destructive text-sm mt-1">
-                {errors.postalCode.message as string}
-              </p>
-            )}
-          </Field>
+         
+             <FormField
+                className=""
+                id="register-city"
+                label="City"
+                type="text"
+                placeholder="New York"
+                disabled={disableInput}
+                register={register("city")}
+                error={errors.city}
+                required={true}
+              ></FormField>
+
+
+
+           <FormField
+                className=""
+                id="register-postalcode"
+                label="Postal Code"
+                type="text"
+                placeholder="80952"
+                disabled={disableInput}
+                register={register("postalCode")}
+                error={errors.postalCode}
+                required={true}
+              ></FormField>
+
+
         </div>
       </FieldGroup>
     </FieldSet>

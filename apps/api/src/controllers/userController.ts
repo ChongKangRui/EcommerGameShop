@@ -3,6 +3,8 @@ import bcrypt from "bcrypt";
 import { pool } from "../db";
 import {generateToken}from "../utils/jwtHelper"
 import type { AuthRequest } from 'src/middleWare/auth';
+import {registerDataSchema} from "@ecom/shared/src/registerDataSchema"
+import {loginDataSchema } from "@ecom/shared/src/loginDataSchema"
 
 type UserInfo = {
   first_name: string,
@@ -22,7 +24,23 @@ export const register = async (req: Request, res: Response) => {
   try {
     console.log("register route trigger");
     //console.log(req.body);
-    const {
+  
+    // pass the validation first
+    const validationResult = registerDataSchema.safeParse(req.body);
+        //console.log("---------------------register Validation Result------------------");
+        //console.log(validationResult);
+        if (!validationResult.success) {
+          const errors = validationResult.error.issues;
+          errors.forEach((err) => {
+            console.log(err.path, err.message); 
+          });
+          return res.status(400).json({
+            error: "Validation failed",
+            details: validationResult.error.issues,
+          });
+        }
+
+     const {
       firstName,
       lastName,
       email,
@@ -39,7 +57,7 @@ export const register = async (req: Request, res: Response) => {
     const address = `${streetAddress}, ${city}, ${postalCode}`
    // console.log(pepperedPassword);
     // Insert user
-    const result = await pool.query(
+     await pool.query(
       `INSERT INTO users (first_name, last_name, email, password, address, role)
        VALUES ($1, $2, $3, $4, $5, $6)`,
       [
@@ -52,7 +70,7 @@ export const register = async (req: Request, res: Response) => {
       ],
     );
 
-    const user = result.rows[0];
+    //const user = result.rows[0];
 
     res.status(201).json({ message: "Registration successful" });
 
@@ -75,6 +93,20 @@ export const login = async (
   try {
     console.log(req.body);
 
+    const validationResult = loginDataSchema.safeParse(req.body);
+       // console.log("---------------------login Validation Result------------------");
+        //console.log(validationResult);
+        if (!validationResult.success) {
+          const errors = validationResult.error.issues;
+          errors.forEach((err) => {
+            console.log(err.path, err.message); 
+          });
+          return res.status(400).json({
+            error: "Validation failed",
+            details: validationResult.error.issues,
+          });
+        }
+
     const {email, password, rememberMe}= req.body;
 
      const result = await pool.query(
@@ -87,12 +119,12 @@ export const login = async (
     const match = await bcrypt.compare(pepperedPassword, selectedUser.password);
 
     // jwt token generated
-    const token = generateToken(selectedUser.user_id, rememberMe);
+    const token = generateToken(selectedUser.user_id, selectedUser.role, rememberMe);
 
 
     if(match){
 
-        res.json({user: getUserData(selectedUser), token});
+        res.status(200).json({user: getUserData(selectedUser), token});
     }
     else{
          res.status(500).json({ error: "Invalid email or password" });

@@ -1,26 +1,25 @@
+// if we are running in development, we can access .env anywhere
+import 'dotenv/config'
+
+
 import express from "express";
 import cors from "cors"
 
-import userRouters from './routes/user';
+import userRoutes from './routes/user';
+import adminRoutes from "./routes/admin"
 import { Response, Request,NextFunction } from "express";
 import ExpressError from "./utils/expressError";
+
+
+
 
 const app = express();
 app.use(express.json());
 
-// if we are running in development, we can access .env anywhere
-if (process.env.NODE_ENV != 'production') {
-    require('dotenv').config({ quiet: true });
-}
-
-
-
+// allow this origin to access our api in local machine
 app.use(cors({
   origin: "http://localhost:5173",
 }))
-
-
-
 
 
  app.get("/", async (req, res) => {
@@ -29,7 +28,8 @@ app.use(cors({
  });
 
 
-app.use('/', userRouters);
+app.use('/', userRoutes);
+app.use('/admin', adminRoutes);
 
 //==========================================
 // error handling

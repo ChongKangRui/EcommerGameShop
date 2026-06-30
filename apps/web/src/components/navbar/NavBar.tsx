@@ -16,6 +16,11 @@ import { useState } from "react";
 import {productCategoryCollections} from "../../data/ProductCategoryCollections"
 import { Link } from "react-router";
 
+import {
+
+  ShoppingCart
+} from "lucide-react";
+
 export default function NavBar() {
 
  const [value, setValue] = useState("");
@@ -57,13 +62,14 @@ export default function NavBar() {
         </div>
 
         <div className="hidden md:flex justify-center items-center">
-          <Link to={"/carts"}> <img src="/cartIcon.png" className="invert w-5 h-5 " alt="" /> </Link>
+          <Link to={"/carts"}><ShoppingCart className="size-6 hover:text-red-500"></ShoppingCart></Link>
           <NavBarUserDropDown ></NavBarUserDropDown> 
         </div>                   
        
        {/* Mobile Nav Bar Sheet */}
        <div className="flex items-center md:hidden">
-        <Link to={"/carts"}> <img src="/cartIcon.png" className="invert w-8 h-8 " alt="" /> </Link>
+
+        <Link to={"/carts"}><ShoppingCart className="size-6  hover:text-red-500"></ShoppingCart> </Link>
             <NavBarSheet></NavBarSheet>
        </div>
       

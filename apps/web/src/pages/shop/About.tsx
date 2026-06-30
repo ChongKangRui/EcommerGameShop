@@ -1,4 +1,4 @@
-import CommentCarousel from "../components/about/CommentCarousel"
+import CommentCarousel from "../../components/about/CommentCarousel"
 
 export default function About() {
   return (

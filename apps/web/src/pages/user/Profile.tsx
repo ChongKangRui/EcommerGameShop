@@ -1,13 +1,13 @@
 import { useForm, type FieldValues } from "react-hook-form";
 
 import { Link } from "react-router";
-import { Button } from "../components/ui/button";
+import { Button } from "../../components/ui/button";
 import {
   userInfoUpdateDataSchema,
   type UserData,
 } from "@ecom/shared/src/profileUpdateDataSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useProfileUpdate } from "@/hooks/userAuth";
+import { useProfileUpdate } from "@/hooks/userAuthMutation";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -15,6 +15,7 @@ import { useAuth } from "@/context/AuthProvider";
 import UserProfile from "@/components/user/UserProfile";
 
 import UpdatePasswordDialogue from "@/components/user/UpdatePasswordDialogue";
+import { flashMessage_Failed, flashMessage_Success } from "@/lib/flash";
 
 export default function Profile() {
   const { user, logout } = useAuth();
@@ -53,14 +54,17 @@ export default function Profile() {
     setIsEditing(false);
     profileUpdateMutation.mutate(data, {
       onSuccess: () => {
+        flashMessage_Success("Profile Update Success");
+       
         // navigate("/login");
-        navigate("/profile");
+        //navigate("/profile");
       },
       onError: (error) => {
         console.log("showing error");
         console.log(error.message);
         // console.error(error.message);
         setIsEditing(false);
+         flashMessage_Failed(error.message);
       },
     });
   };

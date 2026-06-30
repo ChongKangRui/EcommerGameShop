@@ -11,15 +11,21 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
+import {
+  MenuIcon
+} from "lucide-react";
+
 import { useState, useEffect } from "react";
 
 import NavBarMenuItem from "./NavBarMenuItem";
 import NavBarShopSheetTrigger from "./NavBarShopSheetTrigger";
+import { useAuth } from "@/context/AuthProvider";
 
 export default function NavBarSheet() {
   const [isDesktop, setIsDesktop] = useState(false);
 
   const [open, setOpen] = useState(false);
+ const {isAuthenticated, user, logout} = useAuth();
 
   useEffect(() => {
     // Create media query list
@@ -52,12 +58,12 @@ export default function NavBarSheet() {
 
   return (
     <Sheet onOpenChange={setOpen} open={open}>
-      <SheetTrigger render={<Button><img src="/MobileMenuIcon.png"  className="invert w-10 mr-3"/> </Button>} />
+      <SheetTrigger render={<Button><MenuIcon className="size-7"></MenuIcon> </Button>} />
       <SheetContent className="data-[side=right]:w-full  bg-black">
         <SheetHeader>
-          <SheetTitle className="text-white">Anoynomous User</SheetTitle>
+          <SheetTitle className="text-white">Hi, {isAuthenticated ? `${user?.first_name} ${user?.last_name}` : "Guest"}</SheetTitle>
           <SheetDescription>
-            Make changes to your profile here. Click save when you&apos;re done.
+           Have fun with Redfield Gaming
           </SheetDescription>
           <hr />
         </SheetHeader>
@@ -68,16 +74,15 @@ export default function NavBarSheet() {
           <NavBarMenuItem name="About" link="/about" onClick={()=>setOpen(false)} />
 
           {
-          true ?
+          isAuthenticated ?
             <div className="grid auto-rows-min gap-6 ">
               <NavBarMenuItem name="Profile" link="/" onClick={()=>setOpen(false)} />
-              <NavBarMenuItem name="Settings" link="/" onClick={()=>setOpen(false)} />
-              <NavBarMenuItem name="Logout" link="/" onClick={()=>setOpen(false)} />
+              <NavBarMenuItem name="Logout" link="/" onClick={()=>{setOpen(false);logout();}} />
             </div>
           :
           <div>
-              <NavBarMenuItem name="Login" link="/" onClick={()=>setOpen(false)} />
-              <NavBarMenuItem name="Register" link="/" onClick={()=>setOpen(false)} />
+              <NavBarMenuItem name="Login" link="/login" onClick={()=>setOpen(false)} />
+              <NavBarMenuItem name="Register" link="/register" onClick={()=>setOpen(false)} />
              
             </div>
 

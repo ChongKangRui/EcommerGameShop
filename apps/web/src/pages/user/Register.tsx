@@ -1,12 +1,12 @@
 import { useForm, type FieldValues } from "react-hook-form";
 
-import UserForm from "../components/auth/register/UserForm";
-import AddressForm from "../components/auth/register/AddressForm";
+import UserForm from "../../components/auth/register/UserForm";
+import AddressForm from "../../components/auth/register/AddressForm";
 import { Link } from "react-router";
-import { Button } from "../components/ui/button";
+import { Button } from "../../components/ui/button";
 import { registerDataSchema, type RegisterData } from "@ecom/shared/src/registerDataSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRegister } from "@/hooks/userAuth";
+import { useRegister } from "@/hooks/userAuthMutation";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import TermOfService from "@/components/auth/register/TermOfService";

@@ -10,46 +10,39 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { type ValidationFormProps } from "@/lib/utils";
+import FormField from "../../FormField";
 
-export default function LoginForm({ register, errors, disableInput=false }: ValidationFormProps) {
-
-
-
-
+export default function LoginForm({
+  register,
+  errors,
+  disableInput = false,
+}: ValidationFormProps) {
   return (
     <FieldGroup className="grid max-w-sm grid-cols-2 col-span-full">
-
       {/* Email */}
-      <Field className="col-span-2">
-        <FieldLabel htmlFor="form-email">
-          Email <span className="text-destructive">*</span>
-        </FieldLabel>
-        <Input
-          id="form-email"
-          type="text"
-          placeholder="john@example.com"
-          disabled = {disableInput}
-          {...register("email")}
-        />
-        {errors.email && (
-          <p className="text-destructive text-sm mt-1">
-            {errors.email.message as string}
-          </p>
-        )}
-      </Field>
+      <FormField
+        className="col-span-2"
+        id="login-email"
+        label="Email"
+        type="text"
+        disabled={disableInput}
+        register={register("email")}
+        error={errors.email}
+        required={true}
+      ></FormField>
+     
       {/* password */}
-      <Field className="col-span-2">
-        <FieldLabel htmlFor="password">Password  <span className="text-destructive">*</span> </FieldLabel>
-        
-        <Input id="password" type="password" placeholder="••••••••"
-        disabled = {disableInput}
-        {...register("password")} />
-         {errors.password && (
-          <p className="text-destructive text-sm mt-1">
-            {errors.password.message as string}
-          </p>
-        )}
-      </Field>
+      <FormField
+        className="col-span-2"
+        id="login-email"
+        label="password"
+        type="password"
+        disabled={disableInput}
+        register={register("password")}
+        error={errors.password}
+        required={true}
+      ></FormField>
+     
     </FieldGroup>
   );
 }

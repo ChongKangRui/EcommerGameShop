@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+
 import {
   Dialog,
   DialogContent,
@@ -23,13 +23,8 @@ export default function TermOfService() {
     
           
         </DialogHeader>
-        <div className="-mx-4 no-scrollbar max-h-[50vh] overflow-y-auto px-4">
-          <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold text-black mb-2">
-            Terms of Service
-          </h1>
+        <div className="-mx-4 max-h-[50vh] overflow-y-auto px-4">
          
-        </div>
 
         <div className="space-y-8">
           {/* Section 1: Introduction */}

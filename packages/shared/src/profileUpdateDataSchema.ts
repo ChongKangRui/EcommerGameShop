@@ -30,7 +30,10 @@ export const passwordUpdateDataSchema = z
       .regex(/[A-Z]/, "New password must contain at least one uppercase letter")
       .regex(/[0-9]/, "New password must contain at least one number"),
    
-  })
+  }).refine((data) => data.oldPassword !== data.newPassword, {
+    message: "New password must be different from old password",
+    path: ["newPassword"],
+  });
 
   // .refine((data) => data.password === data.confirmPassword, {
   //   message: "Passwords do not match",
