@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Autoplay from "embla-carousel-autoplay"
-import { customerComments } from "../../data/CommentCollection"
+import { customerComments } from "@/data/CommentCollection"
 
 import {
   Carousel,

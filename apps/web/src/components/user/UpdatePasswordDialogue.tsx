@@ -3,10 +3,9 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
+
   DialogFooter,
-  DialogHeader,
-  DialogTitle,
+  
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Field, FieldGroup } from "@/components/ui/field";
@@ -46,6 +45,8 @@ export default function UpdatePasswordDialogue() {
         // navigate("/login");
         //navigate("/profile");
         flashMessage_Success("Profile Update Success");
+        localStorage.removeItem("token");
+        navigate("/login", {replace:true});
         onOpenChange(false);
 
       },

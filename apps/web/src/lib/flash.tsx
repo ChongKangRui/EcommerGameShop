@@ -23,7 +23,7 @@ export function flashMessage_Failed(msg: string) {
       border: "none",
     },
     action: {
-      label: <X className="h-4 w-4" />,
+      label: "✕",
       onClick: () => toast.dismiss(),
     },
   });

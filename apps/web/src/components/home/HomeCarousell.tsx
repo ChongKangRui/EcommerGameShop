@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Autoplay from "embla-carousel-autoplay"
-import { HomeBannerCollections } from "../../data/HomeBannerCollection"
+import { HomeBannerCollections } from "@/data/HomeBannerCollection"
 
 import {
   Carousel,

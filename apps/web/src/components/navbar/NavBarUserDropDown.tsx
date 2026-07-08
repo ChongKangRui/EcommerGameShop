@@ -3,9 +3,9 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
-  DropdownMenuItem,
+
   DropdownMenuLabel,
-  DropdownMenuSeparator,
+
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -13,11 +13,7 @@ import NavBarUserDropDownItem from "./NavBarUserDropDownItem";
 import { useAuth } from "@/context/AuthProvider";
 
 import {
-  LayoutDashboard,
-  Package,
-  ShoppingCart,
-  PanelLeft,
-  Plus,
+
   User,
 } from "lucide-react";
 

@@ -1,18 +1,13 @@
-import { useForm } from "react-hook-form";
 
 import {
-  Field,
-  FieldGroup,
-  FieldDescription,
-  FieldLabel,
-  FieldLegend,
-  FieldSet,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { type ValidationFormProps } from "@/lib/utils";
-import FormField from "../../FormField";
 
-import { registerDataSchema } from "@ecom/shared/src/registerDataSchema";
+  FieldGroup,
+
+} from "@/components/ui/field";
+
+import { type ValidationFormProps } from "@/lib/utils";
+import FormField from "@/components/FormField";
+
 
 export default function UserForm({
   register,

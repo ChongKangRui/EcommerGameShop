@@ -11,14 +11,15 @@ import {
 } from "@/components/ui/card";
 
 type ShopItemProps = {
+  id: number,
   productName: string;
   price: number;
   soldOut: boolean;
 };
 
-export function ShopItemCard({ productName, price, soldOut }: ShopItemProps) {
+export function ShopItemCard({id, productName, price, soldOut }: ShopItemProps) {
   return (
-    <Link to={"/collections/:category/:id"}>
+    <Link to={`/collections/${id}`}>
       <Card size="sm" className="mx-auto w-full max-w-xs overflow-hidden p-0 ">
         <CardHeader className="relative p-0">
           {/* Sold Out Badge - positioned absolutely on the image */}

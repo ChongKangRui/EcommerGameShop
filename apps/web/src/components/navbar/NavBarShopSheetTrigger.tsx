@@ -14,7 +14,7 @@ import {
 import { useState, useEffect } from "react";
 
 import NavBarMenuItem from "./NavBarMenuItem";
-import {productCategoryCollections} from "../../data/ProductCategoryCollections"
+import {productCategoryCollections} from "@/data/ProductCategoryCollections"
 
 export default function NavBarShopSheetTrigger() {
   const [isDesktop, setIsDesktop] = useState(false);

@@ -43,7 +43,7 @@ export function ProductTable<TData, TValue>({
 
   //console.log("columns being passed to table:", columns.map(c => ({ id: c.id, accessorKey: (c as any).accessorKey })));
   return (
-    <div className="container mx-auto">
+    <div>
       {table.getFilteredSelectedRowModel().rows.length > 0 && (
         <div className="text-sm text-muted-foreground px-5 py-2">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}

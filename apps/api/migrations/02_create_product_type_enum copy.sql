@@ -5,3 +5,12 @@ CREATE TYPE product_type AS ENUM (
     'ps4',
     'ps5'
 );
+
+CREATE TYPE order_status AS ENUM (
+    'pending',
+    'paid',
+    'preparing',
+    'shipped',
+    'cancelled',
+    'refunded'
+);

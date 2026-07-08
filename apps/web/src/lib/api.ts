@@ -25,10 +25,10 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 api.interceptors.response.use(
   (res: AxiosResponse) => res,
   (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("token");
-      window.location.href = "/login";
-    }
+    // if (error.response?.status === 401) {
+    //   localStorage.removeItem("token");
+    //   window.location.href = "/login";
+    // }
     return Promise.reject(error);
   },
 );

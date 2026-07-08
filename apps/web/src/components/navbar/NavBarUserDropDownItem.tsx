@@ -3,7 +3,7 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu"
 
-import type{ CommonType } from "../CommonType"
+
 import type { NavBarLinkProps } from "./NavBarItemType"
 import { Link } from "react-router"
 

@@ -7,22 +7,22 @@ import { useNavigate } from "react-router-dom";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Product = {
-  id: string;
-  productName: string;
+  product_id: string;
+  name: string;
   price: number;
-  stock: number;
+  is_sold_out: string;
   sales: number;
 };
 
 
-function ProductNameCell({ id, name }: { id: string; name: string }) {
+function ProductNameCell({ product_id, name }: { product_id: string; name: string }) {
   const navigate = useNavigate();
 
   return (
     <div
       className="truncate cursor-pointer hover:underline"
       title={name}
-      onClick={() => navigate(`/admin/products/${id}`)}
+      onClick={() => navigate(`/admin/products/${product_id}`)}
     >
       {name}
     </div>
@@ -32,23 +32,13 @@ function ProductNameCell({ id, name }: { id: string; name: string }) {
 export const productColumn: ColumnDef<Product>[] = [
   {
     id: "select",
-    header: ({ table }) => {
-      
-      return (
-        <Checkbox
-          checked={table.getIsAllPageRowsSelected()}
-          indeterminate={
-            table.getIsSomePageRowsSelected() &&
-            !table.getIsAllPageRowsSelected()
-          }
-          onCheckedChange={(checked) =>{
-            table.toggleAllPageRowsSelected(checked)
-            
-          }}
-          aria-label="Select all"
-        />
-      );
-    },
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(checked) => table.toggleAllPageRowsSelected(!!checked)}
+        aria-label="Select all"
+      />
+    ),
     cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
@@ -60,22 +50,19 @@ export const productColumn: ColumnDef<Product>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "productName",
+    accessorKey: "name",
     header: "Product Name",
     cell: ({ row }) => (
-      <ProductNameCell id={row.original.id} name={row.getValue("productName")}></ProductNameCell>
-    // <div className="truncate" title={row.getValue("productName")} onClick={}>
-    //   {row.getValue("productName")}
-    // </div>
-  )
+      <ProductNameCell product_id={row.original.product_id} name={row.getValue("name")} />
+    ),
   },
   {
     accessorKey: "price",
     header: "Price",
   },
   {
-    accessorKey: "stock",
-    header: "Stock",
+    accessorKey: "is_sold_out",
+    header: "Sold Out",
   },
   {
     accessorKey: "sales",

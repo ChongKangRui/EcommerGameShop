@@ -13,7 +13,7 @@ import NavBarUserDropDown from "./NavBarUserDropDown"
 import NavBarSheet from "./NavBarSheet"; 
 import { useState } from "react";
 
-import {productCategoryCollections} from "../../data/ProductCategoryCollections"
+import {productCategoryCollections} from "@/data/ProductCategoryCollections"
 import { Link } from "react-router";
 
 import {

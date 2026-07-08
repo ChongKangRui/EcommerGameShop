@@ -6,7 +6,8 @@ import express from "express";
 import cors from "cors"
 
 import userRoutes from './routes/user';
-import adminRoutes from "./routes/admin"
+import adminRoutes from './routes/admin';
+import productRoutes from './routes/product';
 import { Response, Request,NextFunction } from "express";
 import ExpressError from "./utils/expressError";
 
@@ -30,14 +31,14 @@ app.use(cors({
 
 app.use('/', userRoutes);
 app.use('/admin', adminRoutes);
-
+app.use('/products', productRoutes);
 //==========================================
 // error handling
 
 // for this all, order is important here
 // because it will only run when no route matched
 app.all('/{*path}', (req:Request, res:Response, next: NextFunction) => {
-    next(new ExpressError('Something went wrong, please try again', 404));
+    next(new ExpressError('Invalid API end point', 404));
 })
 
 // express 5 know that this err parameter is for error handle 

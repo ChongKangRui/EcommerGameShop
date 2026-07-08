@@ -210,7 +210,7 @@ export const updatePassword = async (req: AuthRequest, res: Response) => {
       `select * from users where user_id = $1`, [req.userId]);
       
       if(!user.rows[0]){
-        return res.status(401).json({messsage: 'User not found'});
+        return res.status(401).json({error: 'User not found'});
       }
 
     const selectedUser = user.rows[0];
@@ -219,8 +219,10 @@ export const updatePassword = async (req: AuthRequest, res: Response) => {
     const oldPepperedPassword = oldPassword + pepper;
     const match = await bcrypt.compare(oldPepperedPassword, selectedUser.password);
 
+    console.log("Matched??", match);
+
     if(!match){
-      return res.status(401).json({messsage: 'Incorrect password'});
+      return res.status(401).json({error: 'Incorrect current password'});
     }
      const newPepperedPassword = newPassword + pepper;
     const newHashPassword = await bcrypt.hash(newPepperedPassword, 12);

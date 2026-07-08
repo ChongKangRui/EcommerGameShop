@@ -19,7 +19,7 @@ export default function AdminLayout() {
     transition-[padding,opacity] duration-300 ease-in-out
     ${isCollapsed
       ? "pl-[10vh] opacity-100 pointer-events-auto"
-      : " opacity-0 pointer-events-none md:opacity-100 md:pointer-events-auto md:pl-[30vh]"
+      : " opacity-0 pointer-events-none md:opacity-100 md:pointer-events-auto md:pl-[35vh]"
     }
   `}
 >

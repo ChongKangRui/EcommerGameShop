@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { type ValidationFormProps } from "@/lib/utils";
-import FormField from "../../FormField";
+import FormField from "@/components/FormField";
 
 export default function LoginForm({
   register,

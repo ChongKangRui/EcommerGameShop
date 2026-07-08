@@ -8,6 +8,7 @@ CREATE TABLE products (
     release_date        DATE            NOT NULL,
     discount_percentage NUMERIC(5, 2)   NOT NULL DEFAULT 0
                             CHECK (discount_percentage >= 0 AND discount_percentage <= 100),
+    push_home_page   BOOLEAN         NOT NULL DEFAULT FALSE,
     created_at          TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
     updated_at          TIMESTAMPTZ     NOT NULL DEFAULT NOW()
 );

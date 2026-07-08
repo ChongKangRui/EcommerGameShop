@@ -16,14 +16,25 @@ import {
 } from "@/components/ui/select";
 
 import { type ValidationFormProps } from "@/lib/utils";
-import FormField from "../../../FormField";
+import FormField from "@/components/FormField";
+
+import {
+  type ProductTypeEnum
+} from "@ecom/shared/src/type/product";
+
+interface ProductInfoProps extends ValidationFormProps{
+  setProductType: (type: ProductTypeEnum)=>void;
+  defaultProductType: string
+}
 
 
-export default function AddProductForm({
+export default function ProductInfo({
   register,
   errors,
   disableInput = false,
-}: ValidationFormProps) {
+  defaultProductType,
+  setProductType
+}: ProductInfoProps) {
 
 
 
@@ -57,6 +68,7 @@ export default function AddProductForm({
         
       ></FormField>
 
+      {/* discount percentage */}
       <FormField
         className="col-span-2 md:col-span-1"
         id="product-discount-percentage"
@@ -75,11 +87,11 @@ export default function AddProductForm({
           Product Type <span className="text-destructive">*</span>
         </FieldLabel>
         <Select
-          defaultValue="Switch"
+          defaultValue={defaultProductType}
            disabled={disableInput}
-          onValueChange={(e) => {
-            console.log(e);
-          }}
+           onValueChange={(e) => {
+             setProductType(e as ProductTypeEnum);
+           }}
           {...register("type")}
         >
           <SelectTrigger id="product-type">
@@ -102,7 +114,7 @@ export default function AddProductForm({
 
       {/* Date */}
       <FormField
-        className="col-span-2"
+        className="col-span-1"
         id="product-release-date"
         label="Release Date"
         type="date"
@@ -111,6 +123,19 @@ export default function AddProductForm({
         register={register("release_date")}
         error={errors.release_date}
         required={true}
+      ></FormField>
+
+       {/* Push to home page */}
+      <FormField
+        className="col-span-1 h-10"
+        id="product-release-date"
+        label="Mark as best selling"
+        type="checkbox"
+        placeholder=""
+        disabled={disableInput}
+        register={register("push_home_page")}
+        error={errors.push_home_page}
+        required={false}
       ></FormField>
     </FieldGroup>
   );
