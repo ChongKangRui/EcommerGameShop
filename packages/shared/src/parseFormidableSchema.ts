@@ -24,6 +24,7 @@ export const productVariationServerSchema = z
     image: formidableFileSchema.optional().nullable(),
     image_url: z.url("Image URL must be valid").optional().nullable(),
     is_cover: z.boolean(),
+    
     stock: z
       .number()
       .int("Stock must be a whole number")
@@ -51,6 +52,7 @@ export const productSchema = z
     release_date: z.string().min(1, "Release date is required"),
     discount_percentage: z.number().min(0, "Discount cannot be negative").max(100, "Discount cannot exceed 100%"),
     push_home_page: z.boolean(),
+     description: z.string().max(2000, "Description too long").optional(),
     variations: z.array(productVariationServerSchema).min(1, "At least one variation is required"),
   })
   .refine((data) => data.variations.filter((v) => v.is_cover).length === 1, {

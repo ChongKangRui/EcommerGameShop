@@ -1,12 +1,7 @@
 import { useForm } from "react-hook-form";
 
-import {
-  Field,
-  FieldGroup,
-
-  FieldLabel,
-
-} from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -18,27 +13,20 @@ import {
 import { type ValidationFormProps } from "@/lib/utils";
 import FormField from "@/components/FormField";
 
-import {
-  type ProductTypeEnum
-} from "@ecom/shared/src/type/product";
+import { type ProductTypeEnum } from "@ecom/shared/src/type/product";
 
-interface ProductInfoProps extends ValidationFormProps{
-  setProductType: (type: ProductTypeEnum)=>void;
-  defaultProductType: string
+interface ProductInfoProps extends ValidationFormProps {
+  setProductType: (type: ProductTypeEnum) => void;
+  defaultProductType: string;
 }
 
-
-export default function ProductInfo({
+export default function ProductInfoForm({
   register,
   errors,
   disableInput = false,
   defaultProductType,
-  setProductType
+  setProductType,
 }: ProductInfoProps) {
-
-
-
-
   return (
     <FieldGroup className=" grid grid-cols-2 col-span-full">
       {/* product name */}
@@ -65,7 +53,6 @@ export default function ProductInfo({
         register={register("price", { valueAsNumber: true })}
         error={errors.price}
         required={true}
-        
       ></FormField>
 
       {/* discount percentage */}
@@ -88,10 +75,11 @@ export default function ProductInfo({
         </FieldLabel>
         <Select
           defaultValue={defaultProductType}
-           disabled={disableInput}
-           onValueChange={(e) => {
-             setProductType(e as ProductTypeEnum);
-           }}
+          disabled={disableInput}
+          onValueChange={(e) => {
+            setProductType(e as ProductTypeEnum);
+          }
+        }
           {...register("type")}
         >
           <SelectTrigger id="product-type">
@@ -125,11 +113,11 @@ export default function ProductInfo({
         required={true}
       ></FormField>
 
-       {/* Push to home page */}
+      {/* Push to home page */}
       <FormField
         className="col-span-1 h-10"
-        id="product-release-date"
-        label="Mark as best selling"
+        id="push-to-home"
+        label="Promote to home page"
         type="checkbox"
         placeholder=""
         disabled={disableInput}
@@ -137,6 +125,37 @@ export default function ProductInfo({
         error={errors.push_home_page}
         required={false}
       ></FormField>
+
+      {/* Product description */}
+      <Field className="col-span-2">
+        <FieldLabel htmlFor="product-description">
+          Product Description
+        </FieldLabel>
+        <Textarea id="textarea-message" {...register("description")} />
+        {errors.description && (
+        <p className="text-destructive text-sm mt-1">
+          {errors.description.message as string}
+        </p>
+      )}
+      </Field>
+
+      {/* <FormField
+        className="col-span-2"
+        inputClassname="h-30 md:h-50"
+        id="product-release-date"
+        label="Product description"
+        type="text"
+        placeholder=""
+        disabled={disableInput}
+        register={register("description")}
+        error={errors.description}
+        required={false}
+        onKeyDown={(e)=>{
+          if(e.key === 'Enter'){
+          e.preventDefault();
+          }
+        }}
+      ></FormField> */}
     </FieldGroup>
   );
 }

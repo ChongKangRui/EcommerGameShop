@@ -28,18 +28,21 @@ type FilterSortingProps<T extends string = string> = {
   currentFilter: string;
   updateFilter: (value: string) => void;
   updateSort:(value: string) => void;
+  className?: string
 };
 
-export default function FilterSorting<T extends string>({
+export default function FilterSortingSelection<T extends string>({
   sortOptions,
   currentSort,
   currentFilter,
   updateFilter,
-  updateSort
+  updateSort,
+  className
+  
 }: FilterSortingProps<T>) {
     
   return (
-    <div className="flex justify-around md:justify-between">
+    <div className={`flex justify-around md:justify-between ${className}`}>
         <Select  value={currentSort}
         onValueChange={(e) =>
           updateSort(e as T)

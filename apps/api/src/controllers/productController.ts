@@ -1,18 +1,19 @@
 import type { Request, Response, NextFunction } from "express";
 import { pool } from "../db";
 import { AuthRequest } from "src/middleWare/auth";
+import { Product, ProductVariation } from "@ecom/shared/src/type/product";
 // single product
 export const getProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const product_id = parseInt(String(id));
 
-    const result = await pool.query(
+    const result = await pool.query<Product>(
       "SELECT * FROM products where product_id = $1",
       [product_id], // fetch one extra to check if more exist
     );
 
-    const variationsResult = await pool.query(
+    const variationsResult = await pool.query<ProductVariation>(
       "SELECT * FROM product_variations WHERE product_id = $1 ORDER BY created_at ASC",
       [product_id],
     );
@@ -30,9 +31,25 @@ export const getProduct = async (req: Request, res: Response) => {
       return res.status(404).json({ error: "No product found" });
     }
 
+    const product = result.rows[0];
+
+    const finalVariationsResult = variationsResult.rows.map((v)=>{
+
+      const price = parseFloat(product.price);
+      const priceOffset = parseFloat(v.price_offset);
+      const discount_percentage = parseFloat(product.discount_percentage);
+
+      const PriceWithOffset = price + priceOffset;
+      const final_price = PriceWithOffset - (PriceWithOffset * (discount_percentage/100));
+
+
+      return {...v, final_price}
+    })
+
+
     res.status(200).json({
       product: result.rows[0],
-      variations: variationsResult.rows,
+      variations: finalVariationsResult,
       message: "get product Success",
     });
   } catch (e) {
@@ -75,26 +92,30 @@ export const getProducts = async (req: AuthRequest, res: Response) => {
       conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 
 
-    const [productsResult, countResult] = await Promise.all([
-      pool.query(
-        `SELECT * FROM products 
-         ${whereClause}
-         ORDER BY ${sortColumn} ${sortDirection}
-         LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`,
+    const [productResults, countResult] = await Promise.all([
+    
+      pool.query<Product>(
+        `SELECT p.*,
+         COALESCE(SUM(pv.stock), 0) as total_stock,
+          p.price * (1 - p.discount_percentage / 100.0) AS discounted_price
+       FROM products p
+       LEFT JOIN product_variations pv ON p.product_id = pv.product_id
+       ${whereClause}
+       GROUP BY p.product_id
+       ORDER BY ${sortColumn} ${sortDirection}
+       LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`,
         [...values, limit, offset],
-      ),
+      )
+      ,
       pool.query(`SELECT COUNT(*) FROM products ${whereClause}`, values),
     ]);
 
-    console.log(`SELECT * FROM products 
-       ${whereClause}
-       ORDER BY 
-       ${sortColumn} ${sortDirection} LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`);
-    //console.log(countResult);
+    
+  
     res
       .status(200)
       .json({
-        products: productsResult.rows,
+        products: productResults.rows,
         productCount: parseInt(countResult.rows[0].count),
         message: "get product Success",
       });

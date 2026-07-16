@@ -34,7 +34,6 @@ WITH inserted_products AS (
     ('Turtle Beach Stealth Pro II Wireless Gaming Headset for PC, PlayStation', 'https://www.gameshop.my/cdn/shop/files/TurtleBeachStealthProIIPS5Black1.jpg?v=1781351667&width=533', 1263.00, 'ps5', false, '2026-01-18', 0),
     ('Split Fiction (PS5/Asia)', 'https://www.gameshop.my/cdn/shop/files/PS5SplitFictionAsia.jpg?v=1781198970&width=533', 185.00, 'ps5', false, '2026-01-06', 0),
     ('PlayStation 5 Slim Console Digital Edition (Japan)', 'https://www.gameshop.my/cdn/shop/files/Photo_8db7a9b5-8330-4120-8b9e-e89bc435c5d7.jpg?v=1719557314&width=533', 2647.00, 'ps5', true, '2025-12-25', 0),
-    ('Elgato Stream Deck Neo', 'https://www.gameshop.my/cdn/shop/files/ElgatoStreamDeckNeo.jpg?v=1769000000&width=533', 448.00, 'ps5', false, '2025-12-13', 0),
     ('Black Myth Wukong (PS5/USA)', 'https://www.gameshop.my/cdn/shop/files/PS5BlackMythWukongUSA.jpg?v=1769000001&width=533', 298.00, 'ps5', false, '2025-12-01', 0),
     ('Dead Island 2 Day One Edition (PS5)', 'https://www.gameshop.my/cdn/shop/files/PS5DeadIsland2DayOneEdition.jpg?v=1769000002&width=533', 163.00, 'ps5', false, '2025-11-19', 0),
 
@@ -63,7 +62,6 @@ WITH inserted_products AS (
     ('Genki ShadowCast 3 Pro', 'https://www.gameshop.my/cdn/shop/files/GenkiShadowCast3Pro1.jpg?v=1776530810&width=533', 264.00, 'xbox', false, '2026-06-23', 0),
     ('ASUS ROG Raikiri II Xbox Wireless Controller', 'https://www.gameshop.my/cdn/shop/files/ASUSROGRaikiriIIXboxWirelessController1.jpg?v=1776013356&width=533', 796.00, 'xbox', true, '2026-06-11', 0),
     ('Playseat Challenge DD F1 Edition', 'https://www.gameshop.my/cdn/shop/files/PlayseatChallengeDDF1Edition1.jpg?v=1773985815&width=533', 1714.00, 'xbox', true, '2026-05-30', 0),
-    ('Elgato Game Capture 4K S', 'https://www.gameshop.my/cdn/shop/files/ElgatoGameCapture4KS.jpg?v=1771325778&width=533', 742.00, 'xbox', false, '2026-05-18', 0),
     ('ASUS ROG Delta II Gaming Headset', 'https://www.gameshop.my/cdn/shop/files/ROGDeltaIIGamingHeadsetBlack1.jpg?v=1771318596&width=533', 976.00, 'xbox', false, '2026-05-06', 0),
     ('ASUS ROG Delta II Gaming Headset Kojima Productions White', 'https://www.gameshop.my/cdn/shop/files/ROGDeltaIIKJPGamingHeadsetWhite1.jpg?v=1771257833&width=533', 1290.00, 'xbox', false, '2026-04-24', 0),
     ('GuliKit 720° Adjustable Tension TMR Magnetic Joystick Replacement Kit', 'https://www.gameshop.my/cdn/shop/files/Gulikit720TensionAdjustableTMRJoystick.jpg?v=1771074949&width=533', 91.00, 'xbox', false, '2026-04-12', 0),
@@ -76,8 +74,7 @@ WITH inserted_products AS (
     ('Thrustmaster Formula Wheel Add-On Ferrari SF-25 Edition (Xbox Edition)', 'https://www.gameshop.my/cdn/shop/files/ThrustmasterFormulaWheelAdd-OnFerrariSF-25Edition1.jpg?v=1782574316&width=533', 2008.00, 'xbox', false, '2026-01-18', 0),
     ('Turtle Beach Stealth Pro II Wireless Gaming Headset for Xbox, PC, PlayStation (Xbox Listing)', 'https://www.gameshop.my/cdn/shop/files/TurtleBeachStealthProIIXboxWhite.jpg?v=1781359843&width=533', 1263.00, 'xbox', false, '2026-01-06', 0),
     ('Xbox Series X Console 1TB Digital White (Japan)', 'https://www.gameshop.my/cdn/shop/files/Photo1_7cd738d0-324d-4e73-b616-118e6a305ce3.jpg?v=1733761325&width=533', 2720.00, 'xbox', true, '2025-12-25', 0),
-    ('Elgato Stream Deck Neo (Xbox Listing)', 'https://www.gameshop.my/cdn/shop/files/ElgatoStreamDeckNeo.jpg?v=1769000000&width=533', 448.00, 'xbox', false, '2025-12-13', 0),
-
+    
     -- ===================== PS4 (16) =====================
     ('Harvest Moon Light of Hope Complete Special Edition (PS4)', 'https://www.gameshop.my/cdn/shop/files/PS4HarvestMoonLightofHopeCompleteSpecialEdition.jpg?v=1779137978&width=533', 111.00, 'ps4', false, '2026-07-05', 0),
     ('Thrustmaster GT Wheel Add-On', 'https://www.gameshop.my/cdn/shop/files/ThrustmasterGTWheelAdd-On1.jpg?v=1778955313&width=533', 1448.00, 'ps4', false, '2026-06-23', 0),
@@ -86,7 +83,6 @@ WITH inserted_products AS (
     ('Genki ShadowCast 3 Pro (PS4 Listing)', 'https://www.gameshop.my/cdn/shop/files/GenkiShadowCast3Pro1.jpg?v=1776530810&width=533', 264.00, 'ps4', false, '2026-05-18', 0),
     ('ASUS ROG Cetra Open Wireless Gaming Earbuds', 'https://www.gameshop.my/cdn/shop/files/ROGCetraOpenWirelessGamingEarbuds1.jpg?v=1774322824&width=533', 870.00, 'ps4', true, '2026-05-06', 0),
     ('Playseat Challenge DD F1 Edition (PS4 Listing)', 'https://www.gameshop.my/cdn/shop/files/PlayseatChallengeDDF1Edition1.jpg?v=1773985815&width=533', 1714.00, 'ps4', false, '2026-04-24', 0),
-    ('Elgato Game Capture 4K S (PS4 Listing)', 'https://www.gameshop.my/cdn/shop/files/ElgatoGameCapture4KS.jpg?v=1771325778&width=533', 742.00, 'ps4', false, '2026-04-12', 0),
     ('ASUS ROG Delta II Gaming Headset (PS4 Listing)', 'https://www.gameshop.my/cdn/shop/files/ROGDeltaIIGamingHeadsetBlack1.jpg?v=1771318596&width=533', 939.00, 'ps4', false, '2026-03-31', 0),
     ('ASUS ROG Delta II Gaming Headset Kojima Productions White (PS4 Listing)', 'https://www.gameshop.my/cdn/shop/files/ROGDeltaIIKJPGamingHeadsetWhite1.jpg?v=1771257833&width=533', 1290.00, 'ps4', false, '2026-03-19', 0),
     ('GuliKit 720° Adjustable Tension TMR Magnetic Joystick Replacement Kit (PS4 Listing)', 'https://www.gameshop.my/cdn/shop/files/Gulikit720TensionAdjustableTMRJoystick.jpg?v=1771074949&width=533', 91.00, 'ps4', false, '2026-03-07', 0),
@@ -96,9 +92,7 @@ WITH inserted_products AS (
     ('Turtle Beach Victrix Pro BFG Reloaded Wireless Gaming Controller for PS5, PS4 and Windows', 'https://www.gameshop.my/cdn/shop/files/TurtleBeachVictrixProBFGReloadedWirelessControllerPS5Black.jpg?v=1769263576&width=533', 846.00, 'ps4', false, '2026-01-18', 0),
     ('Playstation Network Card USD100 - Digital Download', 'https://www.gameshop.my/cdn/shop/files/PSNCardUSD100.jpg?v=1769253330&width=533', 509.00, 'ps4', false, '2026-01-06', 0),
     ('Call of Duty Black Ops 6 (PS4/Asia)', 'https://www.gameshop.my/cdn/shop/files/PS4CallOfDutyBlackOps6.jpg?v=1769000003&width=533', 267.00, 'ps4', false, '2025-12-25', 0),
-    ('Elgato Stream Deck Neo (PS4 Listing)', 'https://www.gameshop.my/cdn/shop/files/ElgatoStreamDeckNeo.jpg?v=1769000000&width=533', 448.00, 'ps4', false, '2025-12-13', 0),
-    -- Note: gameshop.my no longer lists a PS4 console for sale (Sony discontinued
-    -- PS4 manufacturing in 2021). PS4 games/accessories are still actively sold.
+    
 
     -- ===================== Nintendo Switch 2 (16) =====================
     ('The Disney Afternoon Collection (Nintendo Switch 2)', 'https://www.gameshop.my/cdn/shop/files/NSW2TheDisneyAfternoonCollection.jpg?v=1780828742&width=533', 205.00, 'switch_2', false, '2026-07-05', 0),

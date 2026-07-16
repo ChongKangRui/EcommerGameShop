@@ -8,7 +8,7 @@ import About from "./pages/shop/About";
 import Login from "./pages/user/Login";
 import Register from "./pages/user/Register";
 import Shop from "./pages/shop/Shop";
-import Cart from "./pages/user/Checkout";
+import Cart from "./pages/user/Cart";
 import Product from "./pages/shop/Product";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./context/AuthProvider";
@@ -18,10 +18,12 @@ import { PrivateOnlyRoute } from "./route/PrivateOnlyRoute";
 import { AdminOnlyRoute } from "./route/AdminOnlyRoute";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminLayout from "./components/admin/AdminLayout";
-import ProductInfo from "./components/admin/product/add/ProductInfo";
+import ProductInfoForm from "./components/admin/product/add/ProductInfoForm";
 import AddProduct from "./pages/admin/AddProduct";
 import AdminProductList from "./pages/admin/AdminProductList";
 import UpdateProduct from "./pages/admin/UpdateProduct";
+import Checkout from "./pages/user/Checkout";
+import OrderConfirmation from "./pages/user/OrderConfirmation";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -59,6 +61,25 @@ function App() {
                 </PrivateOnlyRoute>
               }
             ></Route>
+
+             <Route
+              path="/checkout"
+              element={
+                <PrivateOnlyRoute>
+                  <Checkout />
+                </PrivateOnlyRoute>
+              }
+            ></Route>
+             <Route
+              path="/order-confirmation/:orderId"
+              element={
+                <PrivateOnlyRoute>
+                  <OrderConfirmation />
+                </PrivateOnlyRoute>
+              }
+            ></Route>
+
+
             {/* Login */}
             <Route
               path="/login"

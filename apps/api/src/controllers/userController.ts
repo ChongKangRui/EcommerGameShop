@@ -5,14 +5,7 @@ import {generateToken}from "../utils/jwtHelper"
 import type { AuthRequest } from 'src/middleWare/auth';
 import {registerDataSchema} from "@ecom/shared/src/registerDataSchema"
 import {loginDataSchema } from "@ecom/shared/src/loginDataSchema"
-
-type UserInfo = {
-  first_name: string,
-  last_name: string,
-  email: string,
-  address: string,
-  role: string
-}
+import {type UserInfo} from "@ecom/shared/src/type/user"
 
 function getUserData (query:any) : UserInfo{
 const { first_name, last_name, email, address, role } = query;
@@ -102,7 +95,7 @@ export const login = async (
             console.log(err.path, err.message); 
           });
           return res.status(400).json({
-            error: "Validation failed",
+            error: "Invalid email or password",
             details: validationResult.error.issues,
           });
         }
@@ -127,13 +120,13 @@ export const login = async (
         res.status(200).json({user: getUserData(selectedUser), token});
     }
     else{
-         res.status(500).json({ error: "Invalid email or password" });
+         res.status(401).json({ error: "Invalid email or password" });
     }
 
   } catch (e) {
     
     console.log(e);
-    res.status(500).json({ error: "Login failed" });
+    res.status(500).json({ error: "Invalid email or password" });
   }
 };
 

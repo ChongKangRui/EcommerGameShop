@@ -16,7 +16,11 @@ import { useState, useEffect } from "react";
 import NavBarMenuItem from "./NavBarMenuItem";
 import {productCategoryCollections} from "@/data/ProductCategoryCollections"
 
-export default function NavBarShopSheetTrigger() {
+type NavBarShopSheetTriggerProps={
+  setOuterOpen: (open:boolean)=>void;
+}
+
+export default function NavBarShopSheetTrigger({setOuterOpen}:NavBarShopSheetTriggerProps) {
   const [isDesktop, setIsDesktop] = useState(false);
 
   const [open, setOpen] = useState(false);
@@ -50,6 +54,11 @@ export default function NavBarShopSheetTrigger() {
     }
   }, [isDesktop, open]);
 
+  const setOuterAndInnerSheetOpen = (open: boolean)=>{
+    setOpen(open);
+    setOuterOpen(open);
+  }
+
   return (
     <Sheet onOpenChange={setOpen} open={open}>
       <SheetTrigger render={<Button className="bg-black hover:bg-black hover:text-red-500 text-white"> Shop By Platform</Button>} />
@@ -66,6 +75,7 @@ export default function NavBarShopSheetTrigger() {
                       key={collection.href}
                       name={collection.title}
                       link={collection.href}
+                      onClick={()=>setOuterAndInnerSheetOpen(false)}
                     />
                   ))}
          

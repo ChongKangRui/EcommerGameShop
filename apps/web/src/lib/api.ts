@@ -5,11 +5,13 @@ import axios, {
   type AxiosError,
 } from "axios";
 
+import { type ApiError } from "@ecom/shared/src/type/api";
+
 const api = axios.create({
-  baseURL:
-    import.meta.env.MODE === "production"
-      ? import.meta.env.VITE_API_URL // set this in production env
-      : "http://localhost:3000", // my local express port
+  baseURL:import.meta.env.VITE_API_URL
+    // import.meta.env.MODE === "production"
+    //   ? import.meta.env.VITE_API_URL // set this in production env
+    //   : "http://localhost:3000", // my local express port
 });
 
 // this include the jwt token everytime it sent a request to the endpoint
@@ -21,15 +23,17 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   return config;
 });
 
-// this remove the token and back to login page whenever the the status is unauthorized
 api.interceptors.response.use(
   (res: AxiosResponse) => res,
   (error: AxiosError) => {
-    // if (error.response?.status === 401) {
-    //   localStorage.removeItem("token");
-    //   window.location.href = "/login";
-    // }
-    return Promise.reject(error);
+    const message =
+  axios.isAxiosError(error) && error.response?.data
+    ? (error.response.data as { error?: string }).error || "Something went wrong"
+    : "Something went wrong";
+
+    console.log("API Error: ", message);
+
+    throw new Error(message);
   },
 );
 

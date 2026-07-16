@@ -91,6 +91,8 @@
  import { useSidebar } from "@/components/ui/sidebar";
  import { useState } from "react";
  import { useAuth } from "@/context/AuthProvider";
+ import AdminDropDown from "./AdminDropDown"
+import { useIsMobile } from "@/lib/utils";
  const menuItems = [
    { to: "/admin", icon: LayoutDashboard, label: "Dashboard" },
    { to: "/admin/products", icon: Package, label: "View Products" },
@@ -105,8 +107,8 @@ type collapseState = {
 
  export function AdminSideBar({isCollapsed, setIsCollapsed}: collapseState) {
    //const [isCollapsed, setIsCollapsed] = useState(false);
-   const {user} = useAuth();
-   
+
+   const isMobile = useIsMobile();
 
    return (
      <div
@@ -140,6 +142,7 @@ type collapseState = {
              className="flex items-center gap-3 px-2 py-2 rounded-md
                         hover:bg-zinc-800 text-zinc-300 hover:text-white
                         transition-colors"
+              onClick={()=> setIsCollapsed(!isCollapsed && isMobile)}
            >
              <Icon className="shrink-0 h-5 w-5" />
              {!isCollapsed && <span className="truncate text-sm">{label}</span>}
@@ -148,8 +151,9 @@ type collapseState = {
        </div>
        {/* footer */}
        <div className="flex py-5 px-4 rounded shrink-0">
-         <User className="shrink-0 h-5 w-5" />
-         {!isCollapsed && <span className="truncate text-sm ms-5">{user?.first_name} {user?.last_name}</span>}
+        <AdminDropDown isCollapsed={isCollapsed}></AdminDropDown>
+         {/* <User className="shrink-0 h-5 w-5" />
+         {!isCollapsed && <span className="truncate text-sm ms-5">{user?.first_name} {user?.last_name}</span>} */}
        </div>
      </div>
    );

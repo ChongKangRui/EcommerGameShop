@@ -15,12 +15,17 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthProvider";
 import { flashMessage_Failed } from "@/lib/flash";
-
+import type { ApiError } from "@ecom/shared/src/type/api";
+import { useCart } from "@/hooks/useCart";
+import { useGuestCartStore } from "@/components/cart/GuestCartStore";
+import type { UserLoginRespawn } from "@ecom/shared/src/type/user";
 
 export default function Register() {
   const {
     register,
     handleSubmit,
+    setValue,
+    reset,
     formState: { errors },
   } = useForm<LoginData>({
     resolver: zodResolver(loginDataSchema),
@@ -30,27 +35,48 @@ export default function Register() {
   const loginMutation = useLogin();
   const [disableInput, setDisableInput] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const {login} = useAuth();
+  const { setToken, setUser } = useAuth();
+  const { migrateItem } = useCart();
+  const { items } = useGuestCartStore();
 
   const handleLogin = (data: FieldValues) => {
     console.log("UserLoginInfo", data);
 
     setDisableInput(true);
-    loginMutation.mutate({...data, rememberMe}, {
-      onSuccess: (res: any) => {
-    
-        console.log(res.user);
-         login(res.token, res.user);
-       
+    loginMutation.mutate(
+      { ...data, rememberMe },
+      {
+        onSuccess: (res: UserLoginRespawn) => {
+          //console.log(res.user);
+          setToken(res.token);
+          // put migrate cart item in between of setToken
+          // but not yet grant the authentication state
+          // prevent the cart items double fetch
+          migrateItem(items);
+          setUser(res.user);
+          //migrateItem(items);
+        },
+        onError: (error: Error) => {
+          console.log("Error", error);
+          setDisableInput(false);
+          flashMessage_Failed(error.message);
+        },
       },
-      onError: (error) => {
-        console.log("Error", error.message);
-        // console.error(error.message);
-        setDisableInput(false);
-        flashMessage_Failed(loginMutation.error?.message || "Something went wrong");
-      },
-    });
+    );
+
   };
+
+  const fillInCustomerCredential = ()=>{
+     setValue("email", "abc@gmail.com", {shouldValidate: true});
+     setValue("password", "abcABC123", {shouldValidate: true, shouldDirty: true});
+    
+  }
+
+  const fillInAdminCredential = ()=>{
+    setValue("email", "admin@gmail.com", {shouldValidate: true});
+    setValue("password", "Admin12345", {shouldValidate: true, shouldDirty: true});
+  }
+
 
   return (
     <div className="flex items-center justify-center min-h-screen">
@@ -77,14 +103,24 @@ export default function Register() {
           </div>
 
           {/* Submit */}
-          <div className="text-center mt-10">
-            <div className="flex items-center justify-center my-5 gap-3">
-              <Switch id="rememberMe" onCheckedChange={setRememberMe} />
-              <Label htmlFor="rememberMe">Remember Me</Label>
+          <div className="flex flex-col gap-5">
+            <div className="text-center mt-10">
+              <div className="flex items-center justify-center my-5 gap-3">
+                <Switch id="rememberMe" onCheckedChange={setRememberMe} />
+                <Label htmlFor="rememberMe">Remember Me</Label>
+              </div>
+              <Button className="cursor-pointer" type="submit">
+                {loginMutation.isPending ? "Logging in..." : "Login"}
+              </Button>
             </div>
-            <Button className="cursor-pointer" type="submit">
-              {loginMutation.isPending ? "Logging in..." : "Login"}
-            </Button>
+            <div className="flex justify-center md:gap-5">
+              <Button className="cursor-pointer bg-green-500" onClick={()=>{fillInCustomerCredential()}}>
+                Fill customer demo
+              </Button>
+              <Button className="cursor-pointer bg-yellow-500" onClick={()=>{fillInAdminCredential()}}>
+                Fill admin demo
+              </Button>
+            </div>
           </div>
 
           {/* error message */}

@@ -5,22 +5,22 @@ export const productCategoryCollections: { title: string; href: string }[] = [
   },
   {
     title: "Switch 2",
-    href: "/collections/switch-2",
+    href: "/collections?filter=switch_2",
   },
   {
     title: "Switch",
-    href: "/collections/switch",
+    href: "/collections?filter=switch",
   },
   {
     title: "PlayStation 4",
-    href: "/collections/playstation-4",
+    href: "/collections?filter=ps4",
   },
   {
     title: "PlayStation 5",
-    href: "/collections/playstatis-5",
+    href: "/collections?filter=ps5",
   },
   {
     title: "Xbox",
-    href: "/collections/xbox",
+    href: "/collections?filter=xbox",
   },
 ];

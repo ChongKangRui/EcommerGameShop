@@ -21,7 +21,7 @@ import {
 export default function NavBarUserDropDown() {
 
 const {isAuthenticated, user, logout} = useAuth();
-
+console.log(user);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -42,8 +42,11 @@ const {isAuthenticated, user, logout} = useAuth();
           <div>
             <NavBarUserDropDownItem name="Profile" link="/profile"></NavBarUserDropDownItem>
             {/* <NavBarUserDropDownItem name="Settings" link="/"></NavBarUserDropDownItem> */}
+           <NavBarUserDropDownItem name="Order" link="/order"></NavBarUserDropDownItem>
             <NavBarUserDropDownItem name="Logout" link="/" onClick={logout}></NavBarUserDropDownItem>
-          </div>:
+          
+          </div>
+          :
           <div>
              <NavBarUserDropDownItem name="Login" link="/login"></NavBarUserDropDownItem>
           <NavBarUserDropDownItem name="Register" link="/register"></NavBarUserDropDownItem>

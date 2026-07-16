@@ -3,35 +3,31 @@ import api from "../lib/api";
 import type { AxiosError } from "axios";
 import { type ChildrenOnlyProps } from "@/components/CommonType";
 import { useNavigate } from "react-router";
+import {type UserInfo} from "@ecom/shared/src/type/user"
 
-type UserType = {
-  first_name: string;
-  last_name: string;
-  email: string;
-  address: string;
-  role: string;
-
-};
 
 type AuthContextType = {
-  user: UserType | null;
+  user: UserInfo | null;
 
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (token: string, user: UserType) => void;
+ // login: (token: string, user: UserType) => void;
+ setToken: (token: string)=>void;
+ setUser: (user: UserInfo) => void;
+
   logout: () => void;
 };
 
 const AuthContext = createContext<AuthContextType>(null!);
 
 export function AuthProvider({ children }: ChildrenOnlyProps) {
-  const [user, setUser] = useState<UserType | null>(null);
+  const [user, setUser] = useState<UserInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   //const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log("Authenticatiing");
+    //console.log("Authenticatiing");
     if (!token) {
       setIsLoading(false);
       return;
@@ -42,7 +38,7 @@ export function AuthProvider({ children }: ChildrenOnlyProps) {
       .get("/auth/verify")
       .then((res) => {
         setUser(res.data.user);
-        console.log(res.data.user);
+       // console.log(res.data.user);
       })
       .catch((err: AxiosError) => {
         localStorage.removeItem("token");
@@ -50,11 +46,17 @@ export function AuthProvider({ children }: ChildrenOnlyProps) {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const login = (token: string, userData: UserType) => {
+  const setToken = (token: string)=>{
     localStorage.setItem("token", token);
-    setUser(userData);
-    console.log(JSON.stringify(userData));
-  };
+  }
+
+
+
+  // const login = (token: string, userData: UserType) => {
+  //   localStorage.setItem("token", token);
+  //   setUser(userData);
+  //  // console.log(JSON.stringify(userData));
+  // };
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -65,7 +67,7 @@ export function AuthProvider({ children }: ChildrenOnlyProps) {
 
   return (
     <AuthContext.Provider
-      value={{ user, isLoading, isAuthenticated: user !== null, login, logout }}
+      value={{ user, isLoading, isAuthenticated: user !== null,setUser, setToken, logout }}
     >
       {children}
     </AuthContext.Provider>

@@ -13,11 +13,16 @@ import {
 type ShopItemProps = {
   id: number,
   productName: string;
-  price: number;
+  discountedPrice: number;
+  originalPrice: number;
   soldOut: boolean;
+  image_url: string;
+  
 };
 
-export function ShopItemCard({id, productName, price, soldOut }: ShopItemProps) {
+export function ShopItemCard({id, productName, discountedPrice, soldOut, image_url, originalPrice }: ShopItemProps) {
+
+const hasDiscount = discountedPrice < originalPrice;
   return (
     <Link to={`/collections/${id}`}>
       <Card size="sm" className="mx-auto w-full max-w-xs overflow-hidden p-0 ">
@@ -35,7 +40,7 @@ export function ShopItemCard({id, productName, price, soldOut }: ShopItemProps) 
           {/* Image - fills the CardHeader space */}
           <div className="relative aspect-square w-full bg-muted">
             <img
-              src="https://m.media-amazon.com/images/I/616X8zng9wS.jpg"
+              src={image_url}
               alt={productName}
               className="absolute inset-0 h-full w-full object-cover"
             />
@@ -49,9 +54,15 @@ export function ShopItemCard({id, productName, price, soldOut }: ShopItemProps) 
           </h3>
 
           {/* Price - bottom of footer */}
-          <p className="text-xs font-semibold text-muted-foreground">
-            RM {price}
+          <div className="flex w-full text-xs font-semibold text-muted-foreground">
+             RM
+             <p className={`${hasDiscount && "line-through"}`}>
+            {originalPrice}
           </p>
+           {hasDiscount && <p className='text-xs font-semibold text-black italic ms-1'>{discountedPrice}</p>}
+          </div>
+          
+         
         </CardFooter>
       </Card>
     </Link>

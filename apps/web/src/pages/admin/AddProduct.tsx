@@ -3,22 +3,22 @@ import { useForm, type FieldValues, useFieldArray } from "react-hook-form";
 import { Button } from "../../components/ui/button";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useAddProduct } from "@/hooks/useProduct";
+import { useAddProductMutation } from "@/hooks/useProduct";
 
 import { useState, useEffect } from "react";
-import ProductInfo from "@/components/admin/product/add/ProductInfo";
+import ProductInfoForm from "@/components/admin/product/add/ProductInfoForm";
 import ProductVariations from "@/components/admin/product/add/ProductVariations";
 import {
   productSchema,
   type ProductFormData,
 } from "@ecom/shared/src/productSchema";
-import { flashMessage_Success } from "@/lib/flash";
+import { flashMessage_Failed, flashMessage_Success } from "@/lib/flash";
 
 import ProductForm from "@/components/admin/product/add/ProductForm";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function AddProduct() {
-  const mutation = useAddProduct();
+  const mutation = useAddProductMutation();
 const queryClient = useQueryClient();
 
   return (
@@ -34,9 +34,13 @@ const queryClient = useQueryClient();
           mutation.mutate(data, {
             onSuccess: (res) => {
               //invalidate the product list queries
-             queryClient.invalidateQueries({queryKey: ["admin", "products"]})
+             queryClient.invalidateQueries({queryKey: ["products"]})
               flashMessage_Success(res.message);
             },
+            onError: (err)=>{
+              flashMessage_Failed("Invalid action");
+                
+            }
           })
         }
       ></ProductForm>

@@ -13,19 +13,23 @@ interface FormFieldProps {
   id: string;
   label: string;
   className?:string;
+  inputClassname?: string;
   type?: string;
   placeholder?: string;
   step?:number;
   required?: boolean;
   disabled?: boolean;
   error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>> | undefined;
-  register: UseFormRegisterReturn;
+  register?: UseFormRegisterReturn;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement> )=>void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>)=> void
 }
 
 export default function FormField({
   id,
   label,
   className,
+  inputClassname,
   type = "text",
   placeholder,
   step,
@@ -33,6 +37,8 @@ export default function FormField({
   disabled = false,
   error,
   register,
+  onChange,
+  onKeyDown
 }: FormFieldProps) {
   return (
     <Field className={className}>
@@ -45,7 +51,10 @@ export default function FormField({
         disabled={disabled}
         step={step}
         placeholder={placeholder}
+         className={inputClassname}
+         onChange={onChange}
         {...register}
+       onKeyDown={onKeyDown}
       />
       {error && (
         <p className="text-destructive text-sm mt-1">

@@ -1,74 +1,62 @@
-import CartContent from "@/components/checkout/CartContent";
-import { Button } from "../../components/ui/button";
-import { useState } from "react";
-import CartProduct from "../../components/checkout/CartProduct";
-import { useCartStore } from "../../components/checkout/CartStore";
+import { useEffect, useRef } from "react";
+import { Elements } from "@stripe/react-stripe-js";
+import { Link } from "react-router";
+import { loadStripe } from "@stripe/stripe-js";
 
-export default function Cart() {
-  const [totalPrice, setTotalPrice] = useState(0);
+import Loading from "@/components/Loading";
 
-  const addTotalPrice = (n: number)=>{
-    setTotalPrice(totalPrice + n);
-  }
+import CheckoutForm from "@/components/checkout/CheckoutForm";
+import { useCheckout } from "@/hooks/useCheckout";
+import { useQueryClient } from "@tanstack/react-query";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
+
+export default function Checkout() {
+  console.log(stripePromise);
+  const { initCheckout } = useCheckout();
+  const hasInitiated = useRef(false);
+  const queryClient = useQueryClient();
+
+  // why use the useRef? as far as I know, strict mode in react will causing mount twice
+  // useRef will prevent it from render twice since changing it doesnt cause rerender
+  useEffect(() => {
+    if (hasInitiated.current) return;
+    hasInitiated.current = true;
+    initCheckout.mutate();
+  }, []);
+
+  
 
   return (
-    <div className="ms-10 md:mx-10 md:ms-40">
-      <h1 className="text-5xl py-5">Your cart</h1>
-
-      {/* cart category */}
-      <div className="grid grid-cols-8 mb-10">
-        <h1 className="col-span-6 md:col-span-4">Product</h1>
-        <h1 className="hidden md:block md:col-span-2">Quantity</h1>
-        <h1 className="col-span-2">Total</h1>
-      </div>
-
-      {/* cart category, later replace with actual product array mapping */}
-      <div className="">
-        <CartProduct
-          price={1500}
-          addTotalPrice={addTotalPrice}
-          q={1}
-          productName="Productdsasdas"
-        ></CartProduct>
-        <hr className="mt-5" />
-        <CartProduct
-          price={1500}
-           addTotalPrice={addTotalPrice}
-          q={1}
-          productName=" Product "
-        ></CartProduct>
-        <hr className="mt-5" />
-        <CartProduct
-          price={1500}
-           addTotalPrice={addTotalPrice}
-          q={1}
-          productName=" Product "
-        ></CartProduct>
-        <hr className="mt-5" />
-        <CartProduct
-          price={1500}
-           addTotalPrice={addTotalPrice}
-          q={1}
-          productName=" Product titl dsad ae "
-        ></CartProduct>
-        <hr className="mt-5" />
-        <CartProduct
-          price={1500}
-           addTotalPrice={addTotalPrice}
-          q={1}
-          productName="Product titl dsad ae ssadasssssssss sassssssssss "
-        ></CartProduct>
-        <hr className="mt-5" />
-      </div>
-
-      <div className="text-center md:text-end md:w-8/10">
-        <div className="flex justify-center md:justify-end items-center gap-4 ">
-          <h1 className="text-sm md:text-md">Estimated total </h1>
-          <h1 className="text-md md:text-xl">RM{totalPrice}</h1>
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="w-full max-w-5xl px-4">
+        {/* Title */}
+        <div className="block md:block text-center mb-5 md:-mt-15 md:mb-13">
+          <Link className="text-5xl font-bitcount" to={"/"}>
+            {"Redfield Gaming"}
+          </Link>
+          <h2 className="text-2xl font-bitcount mt-5">Checkout</h2>
         </div>
 
-        <p className="text-sm text-gray-600">Taxes and shipping calculated at checkout</p>
-        <Button className="rounded-2xl my-2">Checkout</Button>
+        {initCheckout.isPending && <Loading></Loading>}
+
+        {initCheckout.isError && (
+          <p className="text-center text-destructive mt-4">
+            {initCheckout.error?.message || "Unable to start checkout"}
+          </p>
+        )}
+
+        {initCheckout.data?.clientSecret && (
+          <Elements
+            stripe={stripePromise}
+            options={{
+              clientSecret: initCheckout.data.clientSecret,
+              
+            }}
+          >
+            <CheckoutForm orderId={initCheckout.data?.orderId}/>
+          </Elements>
+        )}
       </div>
     </div>
   );

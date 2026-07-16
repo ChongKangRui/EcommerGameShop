@@ -97,48 +97,13 @@ export default function ProductVariations({
         required={true}
       />
 
-      {/* Image */}
-
-      {/* <Field className="col-span-2 md:col-span-1">
-        <FieldLabel htmlFor="picture">
-          Picture <span className="text-destructive">*</span>{" "}
-        </FieldLabel>
-        <Input
-          id="picture"
-          type="file"
-          disabled={disableInput}
-          accept="image/jpeg,image/png,image/webp"
-          className="hidden"
-          //onClick={()=>setImage(index, undefined)}
-          onChange={(e) => {
-            
-            const file = e.target.files?.[0];
-            console.log(e.currentTarget.files);
-            if (file) {
-              setImage(index, file);
-            }
-          }}
-         
-        />
-
-        
-
-        {image_url === "" && <FieldDescription>Select a picture to upload.</FieldDescription> }
-        {image_url !== "" && <img src={image_url} />}
-        {variationErrors?.[index]?.image && (
-          <p className="text-destructive text-sm mt-1">
-            {variationErrors?.[index]?.image.message as string}
-          </p>
-        )}
-        
-      </Field> */}
 
       <Field className="col-span-2 md:col-span-1">
         <FieldLabel htmlFor={`picture-${index}`}>
           Picture <span className="text-destructive">*</span>
         </FieldLabel>
 
-        {/* Hidden real input */}
+        {/* Hidden real input after image */}
         <input
           id={`picture-${index}`}
           type="file"
@@ -152,7 +117,7 @@ export default function ProductVariations({
           }}
         />
 
-        {/* Custom clickable label */}
+        {/* Custom clickable image input label, bind with htmlFor */}
         <label htmlFor={`picture-${index}`} className="cursor-pointer block">
           {image_url ? (
             <img

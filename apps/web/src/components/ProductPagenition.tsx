@@ -13,12 +13,14 @@ type PaginationProps = {
   activePage: number;      
   totalPages: number;       
   onPageChange: (page: number) => void;
+  className?: string
 };
 
 export function ProductPagination({
   activePage,
   totalPages,
   onPageChange,
+  className
 }: PaginationProps) {
 
   // generate which page numbers to show
@@ -46,7 +48,7 @@ export function ProductPagination({
   const pageNumbers = getPageNumbers();
 
   return (
-    <Pagination>
+    <Pagination className={className}>
       <PaginationContent>
         {/* Previous button */}
         

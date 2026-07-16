@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useDebounce } from './useDebounce';
-import { useGetProducts } from '@/hooks/useProduct';
+import { useProductsQuery } from '@/hooks/useProduct';
 
 interface UseProductSearchOptions {
   limit?: number;
@@ -46,7 +46,7 @@ export function useProductSearch(options: UseProductSearchOptions = {}) {
   }, [debouncedSearch, urlSearch, setSearchParams]);
 
   // 4. Fetch Data
-  const { data, isLoading, isError,error, refetch } = useGetProducts({
+  const { data, isLoading, isError, isSuccess,error, refetch } = useProductsQuery({
     limit,
     offset: pageIndex * limit,
     sortBy: sort,
@@ -88,17 +88,16 @@ export function useProductSearch(options: UseProductSearchOptions = {}) {
 
   // 7. Return Grouped Values - Clean and intuitive
   return {
-    // 📦 Data
     data: {
       products,
       totalCount,
       isLoading,
+      isSuccess,
       isError,
       error: error?.message,
       refetch,
     },
 
-    // 🔍 Search
     search: {
       value: searchInput,
       debounced: debouncedSearch,
@@ -106,7 +105,6 @@ export function useProductSearch(options: UseProductSearchOptions = {}) {
       clear: () => setSearchInput(''),
     },
 
-    // 🎯 Filters
     filters: {
       sort,
       filter,
@@ -116,7 +114,7 @@ export function useProductSearch(options: UseProductSearchOptions = {}) {
       reset: resetAll,
     },
 
-    // 📄 Pagination
+  
     pagination: {
       currentPage: pageIndex,
       totalPages,

@@ -13,25 +13,25 @@ import {
 interface DataTableProps<TData> {
   table: TanStackTable<TData>;
   columnsLength: number;
-  colWidths?: string[];
+  
 }
 
-export function DataTable<TData>({ table, columnsLength, colWidths  }: DataTableProps<TData>) {
+export function DataTable<TData>({ table, columnsLength  }: DataTableProps<TData>) {
   return (
     <div className="overflow-hidden rounded-md border">
       <Table className="w-full table-fixed ">
-         {colWidths && (
+         {/* {colClassName && (
           <colgroup>
-            {colWidths.map((width, i) => (
-              <col key={i} className={width} />
+            {colClassName.map((width) => (
+              <col key={i}  />
             ))}
           </colgroup>
-        )}
+        )} */}
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <TableHead key={header.id}>
+                <TableHead key={header.id} className={(header.column.columnDef as any).meta?.className}>
                   {header.isPlaceholder
                     ? null
                     : flexRender(header.column.columnDef.header, header.getContext())}

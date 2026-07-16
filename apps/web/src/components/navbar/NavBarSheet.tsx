@@ -45,7 +45,7 @@ export default function NavBarSheet() {
 
     // Cleanup, run only after unmounted
     return () => {
-    console.log("Clear event listener?");
+    //console.log("Clear event listener?");
       media.removeEventListener("change", listener);
     };
   }, []);
@@ -70,7 +70,7 @@ export default function NavBarSheet() {
         <div className="grid flex-1 auto-rows-min gap-6 px-4 justify-start">
            
           <NavBarMenuItem name="Home" link="/" onClick={()=>setOpen(false)} />
-          <NavBarShopSheetTrigger/>
+          <NavBarShopSheetTrigger setOuterOpen={setOpen} />
           <NavBarMenuItem name="About" link="/about" onClick={()=>setOpen(false)} />
 
           {
