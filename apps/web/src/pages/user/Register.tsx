@@ -78,10 +78,12 @@ export default function Register() {
 
           {/* Submit */}
           <div className="text-center mt-10">
-            <p className="text-[12px] my-2">
+            <p className="text-[15px] my-2">
               By continuing, you agree to our <TermOfService />
             </p>
-
+           
+                <p className="text-[12px] underline cursor-pointer my-2" onClick={()=>navigate("/login")}>Already have an account?</p>
+             
             <Button
               className="cursor-pointer"
               type="submit"

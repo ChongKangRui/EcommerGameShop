@@ -2,8 +2,8 @@ import { useForm, type FieldValues, useFieldArray } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
-import ProductInfoForm from "@/components/admin/product/add/ProductInfoForm";
-import ProductVariations from "@/components/admin/product/add/ProductVariations";
+import ProductInfoForm from "@/components/admin/product/ProductInfoForm";
+import ProductVariations from "@/components/admin/product/ProductVariations";
 import { PopupDialogue } from "@/components/PopupDialogue";
 import {
   productSchema,
@@ -39,6 +39,7 @@ const defaultProductValues: ProductFormData = {
   type: "switch",
   release_date: getTodayDateString(),
   push_home_page: false,
+  is_active: true,
   description: "",
   discount_percentage: 0,
   variations: [
@@ -58,9 +59,7 @@ export default function ProductForm({
   defaultValues = defaultProductValues,
   onSubmit,
   isPending,
-  isError,
   resetForm,
-  errorMessage,
   showDeleteButton = false,
   onDeleteMutation,
   onDeleteCallback
@@ -144,6 +143,7 @@ export default function ProductForm({
     });
   };
 
+
   /////////////////////////////////////////////////////////////////////////
   //setImage will handle the generation of image url to show the selected image for admin
   /////////////////////////////////////////////////////////////////////////
@@ -207,6 +207,7 @@ export default function ProductForm({
                 disableInput={isPending}
                 defaultProductType={watch("type")}
                 setProductType={setProductType}
+               
               />
               {fields.map((field, index) => (
                 <ProductVariations

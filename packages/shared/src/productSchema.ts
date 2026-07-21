@@ -44,6 +44,7 @@ export const productVariationSchema = z
      type: productTypeEnum,
      release_date: z.string().min(1, "Release date is required"), 
      push_home_page: z.boolean(),
+     is_active: z.boolean(),
      discount_percentage: z
        .number()
        .min(0, "Discount cannot be negative")

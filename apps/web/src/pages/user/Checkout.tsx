@@ -6,14 +6,14 @@ import { loadStripe } from "@stripe/stripe-js";
 import Loading from "@/components/Loading";
 
 import CheckoutForm from "@/components/checkout/CheckoutForm";
-import { useCheckout } from "@/hooks/useCheckout";
+import { useInitCheckout } from "@/hooks/useCheckout";
 import { useQueryClient } from "@tanstack/react-query";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 export default function Checkout() {
   console.log(stripePromise);
-  const { initCheckout } = useCheckout();
+  const initCheckout = useInitCheckout();
   const hasInitiated = useRef(false);
   const queryClient = useQueryClient();
 
@@ -22,10 +22,13 @@ export default function Checkout() {
   useEffect(() => {
     if (hasInitiated.current) return;
     hasInitiated.current = true;
-    initCheckout.mutate();
+    initCheckout.mutate(undefined, {
+      onError: (err) => {
+        hasInitiated.current = false; // allow retry
+        console.log(err);
+      },
+    });
   }, []);
-
-  
 
   return (
     <div className="flex items-center justify-center min-h-screen">
@@ -41,9 +44,14 @@ export default function Checkout() {
         {initCheckout.isPending && <Loading></Loading>}
 
         {initCheckout.isError && (
-          <p className="text-center text-destructive mt-4">
+          <div className="text-center text-destructive mt-4">
+             <p>
             {initCheckout.error?.message || "Unable to start checkout"}
           </p>
+            <p>Please try refresh the page or contact the support.</p>
+          </div>
+         
+          
         )}
 
         {initCheckout.data?.clientSecret && (
@@ -51,10 +59,9 @@ export default function Checkout() {
             stripe={stripePromise}
             options={{
               clientSecret: initCheckout.data.clientSecret,
-              
             }}
           >
-            <CheckoutForm orderId={initCheckout.data?.orderId}/>
+            <CheckoutForm orderId={initCheckout.data?.orderId} />
           </Elements>
         )}
       </div>

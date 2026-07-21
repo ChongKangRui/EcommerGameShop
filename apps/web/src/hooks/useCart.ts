@@ -4,7 +4,7 @@ import {
   useQuery,
   type UseQueryResult,
 } from "@tanstack/react-query";
-import { useGuestCartStore } from "../components/cart/GuestCartStore";
+import { useGuestCartStore } from "./useGuestCartStore";
 import { useAuth } from "@/context/AuthProvider";
 import type {
   CartItem,
@@ -16,9 +16,9 @@ import { flashMessage_Failed, flashMessage_Success } from "@/lib/flash";
 
 export interface CartApi {
   items: CartItemResponse[];
-  adjusted: boolean;
+  //adjusted: boolean;
   addItem: (item: CartItem) => void;
-  clearAdjustedNotification: () => void;
+  //clearAdjustedNotification: () => void;
   migrateItem: (item: CartItem[]) => void;
   updateItem: (item: CartItem) => void;
   removeItem: (variation_id: string) => void;
@@ -51,9 +51,9 @@ export const useCart = (): CartApi => {
       const { data } = await api.post<CartItemsResponse>("/cart/guest", {
         cartItems: guestItems,
       });
-if (data.adjusted) {
-      updateLocalCartstorage(data);
-}
+      if (data.adjusted) {
+        updateLocalCartstorage(data);
+      }
 
       return data;
     },
@@ -68,27 +68,27 @@ if (data.adjusted) {
 
       //if (data.adjusted) {
       updateLocalCartstorage(data);
-     // }
-
+      // }
+      
       return data;
     },
 
     enabled: isAuthenticated && !!user && !isAuthLoading,
   });
 
-  const clearAdjustedNotification = () => {
-    if (isAuthenticated) {
-      queryClient.setQueryData(["cart", "user"], (old: CartItemsResponse) => ({
-        ...old,
-        adjusted: false,
-      }));
-    } else {
-      queryClient.setQueryData(["cart", "guest"], (old: CartItemsResponse) => ({
-        ...old,
-        adjusted: false,
-      }));
-    }
-  };
+  // const clearAdjustedNotification = () => {
+  //   if (isAuthenticated) {
+  //     queryClient.setQueryData(["cart", "user"], (old: CartItemsResponse) => ({
+  //       ...old,
+  //       adjusted: false,
+  //     }));
+  //   } else {
+  //     queryClient.setQueryData(["cart", "guest"], (old: CartItemsResponse) => ({
+  //       ...old,
+  //       adjusted: false,
+  //     }));
+  //   }
+  // };
 
   // migrate guest cart to user cart db
   const migrateLocalCartMutation = useMutation({
@@ -119,12 +119,15 @@ if (data.adjusted) {
     onSuccess: (updated: CartItemsResponse) => {
       queryClient.setQueryData(["cart", "user"], updated);
     },
+    onError: (err)=>{
+      queryClient.invalidateQueries({queryKey: ["cart"]});
+      flashMessage_Failed(err.message);
+    }
   });
 
   // Remove item mutation
   const removeItemMutation = useMutation({
-    mutationFn: (variationId: string) =>
-      api.delete(`/cart/me/${variationId}`),
+    mutationFn: (variationId: string) => api.delete(`/cart/me/${variationId}`),
     onMutate: async (variationId) => {
       await queryClient.cancelQueries({ queryKey: ["cart", "user"] });
       const previous = queryClient.getQueryData<CartItemsResponse>([
@@ -149,9 +152,9 @@ if (data.adjusted) {
     ? (serverQuery.data?.cartItems ?? [])
     : (guestQuery.data?.cartItems ?? []);
 
-  const adjusted = isAuthenticated
-    ? (serverQuery.data?.adjusted ?? false)
-    : (guestQuery.data?.adjusted ?? false);
+  // const adjusted = isAuthenticated
+  //   ? (serverQuery.data?.adjusted ?? false)
+  //   : (guestQuery.data?.adjusted ?? false);
 
   // Combined states
   const isLoading =
@@ -221,8 +224,8 @@ if (data.adjusted) {
 
   return {
     items,
-    adjusted,
-    clearAdjustedNotification,
+    //adjusted,
+    //clearAdjustedNotification,
     addItem,
     updateItem,
     removeItem,

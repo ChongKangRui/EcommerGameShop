@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
-import { pool } from "../db";
+import { pool } from "../db/db";
 import {generateToken}from "../utils/jwtHelper"
 import type { AuthRequest } from 'src/middleWare/auth';
 import {registerDataSchema} from "@ecom/shared/src/registerDataSchema"

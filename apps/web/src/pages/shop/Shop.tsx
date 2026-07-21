@@ -5,8 +5,8 @@ import { Input } from "@/components/ui/input";
 import { useProductSearch } from "@/hooks/useProductSearch";
 import { flashMessage_Failed } from "@/lib/flash";
 import { useNavigate } from "react-router";
-import FilterSortingSelection from "@/components/shop/FilterSortingSelection";
-import { sortOptions, type Product } from "@ecom/shared/src/type/product";
+import FilterSortingSelection from "@/components/table/FilterSortingSelection";
+import { productFilterOptions, sortProductOptions, type Product } from "@ecom/shared/src/type/product";
 import { ProductPagination } from "@/components/ProductPagenition";
 import { Loader2 } from "lucide-react";
 
@@ -38,8 +38,9 @@ export default function Shop() {
           <FilterSortingSelection
             className="mt-5 md:gap-10 md:mt-0"
             currentSort={filters.sort}
-            sortOptions={sortOptions}
+            sortOptions={sortProductOptions}
             currentFilter={filters.filter}
+            filterOptions={productFilterOptions}
             updateFilter={filters.updateFilter}
             updateSort={filters.updateSort}
           ></FilterSortingSelection>

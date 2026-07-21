@@ -9,7 +9,7 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 
-import { Button } from "../../../ui/button";
+import { Button } from "../../ui/button";
 
 import { Heading1, Trash2 } from "lucide-react";
 

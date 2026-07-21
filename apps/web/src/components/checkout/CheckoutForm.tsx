@@ -3,7 +3,6 @@ import ReactDOM from "react-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   PaymentElement,
-  Elements,
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
@@ -11,7 +10,7 @@ import OrderSummary from "@/components/checkout/OrderSummary";
 
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthProvider";
-import { replace, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { useCart } from "@/hooks/useCart";
 import Loading from "../Loading";
 
@@ -85,7 +84,7 @@ export default function CheckoutForm({orderId} : CheckoutFormProp) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="flex flex-col md:flex-row md:gap-12 justify-center items-start">
+      <div className="flex flex-col items-center justify-center  md:flex-row md:gap-12  md:items-start">
         {/* Payment details */}
         <div className="max-w-sm w-full md:w-1/2">
           <h2 className="text-2xl font-bitcount mb-5">Payment details</h2>

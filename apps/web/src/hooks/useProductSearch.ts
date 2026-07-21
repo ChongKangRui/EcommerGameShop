@@ -8,6 +8,7 @@ interface UseProductSearchOptions {
   limit?: number;
   defaultSort?: string;
   defaultFilter?: string;
+  showNonActive?:boolean;
 }
 
 export function useProductSearch(options: UseProductSearchOptions = {}) {
@@ -15,9 +16,9 @@ export function useProductSearch(options: UseProductSearchOptions = {}) {
     limit = 20,
     defaultSort = 'release_date:desc',
     defaultFilter = 'all',
+    showNonActive = false
   } = options;
 
-  // 1. URL State - Simple and readable
   const [searchParams, setSearchParams] = useSearchParams();
   
   const pageIndex = Number(searchParams.get('page') ?? 0);
@@ -28,6 +29,7 @@ export function useProductSearch(options: UseProductSearchOptions = {}) {
   // 2. Search State with Debounce
   const [searchInput, setSearchInput] = useState(urlSearch);
   const debouncedSearch = useDebounce(searchInput, 700);
+
 
   // 3. Sync search to URL
   useEffect(() => {
@@ -52,6 +54,7 @@ export function useProductSearch(options: UseProductSearchOptions = {}) {
     sortBy: sort,
     filterBy: filter,
     search: debouncedSearch,
+    showNonActive: showNonActive
   });
 
   // 5. Helper Functions

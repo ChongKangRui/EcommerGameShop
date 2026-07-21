@@ -12,3 +12,7 @@ export const logger = {
     console.debug(`[DEBUG] ${new Date().toISOString()} - ${message}`, meta || '');
   }
 };
+
+export const generateLogId = () : string=>{
+    return Math.random().toString(36).substring(7)
+}

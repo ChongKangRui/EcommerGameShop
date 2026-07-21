@@ -1,19 +1,14 @@
-import { useMutation, useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { type FieldValues } from "react-hook-form";
 import api from "@/lib/api";
-import axios from "axios";
+
 import {
   type ProductsResponse,
   type ProductResponse,
 } from "@ecom/shared/src/type/product";
+import {type SearchQueryParams}from "@ecom/shared/src/type/search";
+import { useAuth } from "@/context/AuthProvider";
 
-type GetProductsParams = {
-  limit?: number;
-  offset?: number;
-  sortBy?: string;
-  filterBy?: string;
-  search?: string;
-};
 
 function getFormData(data: FieldValues): FormData {
   const formData = new FormData();
@@ -74,7 +69,9 @@ export function useProductsQuery({
   sortBy,
   filterBy,
   search,
-}: GetProductsParams) {
+  showNonActive
+}: SearchQueryParams) {
+  const {user} = useAuth();
   return useQuery({
     queryKey: ["products", limit, offset, sortBy, filterBy, search],
     queryFn: async () => {
@@ -84,9 +81,11 @@ export function useProductsQuery({
       if (sortBy) params.set("sortBy", sortBy);
       if (filterBy) params.set("filterBy", filterBy);
       if (search) params.set("search", search);
+      params.set("showNonActive", showNonActive ? "true" : "false");
 
+      console.log(params.toString());
       const { data } = await api.get<ProductsResponse>(
-        `/products?${params.toString()}`,
+        user?.role === 'admin' ? `/admin/products?${params.toString()}`  : `/products?${params.toString()}`,
       );
       //console.log(data);
       return data;
@@ -157,6 +156,21 @@ export function useBulkProductPromoteMutation() {
     }) => {
       const res = await api.patch(`/admin/products/promote`, {
         data: { productIds: params.productIds, promote: params.promote },
+      });
+      return res.data;
+    },
+  });
+}
+
+
+export function useBulkProductActiveMutation() {
+  return useMutation({
+    mutationFn: async (params: {
+      productIds: number[];
+      active: boolean;
+    }) => {
+      const res = await api.patch(`/admin/products/active`, {
+        data: { productIds: params.productIds, active: params.active },
       });
       return res.data;
     },

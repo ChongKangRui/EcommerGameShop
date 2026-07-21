@@ -4,7 +4,7 @@ import {
   useUpdateProductMutation,
 } from "@/hooks/useProduct";
 
-import ProductForm from "@/components/admin/product/add/ProductForm";
+import ProductForm from "@/components/admin/product/ProductForm";
 import { useNavigate, useParams } from "react-router-dom";
 import { flashMessage_Failed, flashMessage_Success } from "@/lib/flash";
 import {
@@ -75,6 +75,7 @@ export default function UpdateProduct() {
     price: parseFloat(product.price),
     type: product.type as ProductTypeEnum,
     push_home_page: data?.product?.push_home_page,
+    is_active: data?.product?.is_active,
     discount_percentage: parseFloat(product.discount_percentage),
     description: product.description ?? "",
     release_date: formatDateForAPI(data?.product?.release_date ?? ""),
@@ -95,7 +96,7 @@ export default function UpdateProduct() {
         onSubmit={(data) => {
           updateMutation.mutate(data, {
             onSuccess: (res) => {
-              console.log("Hello success");
+              queryClient.invalidateQueries({queryKey: ["products"]})
               flashMessage_Success(res.message);
             },
             onError: (error) => {
@@ -106,7 +107,7 @@ export default function UpdateProduct() {
         onDeleteMutation={deleteMutation.mutate}
         onDeleteCallback={(message) => {
           flashMessage_Success(message);
-          navigate("/admin/products/");
+          navigate("/admin/products/", {replace: true});
           queryClient.invalidateQueries({ queryKey: ["products"] });
         }}
       ></ProductForm>

@@ -41,6 +41,7 @@ export function AuthProvider({ children }: ChildrenOnlyProps) {
        // console.log(res.data.user);
       })
       .catch((err: AxiosError) => {
+        console.log("Removve JWT token");
         localStorage.removeItem("token");
       })
       .finally(() => setIsLoading(false));

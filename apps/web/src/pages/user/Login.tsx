@@ -17,7 +17,7 @@ import { useAuth } from "@/context/AuthProvider";
 import { flashMessage_Failed } from "@/lib/flash";
 import type { ApiError } from "@ecom/shared/src/type/api";
 import { useCart } from "@/hooks/useCart";
-import { useGuestCartStore } from "@/components/cart/GuestCartStore";
+import { useGuestCartStore } from "@/hooks/useGuestCartStore";
 import type { UserLoginRespawn } from "@ecom/shared/src/type/user";
 
 export default function Register() {
@@ -105,9 +105,12 @@ export default function Register() {
           {/* Submit */}
           <div className="flex flex-col gap-5">
             <div className="text-center mt-10">
-              <div className="flex items-center justify-center my-5 gap-3">
+              <div className="flex items-center justify-center my-2 gap-3">
                 <Switch id="rememberMe" onCheckedChange={setRememberMe} />
                 <Label htmlFor="rememberMe">Remember Me</Label>
+              </div>
+              <div>
+                <p className="text-[12px] underline cursor-pointer my-2" onClick={()=>navigate("/register")}>Don't have an account?</p>
               </div>
               <Button className="cursor-pointer" type="submit">
                 {loginMutation.isPending ? "Logging in..." : "Login"}

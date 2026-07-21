@@ -1,6 +1,6 @@
 import Loading from "@/components/Loading";
-import { useCheckout } from "@/hooks/useCheckout";
-import { useOrder } from "@/hooks/useOrder";
+
+import { useOrderConfirm } from "@/hooks/useOrder";
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -10,8 +10,8 @@ export default function OrderConfirmation() {
 
   console.log(orderId);
   const queryClient = useQueryClient();
-
-  const { orderConfirm } = useOrder();
+  const orderConfirm = useOrderConfirm();
+  
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const navigate = useNavigate();
   const [countdown, setCountdown] = useState(3);
@@ -22,13 +22,17 @@ export default function OrderConfirmation() {
   // put a timer for redirect
   // or let user click the link to redirect
   useEffect(() => {
-    console.log("hello");
+   
     orderConfirm.mutate(orderId ?? "", {
       onSuccess: (d) => {
-        if (d.status) {
+        console.log(d.status);
+        if (d.status === 'paid') {
           queryClient.invalidateQueries({ queryKey: ["cart", "user"] });
           queryClient.invalidateQueries({ queryKey: ["products"] });
           setPaymentSuccess(true);
+        }
+        else if(d.status === 'pending'){
+          setPaymentSuccess(false);
         }
 
         timerRef.current = setInterval(() => {

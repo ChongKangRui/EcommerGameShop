@@ -17,7 +17,7 @@ export const useGuestCartStore = create<CartStore>()(
       items: [],
       setItems: (items: CartItem[]) =>
         set(() => {
-          console.log(items);
+    
           return {
             items: items,
           };

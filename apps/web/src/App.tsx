@@ -18,12 +18,14 @@ import { PrivateOnlyRoute } from "./route/PrivateOnlyRoute";
 import { AdminOnlyRoute } from "./route/AdminOnlyRoute";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminLayout from "./components/admin/AdminLayout";
-import ProductInfoForm from "./components/admin/product/add/ProductInfoForm";
+import ProductInfoForm from "./components/admin/product/ProductInfoForm";
 import AddProduct from "./pages/admin/AddProduct";
 import AdminProductList from "./pages/admin/AdminProductList";
 import UpdateProduct from "./pages/admin/UpdateProduct";
 import Checkout from "./pages/user/Checkout";
 import OrderConfirmation from "./pages/user/OrderConfirmation";
+import AdminOrderList from "./pages/admin/AdminOrderList";
+import AdminOrder from "./pages/admin/AdminOrder";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -99,7 +101,7 @@ function App() {
               }
             ></Route>
 
-            {/* Admin */}
+            {/* Admin Only*/}
             <Route
               path="/admin"
               element={
@@ -112,6 +114,8 @@ function App() {
               <Route path="/admin/addproduct" element={<AddProduct />} />
               <Route path="/admin/products" element={<AdminProductList />} />
               <Route path="/admin/products/:id" element={<UpdateProduct />} />
+              <Route path="/admin/orders" element={<AdminOrderList />} />
+              <Route path="/admin/orders/:orderId" element={<AdminOrder />} />
               {/* index = default child */}
               {/* future routes */}
               {/* <Route path="products" element={<AdminProductsPage />} /> */}

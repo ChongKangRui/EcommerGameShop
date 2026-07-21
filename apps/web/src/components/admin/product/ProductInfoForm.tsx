@@ -14,10 +14,12 @@ import { type ValidationFormProps } from "@/lib/utils";
 import FormField from "@/components/FormField";
 
 import { type ProductTypeEnum } from "@ecom/shared/src/type/product";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface ProductInfoProps extends ValidationFormProps {
   setProductType: (type: ProductTypeEnum) => void;
   defaultProductType: string;
+
 }
 
 export default function ProductInfoForm({
@@ -26,6 +28,7 @@ export default function ProductInfoForm({
   disableInput = false,
   defaultProductType,
   setProductType,
+
 }: ProductInfoProps) {
   return (
     <FieldGroup className=" grid grid-cols-2 col-span-full">
@@ -78,8 +81,7 @@ export default function ProductInfoForm({
           disabled={disableInput}
           onValueChange={(e) => {
             setProductType(e as ProductTypeEnum);
-          }
-        }
+          }}
           {...register("type")}
         >
           <SelectTrigger id="product-type">
@@ -100,20 +102,21 @@ export default function ProductInfoForm({
         )}
       </Field>
 
-      {/* Date */}
+
+
       <FormField
-        className="col-span-1"
-        id="product-release-date"
-        label="Release Date"
-        type="date"
+        className="col-span-1 h-10"
+        id="push-to-home"
+        label="Set is active product"
+        type="checkbox"
         placeholder=""
         disabled={disableInput}
-        register={register("release_date")}
-        error={errors.release_date}
-        required={true}
+        register={register("is_active")}
+        error={errors.is_active}
+        required={false}
       ></FormField>
 
-      {/* Push to home page */}
+       {/* Push to home page */}
       <FormField
         className="col-span-1 h-10"
         id="push-to-home"
@@ -126,6 +129,21 @@ export default function ProductInfoForm({
         required={false}
       ></FormField>
 
+      {/* Date */}
+      <FormField
+        className="col-span-2"
+        id="product-release-date"
+        label="Release Date"
+        type="date"
+        placeholder=""
+        disabled={disableInput}
+        register={register("release_date")}
+        error={errors.release_date}
+        required={true}
+      ></FormField>
+
+     
+
       {/* Product description */}
       <Field className="col-span-2">
         <FieldLabel htmlFor="product-description">
@@ -133,10 +151,10 @@ export default function ProductInfoForm({
         </FieldLabel>
         <Textarea id="textarea-message" {...register("description")} />
         {errors.description && (
-        <p className="text-destructive text-sm mt-1">
-          {errors.description.message as string}
-        </p>
-      )}
+          <p className="text-destructive text-sm mt-1">
+            {errors.description.message as string}
+          </p>
+        )}
       </Field>
 
       {/* <FormField

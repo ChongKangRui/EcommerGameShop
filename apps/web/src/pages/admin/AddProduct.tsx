@@ -6,15 +6,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddProductMutation } from "@/hooks/useProduct";
 
 import { useState, useEffect } from "react";
-import ProductInfoForm from "@/components/admin/product/add/ProductInfoForm";
-import ProductVariations from "@/components/admin/product/add/ProductVariations";
+import ProductInfoForm from "@/components/admin/product/ProductInfoForm";
+import ProductVariations from "@/components/admin/product/ProductVariations";
 import {
   productSchema,
   type ProductFormData,
 } from "@ecom/shared/src/productSchema";
 import { flashMessage_Failed, flashMessage_Success } from "@/lib/flash";
 
-import ProductForm from "@/components/admin/product/add/ProductForm";
+import ProductForm from "@/components/admin/product/ProductForm";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function AddProduct() {

@@ -32,10 +32,30 @@ CREATE TABLE monthly_product_sales (
     UNIQUE (product_id, year, month)
 );
 
+CREATE TABLE refunds (
+    refund_id       UUID            PRIMARY KEY DEFAULT gen_random_uuid(),
+    order_id        UUID            NOT NULL REFERENCES orders(order_id) ON DELETE RESTRICT,
+    amount          NUMERIC(10, 2)  NOT NULL CHECK (amount > 0),
+    reason          TEXT,
+    status          refund_status   NOT NULL DEFAULT 'pending',
+    refund_ref      TEXT            UNIQUE,
+    requested_by    UUID            REFERENCES users(user_id) ON DELETE SET NULL,
+    processed_by    UUID            REFERENCES users(user_id) ON DELETE SET NULL,
+    requested_at    TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
+    processed_at    TIMESTAMPTZ,
+    created_at      TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
+    updated_at      TIMESTAMPTZ     NOT NULL DEFAULT NOW()
+);
+
+
+
 CREATE INDEX idx_orders_status      ON orders(status);
+CREATE INDEX idx_orders_user_id ON orders(user_id);
 CREATE INDEX idx_orders_created_at  ON orders(created_at);
 CREATE INDEX idx_orders_pending_expiry ON orders(expires_at) WHERE status = 'pending';
 CREATE INDEX idx_order_items_order  ON order_items(order_id);
 CREATE INDEX idx_order_items_product ON order_items(product_id);
 CREATE INDEX idx_monthly_sales_ym   ON monthly_product_sales(year, month);
 CREATE INDEX idx_order_items_variation ON order_items(variation_id);
+CREATE INDEX idx_refunds_order_id ON refunds(order_id);
+CREATE INDEX idx_refunds_status ON refunds(status);

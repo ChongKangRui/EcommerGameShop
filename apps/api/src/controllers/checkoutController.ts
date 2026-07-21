@@ -1,13 +1,18 @@
 import { Request, Response, NextFunction } from "express";
-import { pool } from "../db"; // adjust to your actual pool import
+import { pool } from "../db/db"; // adjust to your actual pool import
 import Stripe from "stripe";
 import { AuthRequest } from "src/middleWare/auth";
 import { CartItemResponse } from "@ecom/shared/src/type/cart";
 import { OrderItemResponse } from "@ecom/shared/src/type/order";
-
+import { createHash } from "crypto";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-const CHECKOUT_TTL_MINUTES = 15;
+const CHECKOUT_TTL_MINUTES = 1;
+
+function useridToLockKey(userId: string): bigint {
+  const hash = createHash("sha256").update(userId).digest();
+  return hash.readBigInt64BE(0);
+}
 
 export const initCheckout = async (
   req: AuthRequest,
@@ -15,6 +20,7 @@ export const initCheckout = async (
   next: NextFunction,
 ) => {
   const client = await pool.connect();
+  
   try {
     // two case when client click checkout
     // 1. client make a new order, no existing order before(or old order was expired)
@@ -28,9 +34,22 @@ export const initCheckout = async (
 
     const userId = req.userId;
 
+    if (!userId) {
+      return res.status(401).json({
+        error: "Unauthorized action",
+      });
+    }
+
     console.log("Start init checkout");
 
     await client.query("BEGIN");
+
+    // make an advisory lock, ensure that if any new request accessing to the same userId
+    // it could wait and ensure all the update were finish,
+    // preventing having stale query or non idempotency issue.
+    await client.query("SELECT pg_advisory_xact_lock($1)", [
+      useridToLockKey(userId),
+    ]);
 
     const cartResult = await client.query<CartItemResponse>(
       `SELECT ci.*, pv.*, p.name,
@@ -42,11 +61,21 @@ export const initCheckout = async (
       [userId],
     );
 
-    if (cartResult.rows.length === 0) {
+
+
+    if (cartResult.rows.length === 0 ) {
       await client.query("ROLLBACK");
       return res.status(400).json({ error: "Cart is empty" });
     }
 
+     let invalidProductExist = cartResult.rows.some((cr)=>!cr.variation_id);
+
+    if(invalidProductExist){
+      await client.query("ROLLBACK");
+      return res.status(400).json({ error: "Invalid cart item" });
+    }
+
+    // get the existing order
     const existing = await client.query(
       `SELECT order_id, payment_ref
         FROM orders
@@ -127,7 +156,7 @@ export const initCheckout = async (
         );
       });
 
-      // ensure atomic update one at a tinme
+      
       // update product variation and delete order_items
       for (const ri of removedItems) {
         await client.query(`DELETE FROM order_items WHERE order_item_id = $1`, [
@@ -139,7 +168,6 @@ export const initCheckout = async (
         );
       }
 
-      // ensure atomic update one at a tinme
       // update or add new order item, sync the order item with the current cart item
       for (const cartItem of cartResult.rows) {
         const oldOrderItems = orderItems.find(
@@ -153,10 +181,11 @@ export const initCheckout = async (
           `,
             [cartItem.quantity, cartItem.variation_id],
           );
-
+          
+          // ensure stock never went negative
           const result = await client.query(
             `UPDATE product_variations SET stock = stock + $1 
-            WHERE variation_id = $2 AND stock >= $1
+            WHERE variation_id = $2 AND stock + $1 >= 0
             RETURNING variation_id`,
             [oldOrderItems.quantity - cartItem.quantity, cartItem.variation_id],
           );
@@ -185,39 +214,118 @@ export const initCheckout = async (
             });
           }
           await client.query(
-          `INSERT INTO order_items (order_id, product_id, variation_id, quantity, price)
+            `INSERT INTO order_items (order_id, product_id, variation_id, quantity, price)
          VALUES ($1, $2, $3, $4, $5)`,
-          [
-            orderId,
-            cartItem.product_id,
-            cartItem.variation_id,
-            cartItem.quantity,
-            cartItem.final_price,
-          ],
-        );
+            [
+              orderId,
+              cartItem.product_id,
+              cartItem.variation_id,
+              cartItem.quantity,
+              cartItem.final_price,
+            ],
+          );
         }
         totalAmount += cartItem.quantity * cartItem.final_price;
-      }
 
+        await client.query(
+        `Update orders SET
+        total_amount = $2
+       where order_id = $1
+       `,
+        [orderId, totalAmount],
+      );
+      }
     }
 
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(totalAmount * 100),
-      currency: "myr",
-      payment_method_types: ["card"],
-      metadata: { order_id: orderId },
-    });
+    let clientSecret: string;
+    // Ensure idempotency in term of payment reference.
+    // if payment already exist, reuse back the payment ref, otherwise
+    // create the new one, assuming the old one already processed
+    if (existing.rows.length > 0 && existing.rows[0].payment_ref) {
+      const existingPI = await stripe.paymentIntents.retrieve(
+        existing.rows[0].payment_ref,
+      );
 
-    await client.query(
-      `UPDATE orders SET payment_ref = $1 WHERE order_id = $2`,
-      [paymentIntent.id, orderId],
-    );
+      console.log("EEEEEEEEEEEEEEEEEEEE ",existingPI.status);
+
+      switch (existingPI.status) {
+        case "requires_payment_method":
+        case "requires_confirmation":
+        case "requires_action": {
+          const newAmount = Math.round(totalAmount * 100);
+          if (existingPI.amount !== newAmount) {
+            const updatedPI = await stripe.paymentIntents.update(
+              existingPI.id,
+              {
+                amount: newAmount,
+              },
+            );
+            clientSecret = updatedPI.client_secret!;
+          } else {
+            clientSecret = existingPI.client_secret!;
+          }
+          break;
+        }
+        case "succeeded":
+          await client.query("ROLLBACK");
+          console.log("Successd");
+          return res.status(200).json({ orderId, alreadyPaid: true });
+        case "processing":
+          await client.query("ROLLBACK");
+          return res
+            .status(409)
+            .json({ error: "Payment already in progress, please wait" });
+        // case "canceled": {
+        //   const newPI = await stripe.paymentIntents.create(
+        //     {
+        //       amount: Math.round(totalAmount * 100),
+        //       currency: "myr",
+        //       payment_method_types: ["card"],
+        //       metadata: { order_id: orderId },
+        //     },
+        //     { idempotencyKey: `checkout_${orderId}` },
+        //   );
+        //   await client.query(
+        //     `UPDATE orders SET payment_ref = $1 WHERE order_id = $2`,
+        //     [newPI.id, orderId],
+        //   );
+        //   clientSecret = newPI.client_secret!;
+        //   break;
+        // }
+        case "requires_capture":
+        default:
+          // shouldn't normally happen for a card-only, auto-capture flow —
+          // but don't leave the request hanging if it does
+          await client.query("ROLLBACK");
+          console.error(
+            `Unexpected PaymentIntent status: ${existingPI.status}`,
+          );
+          return res
+            .status(409)
+            .json({ error: "Unable to resume checkout, please try again" });
+      }
+    } else {
+      const newPI = await stripe.paymentIntents.create(
+        {
+          amount: Math.round(totalAmount * 100),
+          currency: "myr",
+          payment_method_types: ["card"],
+          metadata: { order_id: orderId },
+        },
+        { idempotencyKey: `checkout_${orderId}` },
+      );
+      await client.query(
+        `UPDATE orders SET payment_ref = $1 WHERE order_id = $2`,
+        [newPI.id, orderId],
+      );
+      clientSecret = newPI.client_secret!;
+    }
 
     await client.query("COMMIT");
 
     res.status(200).json({
       orderId,
-      clientSecret: paymentIntent.client_secret,
+      clientSecret,
     });
   } catch (e) {
     await client.query("ROLLBACK");

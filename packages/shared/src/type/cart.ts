@@ -4,8 +4,9 @@ export interface CartItem {
 }
 
 export type CartItemResponse = {
-  cart_id?: string;
+  cart_id: string;
   product_id: number;
+  is_active: boolean;
   variation_id: string;   
   name: string;
   image_url: string;

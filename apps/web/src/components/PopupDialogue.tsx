@@ -53,7 +53,8 @@ export function PopupDialogue({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{content}</AlertDialogDescription>
+          {content}
+          {/* <AlertDialogDescription>{content}</AlertDialogDescription> */}
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onCancel} disabled={disableButton}>Cancel</AlertDialogCancel>

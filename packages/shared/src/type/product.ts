@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const productTypeEnum = z.enum(["switch", "switch_2", "ps4", "ps5", "xbox"]);
-export const sortOptions = [
+export const sortProductOptions = [
   { value: "release_date:desc", label: "Newest First" },
   { value: "release_date:asc", label: "Oldest First" },
   { value: "name:asc", label: "Name A–Z" },
@@ -11,8 +11,8 @@ export const sortOptions = [
   { value: "sales:desc", label: "Best Selling" },
 ] as const;
 
-export const adminSortOptions = [
-  ...sortOptions,
+export const adminProductSortOptions = [
+  ...sortProductOptions,
   { value: "sales:asc", label: "Sales Low–High" },
   { value: "created_at:desc", label: "Latest Created at" },
   { value: "created_at:asc", label: "Oldest Created at" },
@@ -20,7 +20,7 @@ export const adminSortOptions = [
   { value: "total_stock:desc", label: "Higer Stock" },
 ] as const;
 
-export const productFilterOptions = ["all","switch", "switch_2", "ps4", "ps5", "xbox"] as const;
+export const productFilterOptions : string[] = ["all","switch", "switch_2", "ps4", "ps5", "xbox"] as const;
 
 export type Product = {
   product_id: number;
@@ -30,14 +30,14 @@ export type Product = {
   discount_percentage: string; 
   push_home_page: boolean;
   release_date: string;
+  is_active: boolean;
   type: string;
   description:string;
   created_at: string;
   discounted_price: string;
   total_stock:string;
   sales?:string;
-  
-  
+
 }
 
 export type ProductVariation = {
@@ -87,7 +87,7 @@ export type ProductResponse = {
 };
 
 
-export type SortByValue = typeof sortOptions[number]["value"];
-export type AdminSortByValue = typeof adminSortOptions[number]["value"];
+export type SortByValue = typeof sortProductOptions[number]["value"];
+export type AdminSortByValue = typeof adminProductSortOptions[number]["value"];
 export type ProductFilterOptionsByValue = typeof productFilterOptions[number];
 export type ProductTypeEnum = z.infer<typeof productTypeEnum>;
