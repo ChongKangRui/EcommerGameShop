@@ -16,7 +16,6 @@ import stripeRoutes from "./routes/stripe";
 import { Response, Request, NextFunction } from "express";
 import ExpressError from "./utils/expressError";
 
-
 import "./cron/cleanup";
 
 import { requestLoggerMiddleware } from "./middleWare/requestLogger";

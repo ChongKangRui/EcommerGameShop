@@ -7,7 +7,7 @@ import { logger, type Logger } from "src/utils/loggerHelper";
 import { CartItemResponse } from "@ecom/shared/src/type/cart";
 import type { ReconcileResult } from "@ecom/shared/src/type/checkout";
 
-const CHECKOUT_TTL_MINUTES = 10;
+const CHECKOUT_EXPIRED_MINUTES = 10;
 
 /** Thrown to unwind the transaction (ROLLBACK) with a response already decided — success or error alike. */
 class CheckoutHalt extends Error {
@@ -45,7 +45,7 @@ async function createNewOrder(
   }
 
   // if all cart items allow to reserve, insert order items and set the expire time of order
-  const expiresAt = new Date(Date.now() + CHECKOUT_TTL_MINUTES * 60 * 1000);
+  const expiresAt = new Date(Date.now() + CHECKOUT_EXPIRED_MINUTES * 60 * 1000);
   const orderId = await checkoutRepository.insertOrder(
     client,
     userId,

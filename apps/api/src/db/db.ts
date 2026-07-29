@@ -31,7 +31,7 @@ if (process.env.NODE_ENV !== "test") {
     if (err) {
       console.log("DB connection failed:", err.message);
     } else {
-      console.log(`DB connected (${env ?? "unset"}) at:`, res.rows[0].now);
+      console.log(`DB connected at:`, res.rows[0].now);
     }
   });
 }

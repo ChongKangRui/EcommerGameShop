@@ -45,7 +45,7 @@ export default function OrderInfo({
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
+ 
   const onRefundMessageChanged = (change: string) => {
     setRefundMessage(change);
 
@@ -109,11 +109,13 @@ export default function OrderInfo({
     return <Loading />;
   }
 
-  if (orderQuery.isError || !data) {
+  if (orderQuery.isError || !data || !data.order) {
     flashMessage_Failed("Invalid order");
     navigate(isAdmin ? "/admin/orders" : "/orders", { replace: true });
     return;
   }
+
+
   const allowToRefund =
     !isAdmin &&
     !data.order.refund_status &&

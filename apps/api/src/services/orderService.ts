@@ -10,16 +10,17 @@ import {
   orderFilterOptions,
 } from "@ecom/shared/src/type/order";
 
-const MAX_WAIT_MS = 10_000;
+const MAX_CONFIRM_ORDER_WAIT_MS = 10_000;
 const POLL_INTERVAL_MS = 1000;
 
 export const orderService = {
-  async getCustomerOrder(orderId: string, log: Logger) {
+  async getCustomerOrder(orderId: string, userId: string, log: Logger) {
     log.debug(`Fetching single order ${orderId}`);
-    const { customer, items } = await orderRepository.getCustomerOrder(orderId);
+    const { customer, items } = await orderRepository.getCustomerOrder(orderId, userId);
 
     if (!customer) {
-      log.warn(`No order found for orderId ${orderId}`);
+      log.warn(`No order found for orderId ${orderId} for userId ${userId}`);
+      throw Error("Invalid customer info. Maybe user trying to access another user order");
     } else {
       log.info(`Fetched order ${orderId} with ${items.length} items`);
     }
@@ -77,7 +78,7 @@ export const orderService = {
   },
 
   async confirmOrder(orderId: string, userId: string, log: Logger) {
-    const deadline = Date.now() + MAX_WAIT_MS;
+    const deadline = Date.now() + MAX_CONFIRM_ORDER_WAIT_MS;
     let pollCount = 0;
 
     const sleep = (ms: number) =>
@@ -136,6 +137,7 @@ export const orderService = {
 
       const { items } = await orderRepository.getCustomerOrder(
         order.order_id,
+        order.user_id
       );
 
       const now = new Date();
@@ -186,7 +188,7 @@ export const orderService = {
     reason: string,
     requestedBy: string,
   ) {
-    const {customer} = await orderRepository.getCustomerOrder(orderId);
+    const {customer} = await orderRepository.getCustomerOrder(orderId, requestedBy);
 
     if (!customer) {
       throw new Error("Order not found");

@@ -16,13 +16,13 @@ export const getUserOrderTable = async (req: AuthRequest, res: Response) => {
   }
 };
 
-export const getUserOrder = async (req: Request, res: Response) => {
+export const getUserOrder = async (req: AuthRequest, res: Response) => {
   try {
     const { orderId } = req.params;
-
+    const userId = req.userId;
     return res
       .status(200)
-      .json(await orderService.getCustomerOrder(String(orderId), req.log));
+      .json(await orderService.getCustomerOrder(String(orderId), String(userId), req.log));
   } catch (e) {
     req.log.error(` Error in get order`, e);
     return res.status(500).json({ error: "Invalid action" });

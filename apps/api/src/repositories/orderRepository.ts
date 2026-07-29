@@ -50,7 +50,7 @@ export const orderRepository = {
     return { orders: orders.rows, total: parseInt(count.rows[0].count) };
   },
 
-  async getCustomerOrder(orderId: string) {
+  async getCustomerOrder(orderId: string, userId: string) {
     const [orderRef, items] = await Promise.all([
       pool.query<OrderWithCustomer>(
         `SELECT o.*,
@@ -64,8 +64,8 @@ export const orderRepository = {
        ) AS refund_amount
          FROM public.orders o 
          LEFT JOIN users u ON o.user_id = u.user_id 
-         WHERE o.order_id = $1`,
-        [orderId],
+         WHERE o.order_id = $1 and o.user_id = $2`,
+        [orderId, userId],
       ),
       pool.query<OrderItem>(
         `SELECT p.name, oi.order_item_id, oi.quantity, oi.price * oi.quantity AS item_total_price, pv.variation_id, pv.label, pv.image_url, p.product_id

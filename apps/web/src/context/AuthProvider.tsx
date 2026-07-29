@@ -3,6 +3,7 @@ import api from "../lib/api";
 import type { AxiosError } from "axios";
 import { type ChildrenOnlyProps } from "@/components/CommonType";
 import {type UserInfo} from "@ecom/shared/src/type/user"
+import { useQueryClient } from "@tanstack/react-query";
 
 
 type AuthContextType = {
@@ -22,7 +23,9 @@ const AuthContext = createContext<AuthContextType>(null!);
 export function AuthProvider({ children }: ChildrenOnlyProps) {
   const [user, setUser] = useState<UserInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  //const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
+
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -52,17 +55,14 @@ export function AuthProvider({ children }: ChildrenOnlyProps) {
 
 
 
-  // const login = (token: string, userData: UserType) => {
-  //   localStorage.setItem("token", token);
-  //   setUser(userData);
-  //  // console.log(JSON.stringify(userData));
-  // };
+  
 
   const logout = () => {
+    //queryClient.invalidateQueries();
+    queryClient.clear(); 
     localStorage.removeItem("token");
     setUser(null);
-    //window.location.href = "/";
-    // navigate("/", {replace: true});
+   
   };
 
   return (
