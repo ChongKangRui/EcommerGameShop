@@ -8,12 +8,14 @@ export const sortProductOptions = [
   { value: "name:desc", label: "Name Z–A" },
   { value: "discounted_price:asc", label: "Price Low–High" },
   { value: "discounted_price:desc", label: "Price High–Low" },
-  { value: "sales:desc", label: "Best Selling" },
+  { value: "revenue:desc", label: "Best Selling" },
 ] as const;
 
 export const adminProductSortOptions = [
   ...sortProductOptions,
-  { value: "sales:asc", label: "Sales Low–High" },
+  { value: "revenue:asc", label: "Revenues Low–High" },
+    { value: "is_active:asc", label: "Inactive First" },
+  { value: "is_active:desc", label: "Active First" },
   { value: "created_at:desc", label: "Latest Created at" },
   { value: "created_at:asc", label: "Oldest Created at" },
   { value: "total_stock:asc", label: "Lower Stock" },
@@ -21,6 +23,7 @@ export const adminProductSortOptions = [
 ] as const;
 
 export const productFilterOptions : string[] = ["all","switch", "switch_2", "ps4", "ps5", "xbox"] as const;
+
 
 export type Product = {
   product_id: number;
@@ -36,7 +39,7 @@ export type Product = {
   created_at: string;
   discounted_price: string;
   total_stock:string;
-  sales?:string;
+  revenue:string;
 
 }
 
@@ -51,20 +54,6 @@ export type ProductVariation = {
   final_price: number;
 };
 
-// export type ProductVariation = {
-//   variation_id: string;
-//   label: string;
-//   cover_image_url: string;
-//   price: string;           
-//   discount_percentage: string; 
-//   is_sold_out: boolean;
-//   push_home_page: boolean;
-//   release_date: string;
-//   type: string;
-//   created_at: string;
-//   updated_at: string;
-//   sales?:string;
-// }
 
 export type SingleProductResponse = {
    products: Product;

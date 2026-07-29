@@ -1,4 +1,4 @@
-import { useState } from "react";
+
 //import "./App.css";
 import { Route, Routes } from "react-router";
 import Home from "./pages/shop/Home";
@@ -18,7 +18,6 @@ import { PrivateOnlyRoute } from "./route/PrivateOnlyRoute";
 import { AdminOnlyRoute } from "./route/AdminOnlyRoute";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminLayout from "./components/admin/AdminLayout";
-import ProductInfoForm from "./components/admin/product/ProductInfoForm";
 import AddProduct from "./pages/admin/AddProduct";
 import AdminProductList from "./pages/admin/AdminProductList";
 import UpdateProduct from "./pages/admin/UpdateProduct";
@@ -26,6 +25,12 @@ import Checkout from "./pages/user/Checkout";
 import OrderConfirmation from "./pages/user/OrderConfirmation";
 import AdminOrderList from "./pages/admin/AdminOrderList";
 import AdminOrder from "./pages/admin/AdminOrder";
+
+
+import OrderHistory from "./pages/user/OrderHistory";
+import Order from "./pages/user/Order";
+import AdminRefundList from "./pages/admin/AdminRefundList";
+import AdminRefund from "./pages/admin/AdminRefund";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -44,14 +49,30 @@ function App() {
           <Routes>
             {/* Putting layout for every page */}
             <Route element={<Layout />}>
-              <Route path="/" element={<Home />}></Route>
-              <Route path="/about" element={<About />}></Route>
-              <Route path="/collections" element={<Shop />}></Route>
+              <Route path="/" element={<Home />}/>
+              <Route path="/about" element={<About />}/>
+              <Route path="/collections" element={<Shop />}/>
               <Route
                 path="/collections/:id"
                 element={<Product />}
-              ></Route>
-              <Route path="/carts" element={<Cart />}></Route>
+              />
+              <Route path="/carts" element={<Cart />}/>
+              <Route
+              path="/orders"
+              element={
+                <PrivateOnlyRoute>
+                  <OrderHistory />
+                </PrivateOnlyRoute>
+              }
+            />
+            <Route
+              path="/order/:orderId"
+              element={
+                <PrivateOnlyRoute>
+                  <Order />
+                </PrivateOnlyRoute>
+              }
+            />
             </Route>
 
             {/* Profile */}
@@ -113,6 +134,8 @@ function App() {
               <Route index element={<AdminDashboard />} />
               <Route path="/admin/addproduct" element={<AddProduct />} />
               <Route path="/admin/products" element={<AdminProductList />} />
+              <Route path="/admin/refunds" element={<AdminRefundList />} />
+              <Route path="/admin/refund/:orderId" element={<AdminRefund />} />
               <Route path="/admin/products/:id" element={<UpdateProduct />} />
               <Route path="/admin/orders" element={<AdminOrderList />} />
               <Route path="/admin/orders/:orderId" element={<AdminOrder />} />

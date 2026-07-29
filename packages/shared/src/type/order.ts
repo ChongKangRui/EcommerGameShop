@@ -10,23 +10,6 @@ export interface OrderConfirmResponse {
   payment_ref: string;
 }
 
-export const orderCustomerFilterOptions: string[] = [
-  "all",
-  "paid",
-  "shipped",
-  "delivered"
-] as const;
-
-export const orderAdminFilterOptions: string[] = [
-  "all",
-  "pending",
-  "paid",
-  "shipped",
-  "delivered",
-  "refunded",
-  "expired",
-] as const;
-
 export const orderAdminStatusUpdateOptions: string[] = [
   "pending",
   "paid",
@@ -35,6 +18,9 @@ export const orderAdminStatusUpdateOptions: string[] = [
   "refunded",
   "expired",
 ] as const;
+
+
+export const orderFilterOptions = ["all", ...orderAdminStatusUpdateOptions] as const;
 
 export const adminOrderTypeOptions = z.enum(orderAdminStatusUpdateOptions);
 
@@ -53,9 +39,10 @@ export const adminOrderSortOptions = [
   { value: "expires_at:asc", label: "Expires Soonest" },
   { value: "expires_at:desc", label: "Expires Latest" },
   { value: "updated_at:desc", label: "Recently Updated" },
-  { value: "updated_at:asc", label: "Oldest Updated" }
-
+  { value: "updated_at:asc", label: "Oldest Updated" },
 ] as const;
+
+
 
 export interface Order {
   order_id: string;
@@ -63,14 +50,16 @@ export interface Order {
   total_amount: number;
   status: string;
   email: string;
+  refund_status: string | null;
+  refund_amount: string | null;
+  payment_ref: string;
   created_at: string;
   updated_at: string;
-  expires_at:string;
+  expires_at: string;
 }
 
 export interface OrderWithCustomer extends Order {
-  user_id: string
-  payment_ref: string;
+  user_id: string;
   address: string;
 }
 
@@ -81,12 +70,13 @@ export type OrderItem = {
   item_total_price: number;
   label: string;
   image_url: string;
+  product_id: string;
 };
 
 export type OrderInfoRespawn = {
   orderCustomerInfo: OrderWithCustomer;
   orderItems: OrderItem[];
-  message: string,
+  message: string;
 };
 
 export type OrdersResponse = {
@@ -95,9 +85,43 @@ export type OrdersResponse = {
   message: string;
 };
 
+
+//////////////////////////////////////////////////////////////
+
+export type MonthlySalesDataRequestInput = {
+  startYear?: number;
+  endYear?: number;
+  startMonth?: number;
+  endMonth?: number;
+};
+
+export type MonthlySalesData = {
+  revenue: number;
+  year: number;
+  month: number;
+  units_sold: number;
+};
+
+export type GrowthStatus = {
+  count: number;
+  percentageIncrease: number;
+};
+
+export type DashboardDataResponse = {
+  salesData: MonthlySalesData[];
+  activeProductCount: number;
+  customerGrowthStat: GrowthStatus;
+  orderGrowthStat: GrowthStatus;
+};
+
+
+//////////////////////////////////////////////////////////////
+
 export type AdminOrderTypeEnum = z.infer<typeof adminOrderTypeOptions>;
 
-export const getOrderStatusAvailableUpdateOptions = (status: AdminOrderTypeEnum): AdminOrderTypeEnum[] | null => {
+export const getOrderStatusAvailableUpdateOptions = (
+  status: AdminOrderTypeEnum,
+): AdminOrderTypeEnum[] | null => {
   switch (status) {
     case "pending":
       return ["paid", "shipped", "cancelled"]; // Can mark as paid, ship directly, or cancel
@@ -118,7 +142,7 @@ export const getOrderStatusAvailableUpdateOptions = (status: AdminOrderTypeEnum)
       return null; // No actions - terminal state
 
     case "expired":
-      return null; // No actions - terminal state (or you could allow retry)
+      return ["paid"]; // allow set to paid if somehow cron job OR other source of set paid having issue which technically shoudn't happen
 
     default:
       return null;

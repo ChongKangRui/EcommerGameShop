@@ -6,7 +6,10 @@ export type CartValidateResult={
 }
 
 export type CheckoutResponse= {
+    
     orderId: string;
     clientSecret: string;
+    ReconcileResult: ReconcileResult;
 }
 
+export type ReconcileResult = 'paymentUnresolved' | 'createNewOrder' | 'reusePendingOrder';

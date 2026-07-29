@@ -4,14 +4,14 @@ import { useSearchParams } from 'react-router-dom';
 import { useDebounce } from './useDebounce';
 import { useProductsQuery } from '@/hooks/useProduct';
 
-interface UseProductSearchOptions {
+interface ProductSearchOptions {
   limit?: number;
   defaultSort?: string;
   defaultFilter?: string;
   showNonActive?:boolean;
 }
 
-export function useProductSearch(options: UseProductSearchOptions = {}) {
+export function useProductSearch(options: ProductSearchOptions = {}) {
   const {
     limit = 20,
     defaultSort = 'release_date:desc',
@@ -54,7 +54,7 @@ export function useProductSearch(options: UseProductSearchOptions = {}) {
     sortBy: sort,
     filterBy: filter,
     search: debouncedSearch,
-    showNonActive: showNonActive
+    includeInactive: showNonActive,
   });
 
   // 5. Helper Functions

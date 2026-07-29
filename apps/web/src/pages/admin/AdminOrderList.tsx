@@ -1,11 +1,11 @@
-import { productColumn } from "@/components/admin/column/ProductColumn";
 
-import { Table } from "@/components/admin/table/Table";
-import { Loader2 } from "lucide-react";
+
+import { Table } from "@/components/table/Table";
+
 
 import { Input } from "@/components/ui/input";
 
-import { ProductPagination } from "@/components/ProductPagenition";
+import { PaginationComponent } from "@/components/PaginationComponent";
 import FilterSortingSelection from "@/components/table/FilterSortingSelection";
 import { flashMessage_Failed, flashMessage_Success } from "@/lib/flash";
 import { useEffect, useState } from "react";
@@ -17,13 +17,12 @@ import { useIsLgUp, useIsMdUp } from "@/lib/utils";
 import Loading from "@/components/Loading";
 import {
   adminOrderSortOptions,
-  adminOrderTypeOptions,
-  orderAdminFilterOptions,
+  orderFilterOptions,
   orderAdminStatusUpdateOptions,
   type AdminOrderTypeEnum,
 } from "@ecom/shared/src/type/order";
 import { useOrderSearch } from "@/hooks/useOrderSearch";
-import { orderColumns } from "@/components/admin/column/OrderColumn";
+import { adminOrderColumns } from "@/components/columns/AdminOrderColumn";
 
 import {
   Select,
@@ -36,7 +35,7 @@ import { useAdminOrdersUpdate } from "@/hooks/useOrder";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function AdminOrderList() {
-  const { data, search, filters, pagination } = useOrderSearch({ limit: 20 });
+  const { data, search, filters, pagination } = useOrderSearch({ limit: 20, mode:"admin" });
 
   const [rowSelection, setRowSelection] = useState<Record<number, boolean>>({});
 
@@ -56,7 +55,7 @@ export default function AdminOrderList() {
   const bulkUpdateOrders = useAdminOrdersUpdate();
 
   const getSelectedOrderID = () => {
-    const selectedRow = data.orders.filter((d, i) => rowSelection[i]);
+    const selectedRow = data.orders.filter((_d, i) => rowSelection[i]);
 
     const orderIds = selectedRow.map((d) => d.order_id);
     return orderIds;
@@ -117,7 +116,7 @@ export default function AdminOrderList() {
           currentSort={filters.sort}
           sortOptions={adminOrderSortOptions}
           currentFilter={filters.filter}
-          filterOptions={orderAdminFilterOptions}
+          filterOptions={ orderFilterOptions}
           updateFilter={filters.updateFilter}
           updateSort={filters.updateSort}
         ></FilterSortingSelection>
@@ -128,7 +127,7 @@ export default function AdminOrderList() {
       <div className="flex-1">
         {!data.isLoading && (
           <Table
-            columns={orderColumns}
+            columns={adminOrderColumns}
             data={data.orders}
             rowSelection={rowSelection}
             setRowSelection={setRowSelection}
@@ -182,11 +181,11 @@ export default function AdminOrderList() {
       </div>
       {/* Pagination */}
       {pagination.totalPages > 1 && (
-        <ProductPagination
+        <PaginationComponent
           activePage={pagination.currentPage}
           totalPages={pagination.totalPages}
           onPageChange={(number) => pagination.goToPage(number)}
-        ></ProductPagination>
+        ></PaginationComponent>
       )}
     </div>
   );

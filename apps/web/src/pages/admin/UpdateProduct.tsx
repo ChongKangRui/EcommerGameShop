@@ -8,14 +8,13 @@ import ProductForm from "@/components/admin/product/ProductForm";
 import { useNavigate, useParams } from "react-router-dom";
 import { flashMessage_Failed, flashMessage_Success } from "@/lib/flash";
 import {
-  productSchema,
   type ProductFormData,
   type ProductVariationData,
 } from "@ecom/shared/src/productSchema";
 import { useQueryClient } from "@tanstack/react-query";
 import Loading from "@/components/Loading";
 import type { ProductTypeEnum } from "@ecom/shared/src/type/product";
-import { useState } from "react";
+
 
 export default function UpdateProduct() {
   const { id } = useParams<{ id: string }>();
@@ -81,7 +80,6 @@ export default function UpdateProduct() {
     release_date: formatDateForAPI(data?.product?.release_date ?? ""),
     variations: variations,
   };
- 
 
   return (
     <div>
@@ -96,7 +94,9 @@ export default function UpdateProduct() {
         onSubmit={(data) => {
           updateMutation.mutate(data, {
             onSuccess: (res) => {
-              queryClient.invalidateQueries({queryKey: ["products"]})
+              queryClient.invalidateQueries({ queryKey: ["products"] });
+              // invalidate admin dashboard data.
+              queryClient.invalidateQueries({ queryKey: ["admin", "dashboard"] });
               flashMessage_Success(res.message);
             },
             onError: (error) => {
@@ -107,7 +107,9 @@ export default function UpdateProduct() {
         onDeleteMutation={deleteMutation.mutate}
         onDeleteCallback={(message) => {
           flashMessage_Success(message);
-          navigate("/admin/products/", {replace: true});
+          // invalidate admin dashboard data.
+          queryClient.invalidateQueries({ queryKey: ["admin", "dashboard"] });
+          navigate("/admin/products/", { replace: true });
           queryClient.invalidateQueries({ queryKey: ["products"] });
         }}
       ></ProductForm>

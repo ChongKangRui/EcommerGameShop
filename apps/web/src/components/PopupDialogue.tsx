@@ -3,7 +3,6 @@ import {
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
@@ -34,6 +33,7 @@ export function PopupDialogue({
   open: controlledOpen,
   onOpenChange: controlledOnOpenChange,
   disableButton=false
+
 }: AlertDangerousDialogueProps) {
   const [internalOpen, setInternalOpen] = useState(false);
 

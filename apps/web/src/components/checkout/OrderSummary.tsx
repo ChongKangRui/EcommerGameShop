@@ -1,6 +1,5 @@
-import { useCart } from "@/hooks/useCart";
-import Loading from "@/components/Loading";
-import type { CartItem, CartItemResponse } from "@ecom/shared/src/type/cart";
+
+import type {  CartItemResponse } from "@ecom/shared/src/type/cart";
 
 
 type OrderItemProp = {

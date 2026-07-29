@@ -18,15 +18,9 @@ interface DataTableProps<TData> {
 
 export function DataTable<TData>({ table, columnsLength  }: DataTableProps<TData>) {
   return (
-    <div className="overflow-hidden rounded-md border">
+    <div className="rounded-md border">
       <Table className="w-full table-fixed ">
-         {/* {colClassName && (
-          <colgroup>
-            {colClassName.map((width) => (
-              <col key={i}  />
-            ))}
-          </colgroup>
-        )} */}
+         
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>

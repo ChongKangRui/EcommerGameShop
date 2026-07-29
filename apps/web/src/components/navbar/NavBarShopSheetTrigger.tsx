@@ -2,10 +2,7 @@ import { Button } from "@/components/ui/button";
 
 import {
   Sheet,
-  SheetClose,
   SheetContent,
-  SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -14,13 +11,15 @@ import {
 import { useState, useEffect } from "react";
 
 import NavBarMenuItem from "./NavBarMenuItem";
-import {productCategoryCollections} from "@/data/ProductCategoryCollections"
+import { productCategoryCollections } from "@/data/ProductCategoryCollections";
 
-type NavBarShopSheetTriggerProps={
-  setOuterOpen: (open:boolean)=>void;
-}
+type NavBarShopSheetTriggerProps = {
+  setOuterOpen: (open: boolean) => void;
+};
 
-export default function NavBarShopSheetTrigger({setOuterOpen}:NavBarShopSheetTriggerProps) {
+export default function NavBarShopSheetTrigger({
+  setOuterOpen,
+}: NavBarShopSheetTriggerProps) {
   const [isDesktop, setIsDesktop] = useState(false);
 
   const [open, setOpen] = useState(false);
@@ -35,7 +34,7 @@ export default function NavBarShopSheetTrigger({setOuterOpen}:NavBarShopSheetTri
     // Create event listener
     const listener = (event: MediaQueryListEvent) => {
       setIsDesktop(event.matches);
-      console.log("is desktop?",event.matches);
+      console.log("is desktop?", event.matches);
     };
 
     // Add listener
@@ -43,7 +42,7 @@ export default function NavBarShopSheetTrigger({setOuterOpen}:NavBarShopSheetTri
 
     // Cleanup, run only after unmounted
     return () => {
-    console.log("Clear event listener?");
+      console.log("Clear event listener?");
       media.removeEventListener("change", listener);
     };
   }, []);
@@ -54,31 +53,36 @@ export default function NavBarShopSheetTrigger({setOuterOpen}:NavBarShopSheetTri
     }
   }, [isDesktop, open]);
 
-  const setOuterAndInnerSheetOpen = (open: boolean)=>{
+  const setOuterAndInnerSheetOpen = (open: boolean) => {
     setOpen(open);
     setOuterOpen(open);
-  }
+  };
 
   return (
     <Sheet onOpenChange={setOpen} open={open}>
-      <SheetTrigger render={<Button className="bg-black hover:bg-black hover:text-red-500 text-white"> Shop By Platform</Button>} />
+      <SheetTrigger
+        render={
+          <Button className="bg-black hover:bg-black hover:text-red-500 text-white">
+            {" "}
+            Shop By Platform
+          </Button>
+        }
+      />
       <SheetContent className="data-[side=right]:w-full  bg-black">
         <SheetHeader>
           <SheetTitle>Shop By Platform</SheetTitle>
-        
+
           <hr />
         </SheetHeader>
         <div className="grid flex-1 auto-rows-min gap-6 px-4 justify-center">
-           
-{productCategoryCollections.map((collection) => (
-                    <NavBarMenuItem
-                      key={collection.href}
-                      name={collection.title}
-                      link={collection.href}
-                      onClick={()=>setOuterAndInnerSheetOpen(false)}
-                    />
-                  ))}
-         
+          {productCategoryCollections.map((collection) => (
+            <NavBarMenuItem
+              key={collection.href}
+              name={collection.title}
+              link={collection.href}
+              onClick={() => setOuterAndInnerSheetOpen(false)}
+            />
+          ))}
         </div>
       </SheetContent>
     </Sheet>

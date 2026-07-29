@@ -41,7 +41,6 @@ CREATE TABLE refunds (
     refund_ref      TEXT            UNIQUE,
     requested_by    UUID            REFERENCES users(user_id) ON DELETE SET NULL,
     processed_by    UUID            REFERENCES users(user_id) ON DELETE SET NULL,
-    requested_at    TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
     processed_at    TIMESTAMPTZ,
     created_at      TIMESTAMPTZ     NOT NULL DEFAULT NOW(),
     updated_at      TIMESTAMPTZ     NOT NULL DEFAULT NOW()

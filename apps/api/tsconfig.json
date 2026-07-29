@@ -3,32 +3,33 @@
     /* Language & Environment */
     "target": "ES2022",
     "lib": ["ES2022"],
-    "types": ["node"],
+    "types": ["node","jest"],
 
     /* Module - plain Node.js, not bundler */
     "module": "CommonJS",
-    "moduleResolution": "node",
-
+    "moduleResolution": "node10",
+    "ignoreDeprecations": "6.0",
     /* Remove these - they are for bundlers (Vite, esbuild, etc.) */
     // "allowImportingTsExtensions": true,   ← bundler only
     // "verbatimModuleSyntax": true,         ← forces ESM, breaks ts-node
     // "moduleDetection": "force",           ← not needed
-
     /* Output */
     "outDir": "./dist",
     "rootDir": "./src",
 
     /* Paths */
-    "baseUrl": ".",
+   // "baseUrl": ".",
     "paths": {
-      "@shared/*": ["../shared/src/*"]
+      "@shared/*": ["../shared/src/*"],
+      "src/*": ["./src/*"]
+     
     },
 
     /* Strictness */
     "strict": true,
     "skipLibCheck": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
 
     /* Useful for Express */
@@ -36,6 +37,6 @@
     "resolveJsonModule": true,
     "sourceMap": true
   },
-  "include": ["src", "migrate.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src", "src/migration/migrate.ts"],
+  "exclude": ["node_modules", "dist", "src/migration/**/*"]
 }

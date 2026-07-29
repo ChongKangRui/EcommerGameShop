@@ -9,6 +9,7 @@ type QuantitySelectorProps = {
   currentQuantity: number;
   disabled?: boolean;
   setQuantity: (n: number) => void;
+  showOutOfStock: boolean;
 };
 
 export default function QuantitySelector({
@@ -19,6 +20,7 @@ export default function QuantitySelector({
   currentQuantity,
   disabled = false,
   setQuantity,
+  showOutOfStock
 }: QuantitySelectorProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [draftValue, setDraftValue] = useState(String(initialQuantity));
@@ -74,7 +76,7 @@ export default function QuantitySelector({
     }
   };
 
-  if (isOutOfStock) {
+  if (isOutOfStock && showOutOfStock) {
     return (
       <div className="inline-flex flex-col items-start gap-2 font-sans">
         {displayItemInCart && (

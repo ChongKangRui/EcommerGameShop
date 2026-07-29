@@ -5,9 +5,9 @@ CREATE TYPE order_status AS ENUM (
     'paid',
     'delivered',
     'shipped',
-    'cancelled',
+    'canceled',
     'refunded',
     'expired'
 );
 
-CREATE TYPE refund_status AS ENUM ('pending', 'approved', 'rejected', 'processed', 'failed');
+CREATE TYPE refund_status AS ENUM ('pending', 'approved', 'rejected');

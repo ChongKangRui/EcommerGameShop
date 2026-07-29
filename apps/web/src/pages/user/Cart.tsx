@@ -3,16 +3,15 @@ import { Button } from "../../components/ui/button";
 import { useEffect } from "react";
 import CartProduct from "../../components/cart/CartProduct";
 
-import type { CartItem, CartItemsResponse } from "@ecom/shared/src/type/cart";
 import { useCart } from "@/hooks/useCart";
 import Loading from "@/components/Loading";
 import { useNavigate } from "react-router";
 import { useAuth } from "@/context/AuthProvider";
-import { flashMessage_Failed, flashMessage_Success } from "@/lib/flash";
+import { flashMessage_Failed } from "@/lib/flash";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCartValidate } from "@/hooks/useCheckout";
 import { type CartValidateResult } from "@ecom/shared/src/type/checkout";
-import type { ValidateResult } from "react-hook-form";
+
 
 export default function Cart() {
   //const [totalPrice, setTotalPrice] = useState(0);
@@ -97,6 +96,7 @@ export default function Cart() {
           {/* cart product items */}
           <div className="">
             {items.map((i) => {
+              
               return (
                 <div key={i.variation_id}>
                   <CartProduct

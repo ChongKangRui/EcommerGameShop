@@ -16,7 +16,7 @@
     "jsx": "react-jsx",
 
     /* Shadcn */
-    "baseUrl": ".",
+    //"baseUrl": ".",
     "paths": {
       "@/*": [
         "./src/*"

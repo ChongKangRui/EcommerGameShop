@@ -1,21 +1,11 @@
-import { Badge } from "@/components/ui/badge";
 
-import { Link, useNavigate } from "react-router";
-import {
-  Card,
-  CardAction,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import QuantitySelector from "./QuantitySelector";
 import { Button } from "@/components/ui/button";
 import type { Product, ProductVariation } from "@ecom/shared/src/type/product";
 
 import { useCart } from "@/hooks/useCart";
-import { flashMessage_Failed } from "@/lib/flash";
+
 import Loading from "../Loading";
 
 type ShopItemProps = {
@@ -114,10 +104,11 @@ export function ProductDetail({
         <div className="flex flex-row justify-center gap-5 items-center md:flex-col md:items-baseline">
           <QuantitySelector
             initialQuantity={1}
-            cartCount={1}
+            cartCount={cartItem?.quantity ?? 0}
             max={maxStock}
             currentQuantity={quantity}
             setQuantity={setQuantity}
+            showOutOfStock = {true}
           ></QuantitySelector>
           <Button
             className="hover:bg-black hover:text-red-500 mt-5"

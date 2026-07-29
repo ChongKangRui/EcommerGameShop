@@ -1,6 +1,5 @@
 import { useState } from "react";
-import ReactDOM from "react-dom";
-import { loadStripe } from "@stripe/stripe-js";
+
 import {
   PaymentElement,
   useStripe,
@@ -14,11 +13,13 @@ import { useNavigate } from "react-router";
 import { useCart } from "@/hooks/useCart";
 import Loading from "../Loading";
 
-type CheckoutFormProp = {
-  orderId: string
-}
+import { useOrderStatusValidation } from "@/hooks/useOrder";
 
-export default function CheckoutForm({orderId} : CheckoutFormProp) {
+type CheckoutFormProp = {
+  orderId: string;
+};
+
+export default function CheckoutForm({ orderId }: CheckoutFormProp) {
   const stripe = useStripe();
   const elements = useElements();
   const { items, isLoading } = useCart();
@@ -28,9 +29,9 @@ export default function CheckoutForm({orderId} : CheckoutFormProp) {
   );
   const [isProcessing, setIsProcessing] = useState(false);
 
-
   const { user } = useAuth();
   const navigate = useNavigate();
+  const orderValidation = useOrderStatusValidation();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -38,7 +39,7 @@ export default function CheckoutForm({orderId} : CheckoutFormProp) {
     if (!stripe || !elements) {
       return;
     }
-  
+
     setIsProcessing(true);
     setErrorMessage(undefined);
     // Trigger form validation and wallet collection
@@ -65,22 +66,48 @@ export default function CheckoutForm({orderId} : CheckoutFormProp) {
         },
       });
 
-    
-
       if (!error) {
-        navigate(`/order-confirmation/${orderId}`, {replace: true});
+        console.log("No error from stripe");
+        navigate(`/order-confirmation/${orderId}`, { replace: true });
+      } else {
+        console.log(" error from stripe");
+
+        // validate if order still valid, not expired
+        orderValidation.mutate(orderId, {
+          onSuccess: (data) => {
+            console.log("validate data success??", data);
+
+            if (!data.valid) {
+              navigate(`/order-confirmation/${orderId}`, {
+                replace: true,
+                state: { status: "invalid_order" },
+              });
+              
+            } else {
+              
+              navigate(`/order-confirmation/${orderId}`, {
+                replace: true,
+              });
+             
+            }
+          },
+          onError: (err) => {
+            
+            navigate(`/order-confirmation/${orderId}`, {
+                replace: true,
+                state: { status: "invalid_order" },
+              });
+            console.log(err);
+          },
+        });
       }
-      else{
-        setIsProcessing(false);
-      }
+
     }
   };
-
 
   if (isLoading) {
     return <Loading></Loading>;
   }
-
 
   return (
     <form onSubmit={handleSubmit}>
@@ -97,7 +124,7 @@ export default function CheckoutForm({orderId} : CheckoutFormProp) {
 
         {/* Order summary */}
         <div className="max-w-sm w-full md:w-1/2 mt-6 md:mt-0">
-          <OrderSummary items={items}/>
+          <OrderSummary items={items} />
         </div>
       </div>
 

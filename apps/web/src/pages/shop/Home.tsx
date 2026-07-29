@@ -2,7 +2,7 @@ import HomeCarousell from "@/components/home/HomeCarousell"
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { flashMessage_Success } from "@/lib/flash";
-
+import PromotedProductCarousell from "@/components/home/PromotedProductCarousell"
 export default function Home(){
 
 const location = useLocation();
@@ -20,6 +20,7 @@ const location = useLocation();
            
            <HomeCarousell></HomeCarousell>
            <hr className="mt-5"/>
+           <PromotedProductCarousell></PromotedProductCarousell>
             
         </div>
     )

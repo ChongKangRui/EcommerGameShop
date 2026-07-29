@@ -1,74 +1,92 @@
-import { Request, Response, NextFunction } from "express";
-import { pool } from "../db/db"; // adjust to your actual pool import
-import Stripe from "stripe";
+import type { Request, Response } from "express";
 import { AuthRequest } from "src/middleWare/auth";
-import { CartItemResponse } from "@ecom/shared/src/type/cart";
-import {
-  Order,
-  OrderConfirmResponse,
-  OrderItemResponse,
-} from "@ecom/shared/src/type/order";
-import { generateLogId } from "src/utils/loggerHelper";
-import { logger } from "src/utils/loggerHelper";
+
 import { orderService } from "src/services/orderService";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+// use by customer.
+export const getUserOrderTable = async (req: AuthRequest, res: Response) => {
+  try {
+    const userId = req.userId;
+    return res
+      .status(200)
+      .json(await orderService.getAllOrders(req.query, req.log, userId));
+  } catch (e) {
+    req.log.error(` Error in get customer orders`, e);
+    return res.status(500).json({ error: "Invalid action" });
+  }
+};
 
-export const orderConfirm = async (
-  req: AuthRequest,
-  res: Response,
-  next: NextFunction,
-) => {
-  const requestId = generateLogId();
+export const getUserOrder = async (req: Request, res: Response) => {
+  try {
+    const { orderId } = req.params;
 
-  logger.info(`-------------------------------------------------------`);
-  logger.info(`[${requestId}] Order confirm request received`, {
-    ip: req.ip,
-    userAgent: req.headers["user-agent"],
-    userId: req.userId,
-    orderId: req.params.orderId,
-  });
+    return res
+      .status(200)
+      .json(await orderService.getCustomerOrder(String(orderId), req.log));
+  } catch (e) {
+    req.log.error(` Error in get order`, e);
+    return res.status(500).json({ error: "Invalid action" });
+  }
+};
 
-  
+export const orderConfirm = async (req: AuthRequest, res: Response) => {
+  req.log.info(`-------------------------------------------------------`);
+  req.log.info(`Order confirm request received`);
+
+  try {
     const { orderId } = req.params;
     const userId = req.userId;
 
-   logger.info(`[${requestId}] Order confirm request received`, {
-    ip: req.ip, userAgent: req.headers["user-agent"], userId: userId, orderId: orderId})
- 
-  try {
-    const result = await orderService.confirmOrder(String(orderId), String(userId), requestId);
-    if (result.notFound) return res.status(404).json({ error: "Order not found" });
+    const result = await orderService.confirmOrder(
+      String(orderId),
+      String(userId),
+      req.log,
+    );
+    // if (result.status === 'notFound')
+    //   return res.status(404).json({ error: "Order not found" });
     return res.status(200).json({ status: result.status });
   } catch (e) {
-    logger.error(`[${requestId}] Error in order confirmation`, e);
+    req.log.error(`Error in order confirmation`, e);
+    return res.status(500).json({ error: "Unable to confirm order" });
+  }
+};
+
+export const orderValidation = async (req: AuthRequest, res: Response) => {
+  req.log.info(`-------------------------------------------------------`);
+  req.log.info(`Order validation request received`);
+
+  try {
+    const { orderId } = req.params;
+
+    const result = await orderService.validatePendingOrder(String(orderId));
+    console.log(result);
+    if (!result)
+      return res.status(200).json({ message: "order invalid", valid: false });
+    else {
+      return res.status(200).json({ message: "order invalid", valid: true });
+    }
+  } catch (e) {
+    req.log.error(`Error in order validation`, e);
     res.status(500).json({ error: "Unable to confirm order" });
   }
 };
 
-export const orderRefundCreate = async (req: AuthRequest, res: Response) => {
-  const requestId = generateLogId();
-
-  logger.info(`-------------------------------------------------------`);
-  logger.info(`[${requestId}] Order refund request received`, {
-    ip: req.ip,
-    userAgent: req.headers["user-agent"],
-    userId: req.userId,
-    orderId: req.params.orderId,
-  });
+export const createRefund = async (req: AuthRequest, res: Response) => {
+  req.log.info(`-------------------------------------------------------`);
+  req.log.info(`Order refund request received`);
 
   try {
     const { orderId } = req.params;
     const userId = req.userId;
+    const {reason} = req.body;
 
-  
+    await orderService.createRefundRequest(String(orderId), reason, String(userId));
 
-    
-    return res.status(200).json({ });
-     
-  } catch (e) {
-    logger.error(`[${requestId}] Error in order confirmation`, e);
-    console.log(e);
-    res.status(500).json({ error: "Unable to confirm order" });
+    return res.status(200).json({message: "Refund request success"});
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+
+    req.log.error(`Error in update refund status`, message);
+    return res.status(500).json({ error: message });
   }
 };

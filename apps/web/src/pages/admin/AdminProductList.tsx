@@ -1,14 +1,14 @@
-import { productColumn } from "@/components/admin/column/ProductColumn";
+import { productColumn } from "@/components/columns/ProductColumn";
 
-import { Table } from "@/components/admin/table/Table";
-import { Eye, Loader2 } from "lucide-react";
+import { Table } from "@/components/table/Table";
+import { Eye } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 
 import { adminProductSortOptions, productFilterOptions } from "@ecom/shared/src/type/product";
-import { ProductPagination } from "@/components/ProductPagenition";
+import { PaginationComponent } from "@/components/PaginationComponent";
 import FilterSortingSelection from "@/components/table/FilterSortingSelection";
-import { flashMessage_Failed, flashMessage_Success } from "@/lib/flash";
+import { flashMessage_Failed } from "@/lib/flash";
 import { useProductSearch } from "@/hooks/useProductSearch";
 import { useEffect, useState } from "react";
 import {
@@ -22,8 +22,7 @@ import { Flame, Percent, Trash } from "lucide-react";
 import { PopupDialogue } from "@/components/PopupDialogue";
 import FormField from "@/components/FormField";
 
-import { useQueryClient } from "@tanstack/react-query";
-import { useIsLgUp, useIsMdUp } from "@/lib/utils";
+import { useIsMdUp } from "@/lib/utils";
 import Loading from "@/components/Loading";
 import { useBulkAction } from "@/hooks/useBulkAction";
 
@@ -33,7 +32,7 @@ export default function AdminProductList() {
   const [rowSelection, setRowSelection] = useState<Record<number, boolean>>({});
 
   const getSelectedProductID = () => {
-    const selectedRow = data.products.filter((d, i) => rowSelection[i]);
+    const selectedRow = data.products.filter((_d, i) => rowSelection[i]);
     const productIds = selectedRow.map((d) => d.product_id);
     return productIds;
   };
@@ -83,38 +82,10 @@ const activeAction = useBulkAction({
   setDialogueButtonDisable: setDialogueButtonDisable
 });
 
-  // Bulk modification input state
-  // const [discountPercentage, setDiscountPercentage] = useState(0);
-  // const [discountValueError, setDiscountValueError] = useState("");
-  // const [promote, setPromote] = useState(false);
-  // const [productActive, setProductActive] = useState(false);
-
-  // Bulk modification dialogue and button state
-  // const [deleteDialogueOpen, setDeleteDialogueOpen] = useState(false);
-  // const [promoteDialogueOpen, setPromoteDialogueOpen] = useState(false);
-  // const [discountDialogueOpen, setDiscountDialogueOpen] = useState(false);
-  // const [activeDialogueOpen, setActiveDialogueOpen] = useState(false);
 
  
-
- 
-
   // Size condition
   const isMdUp = useIsMdUp();
- //const isLgUp = useIsLgUp();
-
-  const queryClient = useQueryClient();
-
-  // const onDiscountChange = (value: number) => {
-  //   if (value < 0) {
-  //     discountAction.setError("Discount cannot be negative");
-  //   } else if (value > 100) {
-  //     discountAction.setError(" Discount cannot exceed 100%");
-  //   } else {
-  //     discountAction.setError("");
-  //     discountAction.setValue(value);
-  //   }
-  // };
 
   
 
@@ -126,108 +97,7 @@ const activeAction = useBulkAction({
   }, [deleteAction.dialogueOpen, promoteAction.dialogueOpen, discountAction.dialogueOpen, activeAction.dialogueOpen])
 
 
-  // Bulk delete execute function
-  // const onDeleteConfirm = () => {
-  //   // const id = selectedData.map((d)=>d.?product_id)
-  //   const productIds = getSelectedProductID();
-  //   deleteMutation.mutate(productIds, {
-  //     onSuccess: () => {
-  //       queryClient.invalidateQueries({
-  //         queryKey: ["products"],
-  //         refetchType: "active",
-  //       });
-  //       setDeleteDialogueOpen(false);
-       
-  //       flashMessage_Success("Remove products success");
-  //       console.log("Did i success");
-  //     },
-  //     onError: (e) => {
-  //       console.log("Bulk delete product error", e);
-  //       flashMessage_Failed("Invalid action");
-  //       setDeleteDialogueOpen(false);
-       
-  //     },
-  //   });
-
-  //   setDialogueButtonDisable(true);
-  // };
-
-  // const onDiscountConfirm = (value: number) => {
-  //   if (value < 0 || value > 100) {
-  //     flashMessage_Failed("Invalid action, discount number invalid");
-  //     return;
-  //   }
-  //   const productIds = getSelectedProductID();
-  //   setDialogueButtonDisable(true);
-  //   discountMutation.mutate(
-  //     { productIds, discountPercentage: value },
-  //     {
-  //       onSuccess: (res) => {
-  //         queryClient.invalidateQueries({
-  //         queryKey: ["products"],
-  //         refetchType: "active",
-  //       })
-  //         setDiscountDialogueOpen(false);
-  //         flashMessage_Success(res.message);
-  //       },
-  //       onError: (err) => {
-  //         setDiscountDialogueOpen(false);
-  //         flashMessage_Failed(err.message);
-  //       },
-  //     },
-  //   );
-   
-  // };
-
-  // const onPromoteConfirm = () => {
-   
-  //   const productIds = getSelectedProductID();
-  //   setDialogueButtonDisable(true);
-  //   promoteMutation.mutate(
-  //     { productIds, promote: promoteAction. },
-  //     {
-  //       onSuccess: (res) => {
-  //       queryClient.invalidateQueries({
-  //         queryKey: ["products"],
-  //         refetchType: "active",
-  //       })
-  //         setPromoteDialogueOpen(false);
-  //         setPromote(false);
-  //         flashMessage_Success(res.message);
-  //       },
-  //       onError: (err) => {
-  //         setPromoteDialogueOpen(false);
-  //         setPromote(false);
-  //         flashMessage_Failed(err.message);
-  //       },
-  //     },
-  //   );
-   
-  // };
-
-  // const onProductActiveConfirm = ()=>{
-  //   const productIds = getSelectedProductID();
-  //   setDialogueButtonDisable(true);
-  //   activeMutation.mutate(
-  //     { productIds, active: productActive },
-  //     {
-  //       onSuccess: (res) => {
-  //       queryClient.invalidateQueries({
-  //         queryKey: ["products"],
-  //         refetchType: "active",
-  //       })
-  //         setActiveDialogueOpen(false);
-  //         setProductActive(false);
-  //         flashMessage_Success(res.message);
-  //       },
-  //       onError: (err) => {
-  //         setActiveDialogueOpen(false);
-  //         setProductActive(false);
-  //         flashMessage_Failed(err.message);
-  //       },
-  //     },
-  //   );
-  // }
+  
 
   if(data.isError){
     flashMessage_Failed(data.error ?? "Invalid action");
@@ -377,11 +247,11 @@ const activeAction = useBulkAction({
       </div>
  {/* Pagination */}
       {pagination.totalPages > 1 && (
-        <ProductPagination
+        <PaginationComponent
           activePage={pagination.currentPage}
           totalPages={pagination.totalPages}
           onPageChange={(number) => pagination.goToPage(number)}
-        ></ProductPagination>
+        ></PaginationComponent>
       )}
     </div>
   );

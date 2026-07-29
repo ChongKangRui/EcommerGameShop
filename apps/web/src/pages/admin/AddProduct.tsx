@@ -1,17 +1,6 @@
-import { useForm, type FieldValues, useFieldArray } from "react-hook-form";
 
-import { Button } from "../../components/ui/button";
-
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddProductMutation } from "@/hooks/useProduct";
 
-import { useState, useEffect } from "react";
-import ProductInfoForm from "@/components/admin/product/ProductInfoForm";
-import ProductVariations from "@/components/admin/product/ProductVariations";
-import {
-  productSchema,
-  type ProductFormData,
-} from "@ecom/shared/src/productSchema";
 import { flashMessage_Failed, flashMessage_Success } from "@/lib/flash";
 
 import ProductForm from "@/components/admin/product/ProductForm";
@@ -35,9 +24,11 @@ const queryClient = useQueryClient();
             onSuccess: (res) => {
               //invalidate the product list queries
              queryClient.invalidateQueries({queryKey: ["products"]})
+            // invalidate admin dashboard data.
+             queryClient.invalidateQueries({ queryKey: ["admin", "dashboard"]});
               flashMessage_Success(res.message);
             },
-            onError: (err)=>{
+            onError: ()=>{
               flashMessage_Failed("Invalid action");
                 
             }

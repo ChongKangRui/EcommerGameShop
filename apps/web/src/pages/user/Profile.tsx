@@ -8,7 +8,7 @@ import {
 } from "@ecom/shared/src/profileUpdateDataSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useProfileUpdate } from "@/hooks/userAuthMutation";
-import { useNavigate } from "react-router-dom";
+
 import { useState } from "react";
 
 import { useAuth } from "@/context/AuthProvider";
@@ -48,7 +48,7 @@ export default function Profile() {
   const profileUpdateMutation = useProfileUpdate();
 
   const [isEditing, setIsEditing] = useState(false);
-  const navigate = useNavigate();
+
 
   const handleUpdate = (data: FieldValues) => {
     setIsEditing(false);

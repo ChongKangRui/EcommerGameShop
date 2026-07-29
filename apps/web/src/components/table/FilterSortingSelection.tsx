@@ -1,9 +1,4 @@
-import {
-  //adminSortOptions,
-  //type AdminSortByValue,
-  productFilterOptions,
-  type ProductFilterOptionsByValue,
-} from "@ecom/shared/src/type/product";
+
 
 import {
   Select,
@@ -24,7 +19,7 @@ type FilterSortingProps<T extends string = string> = {
   sortOptions: readonly SortOption<T>[];
   currentSort: T;
   currentFilter: string;
-  filterOptions: string[];
+  filterOptions: readonly string[];
   updateFilter: (value: string) => void;
   updateSort: (value: string) => void;
   className?: string;

@@ -6,19 +6,19 @@ import {
   type ProductsResponse,
   type ProductResponse,
 } from "@ecom/shared/src/type/product";
-import {type SearchQueryParams}from "@ecom/shared/src/type/search";
+import {type ProductListRepositoryFilter}from "@ecom/shared/src/type/search";
 import { useAuth } from "@/context/AuthProvider";
 
 
-function getFormData(data: FieldValues): FormData {
+function convertFieldToForm(data: FieldValues): FormData {
   const formData = new FormData();
 
   formData.append("name", data.name);
   formData.append("price", data.price.toString());
   formData.append("type", data.type);
-  console.log(data.type);
   formData.append("release_date", data.release_date);
   formData.append("push_home_page", data.push_home_page.toString());
+  formData.append("is_active", data.is_active.toString());
   formData.append("discount_percentage", data.discount_percentage.toString());
   formData.append("description", data.description);
 
@@ -55,8 +55,8 @@ export function useAddProductMutation() {
   return useMutation({
     mutationFn: async (data: FieldValues) => {
       // we need to use form data because backend only accept form data when it contain image file
-      const formData = getFormData(data);
-
+      const formData = convertFieldToForm(data);
+      console.log(formData);
       const res = await api.post("/admin/products", formData);
       return res.data;
     },
@@ -69,8 +69,8 @@ export function useProductsQuery({
   sortBy,
   filterBy,
   search,
-  showNonActive
-}: SearchQueryParams) {
+  includeInactive
+}: ProductListRepositoryFilter) {
   const {user} = useAuth();
   return useQuery({
     queryKey: ["products", limit, offset, sortBy, filterBy, search],
@@ -81,9 +81,10 @@ export function useProductsQuery({
       if (sortBy) params.set("sortBy", sortBy);
       if (filterBy) params.set("filterBy", filterBy);
       if (search) params.set("search", search);
-      params.set("showNonActive", showNonActive ? "true" : "false");
+      params.set("showNonActive", includeInactive ? "true" : "false");
 
-      console.log(params.toString());
+      // this is fine because even user modify the role from customer to admin
+      // backend will still validate as backend is the single source of truth and never trust frontend.
       const { data } = await api.get<ProductsResponse>(
         user?.role === 'admin' ? `/admin/products?${params.toString()}`  : `/products?${params.toString()}`,
       );
@@ -95,10 +96,13 @@ export function useProductsQuery({
 }
 
 export function useProductQuery(productId: string) {
+  const {user} = useAuth();
   return useQuery({
     queryKey: ["products", productId],
     queryFn: async () => {
-      const { data } = await api.get<ProductResponse>(`/products/${productId}`);
+      // this is fine because even user modify the role from customer to admin
+      // backend will still validate as backend is the single source of truth and never trust frontend.
+      const { data } = await api.get<ProductResponse>(user?.role === 'admin' ? `/admin/products/${productId}` : `/products/${productId}`);
       console.log(data);
       return { product: data.product, variations: data.variations };
     },
@@ -106,10 +110,25 @@ export function useProductQuery(productId: string) {
   });
 }
 
+export function usePromotedProductQuery() {
+  
+  return useQuery({
+    queryKey: ["promoted"],
+    queryFn: async () => {
+      // this is fine because even user modify the role from customer to admin
+      // backend will still validate as backend is the single source of truth and never trust frontend.
+      const { data } = await api.get<ProductsResponse>(`/products/promoted`);
+      console.log(data);
+     return data;
+    },
+    
+  });
+}
+
 export function useUpdateProductMutation(productId: string) {
   return useMutation({
     mutationFn: async (data: FieldValues) => {
-      const formData = getFormData(data);
+      const formData = convertFieldToForm(data);
       const res = await api.put(`/admin/products/${productId}`, formData);
       return res.data;
     },

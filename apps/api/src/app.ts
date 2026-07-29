@@ -1,5 +1,6 @@
 // if we are running in development, we can access .env anywhere
 import "dotenv/config";
+import helmet from "helmet";
 
 import express from "express";
 import cors from "cors";
@@ -14,16 +15,31 @@ import stripeRoutes from "./routes/stripe";
 
 import { Response, Request, NextFunction } from "express";
 import ExpressError from "./utils/expressError";
+
+
 import "./cron/cleanup";
 
+import { requestLoggerMiddleware } from "./middleWare/requestLogger";
+
+import { browsingLimiter, checkoutLimiter, globalLimiter } from "./utils/rateLimitHelper";
+import { isAdmin, requireAuth } from "./middleWare/auth";
+
+
 const app = express();
+
+app.use(helmet({
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+}));
 
 // allow this origin to access our api in local machine
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: process.env.CLIENT_URL || "http://localhost:5173",
   }),
 );
+
+// Apply the rate limiting middleware to all requests.
+app.use(requestLoggerMiddleware);
 
 app.get("/", async (req, res) => {
   res.json({ message: "Server is working!" });
@@ -31,14 +47,15 @@ app.get("/", async (req, res) => {
 
 // exclude express.json for stripe route
 app.use("/stripe", express.raw({ type: "application/json" }), stripeRoutes);
+app.use(globalLimiter)
 
 app.use(express.json());
 app.use("/", userRoutes);
-app.use("/admin", adminRoutes);
-app.use("/products", productRoutes);
+app.use("/admin",requireAuth, isAdmin, adminRoutes);
+app.use("/products", browsingLimiter, productRoutes);
 app.use("/cart", cartRoutes);
-app.use("/order", orderRoutes)
-app.use("/checkout", checkoutRoutes);
+app.use("/order", requireAuth,orderRoutes)
+app.use("/checkout", requireAuth, checkoutLimiter, checkoutRoutes);
 
 //==========================================
 // error handling
@@ -62,8 +79,4 @@ app.use(
   },
 );
 
-app.listen(3000, () => {
-  console.log("Listening on port 3000");
-});
-
-console.log("HEllo!!!");
+export default app;

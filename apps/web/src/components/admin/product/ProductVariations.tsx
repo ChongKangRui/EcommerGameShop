@@ -1,21 +1,18 @@
-import { useForm, type Control } from "react-hook-form";
+import {  type Control } from "react-hook-form";
 
 import {
   Field,
   FieldGroup,
-  FieldDescription,
   FieldLabel,
-  FieldLegend,
-  FieldSet,
+
 } from "@/components/ui/field";
 
 import { Button } from "../../ui/button";
 
-import { Heading1, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
-import { Input } from "@/components/ui/input";
 import { type ValidationFormProps } from "@/lib/utils";
-import { type UseFormWatch } from "react-hook-form";
+
 
 import { type ProductVariationData } from "@ecom/shared/src/productSchema";
 import { type ProductFormData } from "@ecom/shared/src/productSchema";

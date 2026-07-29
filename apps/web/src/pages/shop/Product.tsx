@@ -1,19 +1,16 @@
-import { ShopItemCard } from "@/components/shop/ShopItem";
-import { Loader, Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { ShopFilterSelection } from "@/components/shop/ShopFilterSelection";
+
 
 import { ProductDetail } from "@/components/shop/ProductDetail";
 import { ProductDescription } from "@/components/shop/ProductDescription";
 import { useProductQuery } from "@/hooks/useProduct";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import Loading from "@/components/Loading";
-import { flashMessage_Failed } from "@/lib/flash";
+
 import { useEffect, useState } from "react";
 
 export default function Product() {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+
   const { data, isLoading, isError, isSuccess } = useProductQuery(id ? id : "");
   const [currentVariationId, setCurrentVariationId] = useState("");
 

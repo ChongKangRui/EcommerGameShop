@@ -1,4 +1,4 @@
-import { useForm, type FieldValues, useFieldArray } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
@@ -12,7 +12,7 @@ import {
 
 import { type ProductTypeEnum } from "@ecom/shared/src/type/product";
 import type { UseMutateFunction } from "@tanstack/react-query";
-import { flashMessage_Failed, flashMessage_Success } from "@/lib/flash";
+import { flashMessage_Failed } from "@/lib/flash";
 
 type ProductFormProps = {
   title: string;
@@ -252,11 +252,7 @@ export default function ProductForm({
               {isPending ? "Sending..." : "Submit"}
             </Button>
           </div>
-          {/* {isError && (
-             <p className="text-center text-destructive mt-4">
-               {errorMessage ?? "Something went wrong"}
-             </p>
-           )} */}
+         
         </form>
       </div>
     </div>

@@ -2,7 +2,6 @@ import {
   useQueryClient,
   useMutation,
   useQuery,
-  type UseQueryResult,
 } from "@tanstack/react-query";
 import { useGuestCartStore } from "./useGuestCartStore";
 import { useAuth } from "@/context/AuthProvider";
@@ -40,6 +39,8 @@ export const useCart = (): CartApi => {
     const newLocalCartItems = cartItems.cartItems.map((i) => {
       return { variation_id: i.variation_id, quantity: i.quantity };
     });
+    
+    
     setItems(newLocalCartItems);
   };
 
@@ -51,11 +52,13 @@ export const useCart = (): CartApi => {
       const { data } = await api.post<CartItemsResponse>("/cart/guest", {
         cartItems: guestItems,
       });
+      const finalCartItems = data.cartItems.filter((i)=>i.quantity > 0);
+  
       if (data.adjusted) {
-        updateLocalCartstorage(data);
+        updateLocalCartstorage({cartItems: finalCartItems, adjusted: data.adjusted});
       }
 
-      return data;
+      return {cartItems: finalCartItems, adjusted: data.adjusted};
     },
     enabled: !isAuthenticated && guestItems.length > 0 && !isAuthLoading,
   });
@@ -65,7 +68,7 @@ export const useCart = (): CartApi => {
     queryKey: ["cart", "user"],
     queryFn: async () => {
       const { data } = await api.get<CartItemsResponse>("/cart/me");
-
+      console.log(data);
       //if (data.adjusted) {
       updateLocalCartstorage(data);
       // }

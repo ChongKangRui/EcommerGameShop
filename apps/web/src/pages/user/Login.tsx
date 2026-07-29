@@ -15,7 +15,6 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthProvider";
 import { flashMessage_Failed } from "@/lib/flash";
-import type { ApiError } from "@ecom/shared/src/type/api";
 import { useCart } from "@/hooks/useCart";
 import { useGuestCartStore } from "@/hooks/useGuestCartStore";
 import type { UserLoginRespawn } from "@ecom/shared/src/type/user";
@@ -25,16 +24,22 @@ export default function Register() {
     register,
     handleSubmit,
     setValue,
-    reset,
+
+    watch,
     formState: { errors },
   } = useForm<LoginData>({
     resolver: zodResolver(loginDataSchema),
+    defaultValues:{
+      email: "",
+      password:"",
+      rememberMe:false
+    }
   });
 
   const navigate = useNavigate();
   const loginMutation = useLogin();
   const [disableInput, setDisableInput] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+ // const [rememberMe, setRememberMe] = useState(false);
   const { setToken, setUser } = useAuth();
   const { migrateItem } = useCart();
   const { items } = useGuestCartStore();
@@ -44,7 +49,7 @@ export default function Register() {
 
     setDisableInput(true);
     loginMutation.mutate(
-      { ...data, rememberMe },
+      { ...data },
       {
         onSuccess: (res: UserLoginRespawn) => {
           //console.log(res.user);
@@ -65,7 +70,7 @@ export default function Register() {
     );
 
   };
-
+ 
   const fillInCustomerCredential = ()=>{
      setValue("email", "abc@gmail.com", {shouldValidate: true});
      setValue("password", "abcABC123", {shouldValidate: true, shouldDirty: true});
@@ -106,7 +111,7 @@ export default function Register() {
           <div className="flex flex-col gap-5">
             <div className="text-center mt-10">
               <div className="flex items-center justify-center my-2 gap-3">
-                <Switch id="rememberMe" onCheckedChange={setRememberMe} />
+                <Switch id="rememberMe" onCheckedChange={()=>setValue("rememberMe", !watch('rememberMe'))} />
                 <Label htmlFor="rememberMe">Remember Me</Label>
               </div>
               <div>

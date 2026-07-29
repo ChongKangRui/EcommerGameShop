@@ -4,12 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/app.ts",
-    "dev:debug": "node --inspect --import tsx src/app.ts",
+    "dev": "tsx watch src/server.ts",
+    "dev:debug": "node --inspect --import tsx src/server.ts",
     "build": "tsc",
-    "start": "node dist/app.js",
-    "initDB": "npx ts-node migrate.ts",
-    "reInitDB": "npx ts-node migrate.ts 1"
+    "test": "jest --runInBand --detectOpenHandles",
+    "start": "node dist/server.js",
+    "initDB": "npx ts-node src/migration/migrate.ts",
+    "initTestDB": "npx ts-node src/migration/migrateForTestDB.ts 1 seed",
+    "reInitDB": "npx ts-node src/migration/migrate.ts 1"
   },
   "keywords": [],
   "author": "",
@@ -27,6 +29,7 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.6.1",
     "formidable": "^3.5.4",
     "helmet": "^8.2.0",
     "jsonwebtoken": "^9.0.3",

@@ -1,13 +1,12 @@
 import { useEffect, useRef } from "react";
 import { Elements } from "@stripe/react-stripe-js";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { loadStripe } from "@stripe/stripe-js";
 
 import Loading from "@/components/Loading";
 
 import CheckoutForm from "@/components/checkout/CheckoutForm";
 import { useInitCheckout } from "@/hooks/useCheckout";
-import { useQueryClient } from "@tanstack/react-query";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
@@ -15,14 +14,22 @@ export default function Checkout() {
   console.log(stripePromise);
   const initCheckout = useInitCheckout();
   const hasInitiated = useRef(false);
-  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  //const queryClient = useQueryClient();
 
   // why use the useRef? as far as I know, strict mode in react will causing mount twice
   // useRef will prevent it from render twice since changing it doesnt cause rerender
   useEffect(() => {
     if (hasInitiated.current) return;
     hasInitiated.current = true;
+    
     initCheckout.mutate(undefined, {
+      onSuccess:(data)=>{
+        console.log("Hi", data);
+        if(data.ReconcileResult === 'paymentUnresolved'){
+         navigate(`/order-confirmation/${data.orderId}`, {replace: true, state: {status: "last_pay_unresolved"}});
+        }
+      },
       onError: (err) => {
         hasInitiated.current = false; // allow retry
         console.log(err);

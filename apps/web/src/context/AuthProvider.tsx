@@ -2,7 +2,6 @@ import { createContext, useContext, useState, useEffect } from "react";
 import api from "../lib/api";
 import type { AxiosError } from "axios";
 import { type ChildrenOnlyProps } from "@/components/CommonType";
-import { useNavigate } from "react-router";
 import {type UserInfo} from "@ecom/shared/src/type/user"
 
 
@@ -32,7 +31,7 @@ export function AuthProvider({ children }: ChildrenOnlyProps) {
       setIsLoading(false);
       return;
     }
-
+    console.log("Run content authenticating");
     // get the user data and store in the global context
     api
       .get("/auth/verify")
@@ -41,7 +40,7 @@ export function AuthProvider({ children }: ChildrenOnlyProps) {
        // console.log(res.data.user);
       })
       .catch((err: AxiosError) => {
-        console.log("Removve JWT token");
+        console.log("Remove JWT token due to ", err);
         localStorage.removeItem("token");
       })
       .finally(() => setIsLoading(false));

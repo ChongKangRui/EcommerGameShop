@@ -1,7 +1,5 @@
 "use client"
 
-import * as React from "react"
-import Autoplay from "embla-carousel-autoplay"
 import { HomeBannerCollections } from "@/data/HomeBannerCollection"
 
 import {
@@ -10,18 +8,22 @@ import {
   CarouselItem,
  
 } from "@/components/ui/carousel"
+import { useAutoplayCarousel } from "@/hooks/useCarousell"
 
 export default function HomeCarousell() {
-  const plugin = React.useRef(
-    Autoplay({ delay: 5000, stopOnInteraction: false })
-  )
+ const { plugin,setApi, onMouseEnter, onMouseLeave } = useAutoplayCarousel({
+     delay: 5000,
+     stopOnInteraction: false,
+   });
 
   return (
     <Carousel
-      plugins={[plugin.current]}
+     
       className="max-w-[50rem] md:max-w-5xl mx-auto mt-5"
-      onMouseEnter={plugin.current.stop}
-      onMouseLeave={()=>{plugin.current.reset(); plugin.current.play()}}
+      plugins={[plugin]}
+      setApi={setApi}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       opts={{
         loop: true,  
       watchDrag: true,
@@ -30,7 +32,7 @@ export default function HomeCarousell() {
       <CarouselContent>
         {HomeBannerCollections.map((item, index) => (
           <CarouselItem key={index} >
-            <img className="w-full h-50 md:h-130 object-cover" src={item.imgRef} alt="" />
+            <img className="w-full h-70 sm:h-100 md:h-130 object-cover" src={item.imgRef} alt="" />
           </CarouselItem>
         ))}
       </CarouselContent>

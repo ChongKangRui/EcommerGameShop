@@ -2,19 +2,21 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useDebounce } from './useDebounce';
-import { useAdminOrdersQuery } from './useOrder';
+import { useAdminOrdersQuery, useCustomerOrdersQuery } from './useOrder';
 
-interface useOrderSearch {
+interface orderSearchProps {
   limit?: number;
   defaultSort?: string;
   defaultFilter?: string;
+  mode?: 'admin' | 'customer';
 }
 
-export function useOrderSearch(options: useOrderSearch = {}) {
+export function useOrderSearch(options: orderSearchProps = {}) {
   const {
     limit = 20,
     defaultSort = 'created_at:desc',
     defaultFilter = 'all',
+    mode = 'customer',
   } = options;
 
   // 1. URL State - Simple and readable
@@ -46,13 +48,26 @@ export function useOrderSearch(options: useOrderSearch = {}) {
   }, [debouncedSearch, urlSearch, setSearchParams]);
 
   // 4. Fetch Data
-  const { data, isLoading, isError, isSuccess,error, refetch } = useAdminOrdersQuery({
+ const adminQuery = useAdminOrdersQuery({
     limit,
     offset: pageIndex * limit,
     sortBy: sort,
     filterBy: filter,
     search: debouncedSearch,
+    enabled: mode === 'admin'
   });
+
+  const customerQuery = useCustomerOrdersQuery({
+    limit,
+    offset: pageIndex * limit,
+    sortBy: sort,
+    filterBy: filter,
+    search: debouncedSearch,
+    enabled: mode === 'customer'
+  });
+
+  const activeQuery = mode === 'admin' ? adminQuery : customerQuery;
+  const { data, isLoading, isError, isSuccess, error, refetch } = activeQuery;
 
   // 5. Helper Functions
   const updateFilter = (key: string, value: string) => {

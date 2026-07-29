@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+
 
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,7 +14,6 @@ import { type ValidationFormProps } from "@/lib/utils";
 import FormField from "@/components/FormField";
 
 import { type ProductTypeEnum } from "@ecom/shared/src/type/product";
-import { Checkbox } from "@/components/ui/checkbox";
 
 interface ProductInfoProps extends ValidationFormProps {
   setProductType: (type: ProductTypeEnum) => void;

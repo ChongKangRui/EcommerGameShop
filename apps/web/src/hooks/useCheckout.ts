@@ -18,7 +18,8 @@ export function useCartValidate() {
 export function useInitCheckout() {
   return useMutation({
     mutationFn: () => {
-      return api.post<CheckoutResponse>("/checkout/init").then((r) => r.data);
+      return api.post<CheckoutResponse>("/checkout/init").then((r) => {console.log(r);  return r.data});
     },
   });
 }
+

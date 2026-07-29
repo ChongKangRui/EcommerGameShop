@@ -8,7 +8,8 @@ export const loginDataSchema = z
       .min(1, "Email is required"),
     password: z
       .string()
-      .min(1, "Please enter password")
+      .min(1, "Please enter password"),
+    rememberMe: z.boolean()
   })
   // .refine((data) => data.password === data.confirmPassword, {
   //   message: "Passwords do not match",

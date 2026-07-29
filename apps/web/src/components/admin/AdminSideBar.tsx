@@ -1,83 +1,3 @@
-//import { Link } from "react-router-dom";
-//import {
-//  LayoutDashboard,
-//  Package,
-//  ShoppingCart,
-//  Plus,
-//  User,
-//} from "lucide-react";
-//import {
-//  Sidebar,
-//  SidebarHeader,
-//  SidebarContent,
-//  SidebarFooter,
-//  SidebarMenu,
-//  SidebarMenuItem,
-//  SidebarMenuButton,
-//  SidebarTrigger,
-//} from "@/components/ui/sidebar";
-//import { useAuth } from "@/context/AuthProvider";
-//import { useState } from "react";
-//
-//
-//const menuItems = [
-//  { to: "/admin", icon: LayoutDashboard, label: "Dashboard" },
-//  { to: "/admin/products", icon: Package, label: "View Products" },
-//  { to: "/admin/addproduct", icon: Plus, label: "Add Product" },
-//  { to: "/admin/orders", icon: ShoppingCart, label: "Check Orders" },
-//];
-
-// export function AdminSideBar() {
-//   const { user } = useAuth();
-//   //const [isCollapsed, setIsCollapsed] = useState(false);
-//   return (
-//     <Sidebar
-//       collapsible="icon"
-//       className="border-r border-zinc-800 bg-zinc-950 text-white "
-    
-//     >
-//       {/* Header */}
-//       <SidebarHeader className="flex flex-row items-center justify-between px-3 py-4 border-b border-zinc-800">
-//         <Link
-//           className="font-bitcount text-sm truncate text-white group-data-[collapsible=icon]:hidden"
-//           to="/"
-//         >
-//           RedField Gaming
-//         </Link>
-//         <SidebarTrigger className="text-white hover:text-gray-500 hover:bg-black" />
-//       </SidebarHeader>
-
-//       {/* Menu */}
-//       <SidebarContent className="p-2">
-//         <SidebarMenu>
-//           {menuItems.map(({ to, icon: Icon, label }) => (
-//             <SidebarMenuItem key={to}>
-//               <SidebarMenuButton tooltip={label}>
-//                 <Link
-//                   to={to}
-//                   className="text-zinc-300 hover:bg-zinc-800 hover:text-white flex 
-//                   items-center gap-3 px-1 py-2 rounded-md transition-colors"
-//                 >
-//                   <Icon className="shrink-0 h-5 w-5" />
-
-//                   <span className="truncate text-sm">{label}</span>
-//                 </Link>
-//               </SidebarMenuButton>
-//             </SidebarMenuItem>
-//           ))}
-//         </SidebarMenu>
-//       </SidebarContent>
-
-//       {/* Footer */}
-//       <SidebarFooter className="flex flex-row items-center py-5 px-4">
-//         <User className="shrink-0 h-5 w-5" />
-//         <span className="truncate text-sm ms-3 group-data-[collapsible=icon]:hidden">
-//           {user?.first_name} {user?.last_name}
-//         </span>
-//       </SidebarFooter>
-//     </Sidebar>
-//   );
-// }
 
  import { Link } from "react-router-dom";
  import {
@@ -86,17 +6,16 @@
    ShoppingCart,
    PanelLeft,
    Plus,
-   User,
+   RotateCcw ,
  } from "lucide-react";
- import { useSidebar } from "@/components/ui/sidebar";
- import { useState } from "react";
- import { useAuth } from "@/context/AuthProvider";
+
  import AdminDropDown from "./AdminDropDown"
 import { useIsMobile } from "@/lib/utils";
  const menuItems = [
    { to: "/admin", icon: LayoutDashboard, label: "Dashboard" },
    { to: "/admin/products", icon: Package, label: "View Products" },
    { to: "/admin/addproduct", icon: Plus, label: "Add Product" },
+    { to: "/admin/refunds", icon: RotateCcw, label: "Check Refunds" },
    { to: "/admin/orders", icon: ShoppingCart, label: "Check Orders" },
  ];
 

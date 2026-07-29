@@ -54,6 +54,8 @@ export function useBulkAction<TValue, TVariables, TResult extends { message?: st
     mutation.mutate(buildVariables(productIds, value), {
       onSuccess: (res) => {
         queryClient.invalidateQueries({ queryKey: invalidateKey, refetchType: "active" });
+        // invalidate admin dashboard data.
+        queryClient.invalidateQueries({ queryKey: ["admin", "dashboard"]});
         setDialogueOpen(false);
         
         reset();

@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+
 import QuantitySelector from "../shop/QuantitySelector";
 import { useCart } from "@/hooks/useCart";
 import { Trash2 } from "lucide-react";
 import { useNavigate } from "react-router";
-import { useDebounce } from "@/hooks/useDebounce";
 
 type CartItemProps = {
   product_id: number;
@@ -40,7 +39,7 @@ export default function CartProduct({
   }
 
   const navigate = useNavigate();
-
+  console.log(maxQuantity);
   return (
     <div className="grid grid-cols-8">
       <div className="col-span-6 md:col-span-4 flex">
@@ -70,6 +69,7 @@ export default function CartProduct({
                 currentQuantity={quantity}
                 disabled={disabled}
                 setQuantity={handleQuantityChange}
+                showOutOfStock = {false}
               ></QuantitySelector>
               <Trash2 className="cursor-pointer mt-2 ms-2 w-5 h-5" onClick={()=>removeItem(variation_id)}></Trash2>
               
@@ -89,6 +89,7 @@ export default function CartProduct({
           currentQuantity={quantity}
           disabled={disabled}
           setQuantity={handleQuantityChange}
+          showOutOfStock = {false}
         ></QuantitySelector>
         <Trash2 className="cursor-pointer mt-2 ms-2 w-5 h-5" onClick={()=>removeItem(variation_id)}></Trash2>
       </div>
