@@ -70,15 +70,27 @@ export const adminRefundRepository = {
     refundAmount: number,
     processed_by: string,
   ) {
-    const result = await pool.query(
-      `Update refunds SET status = $1, processed_by = $2, refund_ref=$3, amount = $4, 
+    if (refund_ref) {
+      const result = await pool.query(
+        `Update refunds SET status = $1, processed_by = $2, refund_ref=$3, amount = $4, 
       processed_at = NOW(),
     updated_at = NOW()
     where refund_id = $5
       RETURNING refund_id`,
-      [newStatus, processed_by, refund_ref, refundAmount, refundId],
-    );
-    return result.rows[0] ?? null;
+        [newStatus, processed_by, refund_ref, refundAmount, refundId],
+      );
+      return result.rows[0] ?? null;
+    } else {
+      const result = await pool.query(
+        `Update refunds SET status = $1, processed_by = $2,amount = $3, 
+      processed_at = NOW(),
+    updated_at = NOW()
+    where refund_id = $4
+      RETURNING refund_id`,
+        [newStatus, processed_by, refundAmount, refundId],
+      );
+      return result.rows[0] ?? null;
+    }
   },
 
   async massRejectRefund(refundId: string[], processed_by: string) {

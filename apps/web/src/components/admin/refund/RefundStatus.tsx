@@ -52,7 +52,7 @@ console.log(refundInfo.amount);
           disabled={refundInfo.status !== "pending"}
         >
           <SelectTrigger id="orderStatus">
-            <SelectValue>{status}</SelectValue>
+            <SelectValue className="text-black">{status}</SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value={"rejected"}>rejected</SelectItem>

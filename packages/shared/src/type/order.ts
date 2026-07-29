@@ -17,10 +17,13 @@ export const orderAdminStatusUpdateOptions: string[] = [
   "delivered",
   "refunded",
   "expired",
+  "partially_refunded",
 ] as const;
 
-
-export const orderFilterOptions = ["all", ...orderAdminStatusUpdateOptions] as const;
+export const orderFilterOptions = [
+  "all",
+  ...orderAdminStatusUpdateOptions,
+] as const;
 
 export const adminOrderTypeOptions = z.enum(orderAdminStatusUpdateOptions);
 
@@ -41,8 +44,6 @@ export const adminOrderSortOptions = [
   { value: "updated_at:desc", label: "Recently Updated" },
   { value: "updated_at:asc", label: "Oldest Updated" },
 ] as const;
-
-
 
 export interface Order {
   order_id: string;
@@ -85,7 +86,6 @@ export type OrdersResponse = {
   message: string;
 };
 
-
 //////////////////////////////////////////////////////////////
 
 export type MonthlySalesDataRequestInput = {
@@ -114,7 +114,6 @@ export type DashboardDataResponse = {
   orderGrowthStat: GrowthStatus;
 };
 
-
 //////////////////////////////////////////////////////////////
 
 export type AdminOrderTypeEnum = z.infer<typeof adminOrderTypeOptions>;
@@ -127,13 +126,13 @@ export const getOrderStatusAvailableUpdateOptions = (
       return ["paid", "shipped", "cancelled"]; // Can mark as paid, ship directly, or cancel
 
     case "paid":
-      return ["shipped", "refunded"]; // Can ship or refund (but NOT back to pending)
+      return ["shipped", "refunded", "partially_refunded"]; // Can ship or refund (but NOT back to pending)
 
     case "shipped":
-      return ["delivered", "refunded"]; // Can mark delivered or refund
+      return ["delivered", "refunded", "partially_refunded"]; // Can mark delivered or refund
 
     case "delivered":
-      return ["refunded"]; // Only refund is possible (maybe also return/refund)
+      return ["refunded","partially_refunded"]; // Only refund is possible (maybe also return/refund)
 
     case "cancelled":
       return null; // No actions - terminal state
@@ -143,6 +142,8 @@ export const getOrderStatusAvailableUpdateOptions = (
 
     case "expired":
       return ["paid"]; // allow set to paid if somehow cron job OR other source of set paid having issue which technically shoudn't happen
+    case "partially_refunded":
+      return null; // No actions - terminal state
 
     default:
       return null;

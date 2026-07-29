@@ -2,8 +2,6 @@ import { Button } from "@/components/ui/button";
 
 import { useEffect, useState } from "react";
 
-
-
 import { useQueryClient } from "@tanstack/react-query";
 import { flashMessage_Failed, flashMessage_Success } from "@/lib/flash";
 import { useNavigate } from "react-router";
@@ -51,7 +49,11 @@ export default function RefundInfo({ orderId }: { orderId: string }) {
       {
         onSuccess: () => {
           flashMessage_Success("Update refund status success");
-          queryClient.invalidateQueries({queryKey:["admin", "refund", orderId]})
+          queryClient.invalidateQueries({
+            queryKey: ["admin", "refund"],
+          });
+          queryClient.invalidateQueries({ queryKey: ["admin", "dashboard"] });
+          queryClient.invalidateQueries({ queryKey: ["admin", "order"] });
         },
         onError: (err) => {
           flashMessage_Failed(err.message);
@@ -99,18 +101,18 @@ export default function RefundInfo({ orderId }: { orderId: string }) {
           </div>
         </div>
 
-{refundData.status === 'pending' && 
-        <div className="text-center mt-10 flex flex-col justify-center items-center md:flex-row md:gap-5">
-          <Button
-            type="button"
-            className="cursor-pointer max-w-50"
-            disabled={refundUpdateMutation.isPending}
-            onClick={() => onUpdateStatusConfirm()}
-          >
-            Update Refund Status
-          </Button>
-        </div>
-}
+        {refundData.status === "pending" && (
+          <div className="text-center mt-10 flex flex-col justify-center items-center md:flex-row md:gap-5">
+            <Button
+              type="button"
+              className="cursor-pointer max-w-50"
+              disabled={refundUpdateMutation.isPending}
+              onClick={() => onUpdateStatusConfirm()}
+            >
+              Update Refund Status
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

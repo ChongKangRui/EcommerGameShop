@@ -149,17 +149,16 @@ export const orderService = {
         `Monthly sales insertion for ${order.order_id}, total ${items.length} had been updated`,
       );
       await Promise.all([
-        ...items.map(async (i) => {
-          console.log();
-          return await orderRepository.updateMonthlySalesRecord({
+        ...items.map((i) => 
+           orderRepository.updateMonthlySalesRecord({
             productId: i.product_id,
             year,
             month,
             units_sold: i.quantity,
             revenue: i.item_total_price,
-          });
-        }),
-        await cartRepository.clearCart(order.user_id),
+          })
+        ),
+         cartRepository.clearCart(order.user_id),
       ]);
 
       log.debug(`Cart cleared for user ${order.order_id}`);

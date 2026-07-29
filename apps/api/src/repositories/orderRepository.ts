@@ -146,6 +146,8 @@ export const orderRepository = {
     );
     //return result.rows[0] ?? null;
   },
+
+  
   async deductMonthlySalesRecord({
     productId,
     date,

@@ -11,6 +11,8 @@ import {
 import { adminRefundRepository } from "src/repositories/admin/adminRefundRepository";
 import { stripeGateway } from "src/gateways/stripeGateway";
 import { orderRepository } from "src/repositories/orderRepository";
+import { adminOrderRepository } from "src/repositories/admin/adminOrderRepository";
+import { adminOrderService } from "./adminOrderService";
 
 export const adminRefundService = {
   async getRefundRequestTable(query: Request["query"], log: Logger) {
@@ -107,16 +109,21 @@ export const adminRefundService = {
         refundId,
         newStatus,
         "",
-        1,
+        existing.refundInfo.amount,
         processed_by,
       );
     } else {
-      const { customer } = await orderRepository.getCustomerOrder(
+      const { customer, items } = await orderRepository.getCustomerOrder(
         existing.refundInfo.order_id,
+        existing.refundInfo.requested_by,
       );
 
+      if (!customer) {
+        throw Error("Invalid customer info");
+      }
+
       if (paymentAmount > customer.total_amount) {
-        throw new Error(
+        throw Error(
           `Refund amount RM ${paymentAmount} exceeds order total RM ${customer.total_amount}`,
         );
       }
@@ -126,14 +133,38 @@ export const adminRefundService = {
         customer.payment_ref,
         `refund_${existing.refundInfo.order_id}`,
       );
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth() + 1;
 
-      updateResult = await adminRefundRepository.updateRefundStatus(
-        refundId,
-        newStatus,
-        refund.id,
-        paymentAmount,
-        processed_by,
-      );
+      const [outUpdateResult] = await Promise.all([
+        adminRefundRepository.updateRefundStatus(
+          refundId,
+          newStatus,
+          refund.id,
+          paymentAmount,
+          processed_by,
+        ),
+        adminOrderService.updateOrderStatus(existing.refundInfo.order_id, paymentAmount < customer.total_amount ? 'partially_refunded' : 'refunded', log)
+        ,
+        ...items.map((i) => {
+          orderRepository.updateMonthlySalesRecord({
+            productId: i.product_id,
+            year,
+            month,
+            units_sold: -i.quantity,
+            revenue: -i.item_total_price,
+          });
+        }),
+      ]);
+      updateResult = outUpdateResult;
+      // updateResult = await adminRefundRepository.updateRefundStatus(
+      //   refundId,
+      //   newStatus,
+      //   refund.id,
+      //   paymentAmount,
+      //   processed_by,
+      // );
     }
 
     if (!updateResult) {
