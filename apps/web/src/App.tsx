@@ -16,23 +16,23 @@ import Profile from "./pages/user/Profile";
 import { PrivateOnlyRoute } from "./route/PrivateOnlyRoute";
 import { AdminOnlyRoute } from "./route/AdminOnlyRoute";
 import { lazy, Suspense } from "react";
-const AdminProductList = lazy(() => import("@/pages/admin/AdminProductList"));
-const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard"));
 import AdminLayout from "./components/admin/AdminLayout";
-import AddProduct from "./pages/admin/AddProduct";
-//import AdminProductList from "./pages/admin/AdminProductList";
-import UpdateProduct from "./pages/admin/UpdateProduct";
 import Checkout from "./pages/user/Checkout";
 import OrderConfirmation from "./pages/user/OrderConfirmation";
-import AdminOrderList from "./pages/admin/AdminOrderList";
-import AdminOrder from "./pages/admin/AdminOrder";
-
 import OrderHistory from "./pages/user/OrderHistory";
 import Order from "./pages/user/Order";
-import AdminRefundList from "./pages/admin/AdminRefundList";
-import AdminRefund from "./pages/admin/AdminRefund";
 import NotFound from "./pages/NotFound";
 import Loading from "./components/Loading";
+
+// Admin-only pages — lazy-loaded since a regular shopper never needs this code
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AddProduct = lazy(() => import("./pages/admin/AddProduct"));
+const AdminProductList = lazy(() => import("./pages/admin/AdminProductList"));
+const UpdateProduct = lazy(() => import("./pages/admin/UpdateProduct"));
+const AdminOrderList = lazy(() => import("./pages/admin/AdminOrderList"));
+const AdminOrder = lazy(() => import("./pages/admin/AdminOrder"));
+const AdminRefundList = lazy(() => import("./pages/admin/AdminRefundList"));
+const AdminRefund = lazy(() => import("./pages/admin/AdminRefund"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -42,6 +42,11 @@ const queryClient = new QueryClient({
     },
   },
 });
+
+// small helper so every lazy admin route gets the same fallback consistently
+const withSuspense = (children: React.ReactNode) => (
+  <Suspense fallback={<Loading />}>{children}</Suspense>
+);
 
 function App() {
   return (
@@ -129,32 +134,16 @@ function App() {
                 </AdminOnlyRoute>
               }
             >
-              <Route
-                index
-                element={
-                  <Suspense fallback={<Loading />}>
-                    <AdminDashboard />
-                  </Suspense>
-                }
-              />
-              <Route path="/admin/addproduct" element={<AddProduct />} />
-              <Route
-                path="/admin/products"
-                element={
-                  <Suspense fallback={<Loading />}>
-                    <AdminProductList />
-                  </Suspense>
-                }
-              />
-              <Route path="/admin/refunds" element={<AdminRefundList />} />
-              <Route path="/admin/refund/:orderId" element={<AdminRefund />} />
-              <Route path="/admin/products/:id" element={<UpdateProduct />} />
-              <Route path="/admin/orders" element={<AdminOrderList />} />
-              <Route path="/admin/orders/:orderId" element={<AdminOrder />} />
+              <Route index element={withSuspense(<AdminDashboard />)} />
+              <Route path="/admin/addproduct" element={withSuspense(<AddProduct />)} />
+              <Route path="/admin/products" element={withSuspense(<AdminProductList />)} />
+              <Route path="/admin/refunds" element={withSuspense(<AdminRefundList />)} />
+              <Route path="/admin/refund/:orderId" element={withSuspense(<AdminRefund />)} />
+              <Route path="/admin/products/:id" element={withSuspense(<UpdateProduct />)} />
+              <Route path="/admin/orders" element={withSuspense(<AdminOrderList />)} />
+              <Route path="/admin/orders/:orderId" element={withSuspense(<AdminOrder />)} />
               {/* index = default child */}
               {/* future routes */}
-              {/* <Route path="products" element={<AdminProductsPage />} /> */}
-              {/* <Route path="orders" element={<AdminOrdersPage />} /> */}
             </Route>
 
             <Route path="*" element={<NotFound />} />
