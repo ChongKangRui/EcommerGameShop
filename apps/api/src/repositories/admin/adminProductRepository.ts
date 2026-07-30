@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 import { pool } from "src/db/db";
-import {type GrowthStatus} from "@ecom/shared/src/type/order"
+import {type GrowthStatus} from "@ecom/shared/type/order"
 
 export const adminProductRepository = {
   async exists(productId: number) {

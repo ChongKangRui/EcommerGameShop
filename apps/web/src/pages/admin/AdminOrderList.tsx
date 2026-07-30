@@ -20,7 +20,7 @@ import {
   orderFilterOptions,
   orderAdminStatusUpdateOptions,
   type AdminOrderTypeEnum,
-} from "@ecom/shared/src/type/order";
+} from "@ecom/shared/type/order";
 import { useOrderSearch } from "@/hooks/useOrderSearch";
 import { adminOrderColumns } from "@/components/columns/AdminOrderColumn";
 

@@ -5,9 +5,9 @@ import {
   DashboardDataResponse,
   getOrderStatusAvailableUpdateOptions,
   
-} from "@ecom/shared/src/type/order";
+} from "@ecom/shared/type/order";
 import { adminOrderRepository } from "../../repositories/admin/adminOrderRepository";
-import { type ServiceResult } from "@ecom/shared/src/type/service";
+import { type ServiceResult } from "@ecom/shared/type/service";
 import { type Logger } from "src/utils/loggerHelper";
 import { orderRepository } from "src/repositories/orderRepository";
 import { orderService } from "../orderService";

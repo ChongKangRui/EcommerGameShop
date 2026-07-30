@@ -5,7 +5,7 @@ import {
 
 
 import type { NavBarLinkProps } from "./NavBarItemType"
-import { Link } from "react-router"
+import { Link } from "react-router-dom"
 
 export default function NavBarUserDropDownItem({name, link, onClick} : NavBarLinkProps){
     return(

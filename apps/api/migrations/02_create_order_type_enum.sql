@@ -7,6 +7,7 @@ CREATE TYPE order_status AS ENUM (
     'shipped',
     'canceled',
     'refunded',
+    'partially_refunded',
     'expired'
 );
 

@@ -16,7 +16,7 @@ import {
   orderFilterOptions,
   sortOrderOptions,
  
-} from "@ecom/shared/src/type/order";
+} from "@ecom/shared/type/order";
 import { useOrderSearch } from "@/hooks/useOrderSearch";
 import { customerOrderColumns } from "@/components/columns/CustomerOrderColumn";
 

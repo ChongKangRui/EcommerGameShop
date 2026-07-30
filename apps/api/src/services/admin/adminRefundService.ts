@@ -7,11 +7,10 @@ import {
   refundUpdateEnum,
   sortRefundTableOptions,
   type RefundTypeEnum,
-} from "@ecom/shared/src/type/refund";
+} from "@ecom/shared/type/refund";
 import { adminRefundRepository } from "src/repositories/admin/adminRefundRepository";
 import { stripeGateway } from "src/gateways/stripeGateway";
 import { orderRepository } from "src/repositories/orderRepository";
-import { adminOrderRepository } from "src/repositories/admin/adminOrderRepository";
 import { adminOrderService } from "./adminOrderService";
 
 export const adminRefundService = {

@@ -3,10 +3,10 @@ import cloudinary from "../../gateways/cloudinary";
 import { withTransaction } from "../../db/withTransaction";
 import { adminProductRepository } from "../../repositories/admin/adminProductRepository";
 import { parseProductForm } from "../../utils/productMapper";
-import { productServerSchema } from "@ecom/shared/src/parseFormidableSchema";
+import { productServerSchema } from "@ecom/shared/parseFormidableSchema";
 import { Logger } from "src/utils/loggerHelper";
 
-import { type ServiceResult } from "@ecom/shared/src/type/service";
+import { type ServiceResult } from "@ecom/shared/type/service";
 
 async function cleanupImages(publicIds: string[], Log: Logger) {
   const ids = publicIds.filter(Boolean);

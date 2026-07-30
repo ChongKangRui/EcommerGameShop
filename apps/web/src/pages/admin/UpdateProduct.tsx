@@ -10,10 +10,10 @@ import { flashMessage_Failed, flashMessage_Success } from "@/lib/flash";
 import {
   type ProductFormData,
   type ProductVariationData,
-} from "@ecom/shared/src/productSchema";
+} from "@ecom/shared/productSchema";
 import { useQueryClient } from "@tanstack/react-query";
 import Loading from "@/components/Loading";
-import type { ProductTypeEnum } from "@ecom/shared/src/type/product";
+import type { ProductTypeEnum } from "@ecom/shared/type/product";
 
 
 export default function UpdateProduct() {

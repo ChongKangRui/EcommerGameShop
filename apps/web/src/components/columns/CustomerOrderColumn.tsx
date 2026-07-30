@@ -1,7 +1,7 @@
 "use client";
 
 import { parseDateToLocal } from "@/lib/utils";
-import type { Order } from "@ecom/shared/src/type/order";
+import type { Order } from "@ecom/shared/type/order";
 import { type ColumnDef } from "@tanstack/react-table";
 
 import Cell from "../table/Cell";

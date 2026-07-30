@@ -3,7 +3,7 @@
 import { type ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { type Product } from "@ecom/shared/src/type/product";
+import { type Product } from "@ecom/shared/type/product";
 import Cell from "../table/Cell";
 
 
@@ -37,7 +37,7 @@ export const productColumn: ColumnDef<Product>[] = [
     cell: ({ row }) => (
       <Cell
         title={row.getValue("name")}
-        link={`/admin/products/${row.original.product_id})}`}
+        link={`/admin/products/${row.original.product_id}`}
       />
     ),
     meta: { className: "w-28 md:w-auto" },

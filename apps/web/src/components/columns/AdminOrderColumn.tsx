@@ -1,7 +1,7 @@
 "use client";
 
 import { Checkbox } from "@/components/ui/checkbox";
-import type { Order } from "@ecom/shared/src/type/order";
+import type { Order } from "@ecom/shared/type/order";
 import { type ColumnDef } from "@tanstack/react-table";
 import Cell from "../table/Cell";
 

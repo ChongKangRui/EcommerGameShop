@@ -14,8 +14,8 @@ import { Trash2 } from "lucide-react";
 import { type ValidationFormProps } from "@/lib/utils";
 
 
-import { type ProductVariationData } from "@ecom/shared/src/productSchema";
-import { type ProductFormData } from "@ecom/shared/src/productSchema";
+import { type ProductVariationData } from "@ecom/shared/productSchema";
+import { type ProductFormData } from "@ecom/shared/productSchema";
 import { type FieldErrors } from "react-hook-form";
 import FormField from "@/components/FormField";
 import { ImagePlus } from "lucide-react";

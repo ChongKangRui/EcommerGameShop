@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
-import { CartItemResponse } from "@ecom/shared/src/type/cart";
-import { OrderItemResponse } from "@ecom/shared/src/type/order";
+import { CartItemResponse } from "@ecom/shared/type/cart";
+import { OrderItemResponse } from "@ecom/shared/type/order";
 
 export const checkoutRepository = {
   async acquireUserLock(client: PoolClient, lockKey: bigint) {

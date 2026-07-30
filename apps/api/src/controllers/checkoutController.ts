@@ -19,6 +19,6 @@ export const initCheckout = async (req: AuthRequest, res: Response) => {
 
   } catch (e) {
     req.log.error("Error in init checkout", e);
-    return res.status(500).json({ error: "Unable to start checkout" });
+    return res.status(409).json({ error: "Unable to start checkout" });
   }
 };

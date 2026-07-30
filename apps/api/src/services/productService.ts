@@ -1,8 +1,8 @@
 import { Request } from "express";
 import { productRepository } from "src/repositories/productRepository";
 import { type Logger } from "src/utils/loggerHelper";
-import { type ServiceResult } from "@ecom/shared/src/type/service";
-import { adminProductSortOptions, productFilterOptions } from "@ecom/shared/src/type/product";
+import { type ServiceResult } from "@ecom/shared/type/service";
+import { adminProductSortOptions, productFilterOptions } from "@ecom/shared/type/product";
 
 const withFinalPrice = (product: any, variation: any) => {
   const price = parseFloat(product.price);

@@ -8,7 +8,7 @@ import { checkoutRepository } from "src/repositories/checkoutRepository";
 import {
   adminOrderSortOptions,
   orderFilterOptions,
-} from "@ecom/shared/src/type/order";
+} from "@ecom/shared/type/order";
 
 const MAX_CONFIRM_ORDER_WAIT_MS = 10_000;
 const POLL_INTERVAL_MS = 1000;
@@ -20,7 +20,7 @@ export const orderService = {
 
     if (!customer) {
       log.warn(`No order found for orderId ${orderId} for userId ${userId}`);
-      throw Error("Invalid customer info. Maybe user trying to access another user order");
+      throw new Error("Invalid customer info. Maybe user trying to access another user order");
     } else {
       log.info(`Fetched order ${orderId} with ${items.length} items`);
     }
@@ -35,9 +35,7 @@ export const orderService = {
   async getAllOrders(query: Request["query"], log: Logger, userId?: string) {
     const limit = parseInt(String(query.limit ?? "")) || 5;
     const offset = parseInt(String(query.offset ?? "")) || 0;
-    // const [sortColumn, sortDirection] = String(
-    //   query.sortBy ?? "created_at:desc",
-    // ).split(":");
+    
     const sortBy = String(query.sortBy);
     const filterBy = String(query.filterBy ?? "all");
     const search = query.search ? String(query.search) : "";
@@ -90,7 +88,7 @@ export const orderService = {
       if (!order) return { status: "notFound" } as const;
 
       if (order.status === "paid") {
-        log.error(`Order confirmed ${orderId}, ${pollCount}`);
+        log.info(`Order confirmed ${orderId}, ${pollCount}`);
         return { status: "paid" } as const;
       }
 
@@ -103,7 +101,7 @@ export const orderService = {
 
       switch (pi.status) {
         case "succeeded": {
-          log.warn(`Stripe succeeded but webhook may have missed ${orderId}`);
+          log.info(`Stripe succeeded but webhook may have missed ${orderId}`);
           await orderService.markOrderAsPaid(order.payment_ref, log);
           return { status: "paid" } as const;
         }

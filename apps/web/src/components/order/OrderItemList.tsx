@@ -1,5 +1,5 @@
 
-import type { OrderItem } from "@ecom/shared/src/type/order";
+import type { OrderItem } from "@ecom/shared/type/order";
 
 
 type OrderItemProp = {

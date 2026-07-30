@@ -7,8 +7,8 @@ import type {
   OrderConfirmResponse,
   OrderInfoRespawn,
   OrdersResponse,
-} from "@ecom/shared/src/type/order";
-import { buildTableQueryParams, type SearchQueryParams } from "@ecom/shared/src/type/search";
+} from "@ecom/shared/type/order";
+import { buildTableQueryParams, type SearchQueryParams } from "@ecom/shared/type/search";
 
 export function useOrderConfirm() {
   return useMutation({

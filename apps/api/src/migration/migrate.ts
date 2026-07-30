@@ -4,11 +4,6 @@ import fs from "fs";
 import path from "path";
 
 const client = new Client({
-  // host: "localhost",
-  // user: "postgres",
-  // port: 5432,
-  // password: "998101Nan---",
-  // database: "RedfieldGamingDB",
   host: process.env.DB_HOST ?? "localhost",
   user: process.env.DB_USER ?? "postgres",
   port: Number(process.env.DB_PORT) || 5432,

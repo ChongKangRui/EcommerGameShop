@@ -1,7 +1,7 @@
-import { cartItemSchema, cartItemsSchema } from "@ecom/shared/src/cartDataSchema";
+import { cartItemSchema, cartItemsSchema } from "@ecom/shared/cartDataSchema";
 import { cartRepository } from "src/repositories/cartRepository";
 import { type Logger } from "src/utils/loggerHelper";
-import { type ServiceResult } from "@ecom/shared/src/type/service";
+import { type ServiceResult } from "@ecom/shared/type/service";
 import { orderRepository } from "src/repositories/orderRepository";
 
 export const cartService = {

@@ -26,6 +26,7 @@ const poolConfig =
 
 export const pool = new Pool(poolConfig);
 
+
 if (process.env.NODE_ENV !== "test") {
   pool.query("SELECT NOW()", (err, res) => {
     if (err) {

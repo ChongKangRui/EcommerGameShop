@@ -1,5 +1,5 @@
 import { flashMessage_Failed } from "@/lib/flash";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router-dom";
 
 import OrderInfo from "@/components/order/OrderInfo";
 

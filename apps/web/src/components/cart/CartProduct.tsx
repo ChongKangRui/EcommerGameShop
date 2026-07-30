@@ -2,7 +2,7 @@
 import QuantitySelector from "../shop/QuantitySelector";
 import { useCart } from "@/hooks/useCart";
 import { Trash2 } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 type CartItemProps = {
   product_id: number;

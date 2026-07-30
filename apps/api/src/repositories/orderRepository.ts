@@ -1,11 +1,11 @@
 import {
   OrderItem,
   OrderWithCustomer,
-} from "@ecom/shared/src/type/order";
-import { SearchQueryParams } from "@ecom/shared/src/type/search";
+} from "@ecom/shared/type/order";
+import { SearchQueryParams } from "@ecom/shared/type/search";
 import { PoolClient, QueryResult } from "pg";
 import { pool } from "src/db/db";
-import { Order } from "stripe/cjs/resources/Climate";
+import { Order } from "@ecom/shared/type/order";
 
 export const orderRepository = {
   async getOrderTable(f: SearchQueryParams, user_id?: string) {

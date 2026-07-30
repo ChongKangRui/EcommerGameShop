@@ -6,8 +6,8 @@
     "types": ["node","jest"],
 
     /* Module - plain Node.js, not bundler */
-    "module": "CommonJS",
-    "moduleResolution": "node10",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "ignoreDeprecations": "6.0",
     /* Remove these - they are for bundlers (Vite, esbuild, etc.) */
     // "allowImportingTsExtensions": true,   ← bundler only

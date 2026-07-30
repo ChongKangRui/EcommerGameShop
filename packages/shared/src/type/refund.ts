@@ -3,8 +3,8 @@ import z from "zod";
 export const sortRefundTableOptions = [
   { value: "created_at:desc", label: "Newest First" },
   { value: "created_at:asc", label: "Oldest First" },
-  { value: "total_amount:asc", label: "Total: Low–High" },
-  { value: "total_amount:desc", label: "Total: High–Low" },
+  { value: "amount:asc", label: "Total: Low–High" },
+  { value: "amount:desc", label: "Total: High–Low" },
   { value: "status:asc", label: "Status A–Z" },
   { value: "status:desc", label: "Status Z–A" },
   { value: "requested_by:asc", label: "Requested By A–Z" },

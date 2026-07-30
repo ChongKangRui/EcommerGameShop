@@ -36,9 +36,11 @@ export default function QuantitySelector({
     return Math.min(max, Math.max(1, n));
   };
 
-  const decrement = () => {setQuantity(clamp(currentQuantity - 1))};
+  const decrement = () => {
+    setIsEditing(false);
+    setQuantity(clamp(currentQuantity - 1))};
   const increment = () => {
-
+ setIsEditing(false);
     setQuantity(clamp(currentQuantity + 1));
   };
 

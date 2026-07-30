@@ -1,5 +1,5 @@
 import { useAuth } from "@/context/AuthProvider"
-import { Navigate } from "react-router";
+import { Navigate } from "react-router-dom";
 import {type  ChildrenOnlyProps } from "@/components/CommonType";
 
 export function AdminOnlyRoute({children}: ChildrenOnlyProps){

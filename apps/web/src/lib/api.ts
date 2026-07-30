@@ -10,8 +10,8 @@ import { flashMessage_Failed } from "./flash";
 const api = axios.create({
   baseURL:
     import.meta.env.MODE === "production"
-      ? import.meta.env.VITE_API_URL // set this in production env
-      : "http://localhost:3000", // my local express port,
+      ? import.meta.env.VITE_API_URL 
+      : "http://localhost:3000", 
   validateStatus: (status) => status >= 200 && status < 400,
 });
 

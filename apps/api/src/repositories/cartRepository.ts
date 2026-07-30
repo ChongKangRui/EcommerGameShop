@@ -1,5 +1,5 @@
 import { pool } from "src/db/db";
-import { CartItemResponse } from "@ecom/shared/src/type/cart";
+import { CartItemResponse } from "@ecom/shared/type/cart";
 
 export const cartRepository = {
   async clearCart(userId: string) {

@@ -5,12 +5,12 @@ import CartProduct from "../../components/cart/CartProduct";
 
 import { useCart } from "@/hooks/useCart";
 import Loading from "@/components/Loading";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthProvider";
 import { flashMessage_Failed } from "@/lib/flash";
 import { useQueryClient } from "@tanstack/react-query";
 import { useCartValidate } from "@/hooks/useCheckout";
-import { type CartValidateResult } from "@ecom/shared/src/type/checkout";
+import { type CartValidateResult } from "@ecom/shared/type/checkout";
 
 
 export default function Cart() {

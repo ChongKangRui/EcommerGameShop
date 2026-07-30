@@ -5,7 +5,7 @@ import { Eye } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 
-import { adminProductSortOptions, productFilterOptions } from "@ecom/shared/src/type/product";
+import { adminProductSortOptions, productFilterOptions } from "@ecom/shared/type/product";
 import { PaginationComponent } from "@/components/PaginationComponent";
 import FilterSortingSelection from "@/components/table/FilterSortingSelection";
 import { flashMessage_Failed } from "@/lib/flash";

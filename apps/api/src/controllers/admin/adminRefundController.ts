@@ -1,4 +1,4 @@
-import { RefundTypeEnum } from "@ecom/shared/src/type/refund";
+import { RefundTypeEnum } from "@ecom/shared/type/refund";
 import type { Request, Response } from "express";
 
 import { AuthRequest } from "src/middleWare/auth";

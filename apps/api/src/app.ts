@@ -12,6 +12,7 @@ import cartRoutes from "./routes/cart";
 import checkoutRoutes from "./routes/checkout";
 import orderRoutes from "./routes/order";
 import stripeRoutes from "./routes/stripe";
+import healthCheckRoutes from "./routes/healthCheck"
 
 import { Response, Request, NextFunction } from "express";
 import ExpressError from "./utils/expressError";
@@ -22,6 +23,7 @@ import { requestLoggerMiddleware } from "./middleWare/requestLogger";
 
 import { browsingLimiter, checkoutLimiter, globalLimiter } from "./utils/rateLimitHelper";
 import { isAdmin, requireAuth } from "./middleWare/auth";
+
 
 
 const app = express();
@@ -50,6 +52,7 @@ app.use(globalLimiter)
 
 app.use(express.json());
 app.use("/", userRoutes);
+app.use("/healthcheck", healthCheckRoutes)
 app.use("/admin",requireAuth, isAdmin, adminRoutes);
 app.use("/products", browsingLimiter, productRoutes);
 app.use("/cart", cartRoutes);

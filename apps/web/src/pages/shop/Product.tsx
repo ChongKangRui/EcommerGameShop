@@ -3,7 +3,7 @@
 import { ProductDetail } from "@/components/shop/ProductDetail";
 import { ProductDescription } from "@/components/shop/ProductDescription";
 import { useProductQuery } from "@/hooks/useProduct";
-import { useParams } from "react-router";
+import { useParams } from "react-router-dom";
 import Loading from "@/components/Loading";
 
 import { useEffect, useState } from "react";

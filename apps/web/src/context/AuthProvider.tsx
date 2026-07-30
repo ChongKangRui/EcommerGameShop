@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import api from "../lib/api";
 import type { AxiosError } from "axios";
 import { type ChildrenOnlyProps } from "@/components/CommonType";
-import {type UserInfo} from "@ecom/shared/src/type/user"
+import {type UserInfo} from "@ecom/shared/type/user"
 import { useQueryClient } from "@tanstack/react-query";
 
 

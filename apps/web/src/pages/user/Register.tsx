@@ -2,12 +2,12 @@ import { useForm, type FieldValues } from "react-hook-form";
 
 import UserForm from "../../components/auth/register/UserForm";
 import AddressForm from "../../components/auth/register/AddressForm";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import {
   registerDataSchema,
   type RegisterData,
-} from "@ecom/shared/src/registerDataSchema";
+} from "@ecom/shared/registerDataSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRegister } from "@/hooks/userAuthMutation";
 import { useNavigate } from "react-router-dom";
@@ -81,9 +81,11 @@ export default function Register() {
             <p className="text-[15px] my-2">
               By continuing, you agree to our <TermOfService />
             </p>
-           
-                <p className="text-[12px] underline cursor-pointer my-2" onClick={()=>navigate("/login")}>Already have an account?</p>
+            <div className="flex items-center justify-center my-2">
+ <p className="text-[12px] underline cursor-pointer w-50" onClick={()=>navigate("/login")}>Already have an account?</p>
              
+            </div>
+           
             <Button
               className="cursor-pointer"
               type="submit"

@@ -9,6 +9,8 @@ module.exports = {
   transform: {
     ...tsJestTransformCfg,
   },
+ 
+ // globalSetup: "./jest.globalSetup.ts", 
   globalTeardown: "./jest.teardown.ts",
   clearMocks: true,
    moduleNameMapper: {

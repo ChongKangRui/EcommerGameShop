@@ -1,8 +1,8 @@
-import type { RefundRow, RefundsResponse } from "@ecom/shared/src/type/refund";
+import type { RefundRow, RefundsResponse } from "@ecom/shared/type/refund";
 import {
   buildTableQueryParams,
   type SearchQueryParams,
-} from "@ecom/shared/src/type/search";
+} from "@ecom/shared/type/search";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import api from "@/lib/api";
 

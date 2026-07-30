@@ -12,8 +12,8 @@ import { Input } from "@/components/ui/input";
 
 import type {
   AdminOrderTypeEnum,
-} from "@ecom/shared/src/type/order";
-import { type RefundRow } from "@ecom/shared/src/type/refund";
+} from "@ecom/shared/type/order";
+import { type RefundRow } from "@ecom/shared/type/refund";
 
 type RefundStatusProps = {
   refundInfo: RefundRow;

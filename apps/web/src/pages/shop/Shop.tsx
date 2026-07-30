@@ -4,13 +4,13 @@ import { Input } from "@/components/ui/input";
 
 import { useProductSearch } from "@/hooks/useProductSearch";
 import { flashMessage_Failed } from "@/lib/flash";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import FilterSortingSelection from "@/components/table/FilterSortingSelection";
 import {
   productFilterOptions,
   sortProductOptions,
   type Product,
-} from "@ecom/shared/src/type/product";
+} from "@ecom/shared/type/product";
 import { PaginationComponent } from "@/components/PaginationComponent";
 import { Loader2 } from "lucide-react";
 

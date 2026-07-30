@@ -4,7 +4,7 @@ NavigationMenuLink,
     
 } from "@/components/ui/navigation-menu";
 
-import {useNavigate } from "react-router";
+import {useNavigate } from "react-router-dom";
 import type {NavBarLinkProps} from "./NavBarItemType";
 
 

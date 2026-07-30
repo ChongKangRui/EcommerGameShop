@@ -5,7 +5,7 @@ import {
   MonthlySalesDataRequestInput,
   OrderItem,
   OrderWithCustomer,
-} from "@ecom/shared/src/type/order";
+} from "@ecom/shared/type/order";
 
 
 export const adminOrderRepository = {

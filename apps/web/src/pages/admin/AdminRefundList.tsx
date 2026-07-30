@@ -23,7 +23,7 @@ import {
 
   sortRefundTableOptions,
 
-} from "@ecom/shared/src/type/refund";
+} from "@ecom/shared/type/refund";
 import { useAdminBulkRejectRefund } from "@/hooks/useRefund";
 
 export default function AdminRefundList() {

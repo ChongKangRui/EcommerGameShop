@@ -9,7 +9,7 @@ import type {
   CartItem,
   CartItemResponse,
   CartItemsResponse,
-} from "@ecom/shared/src/type/cart";
+} from "@ecom/shared/type/cart";
 import api from "@/lib/api";
 import { flashMessage_Failed, flashMessage_Success } from "@/lib/flash";
 

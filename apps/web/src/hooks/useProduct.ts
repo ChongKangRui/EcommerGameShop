@@ -5,8 +5,8 @@ import api from "@/lib/api";
 import {
   type ProductsResponse,
   type ProductResponse,
-} from "@ecom/shared/src/type/product";
-import {type ProductListRepositoryFilter}from "@ecom/shared/src/type/search";
+} from "@ecom/shared/type/product";
+import {type ProductListRepositoryFilter}from "@ecom/shared/type/search";
 import { useAuth } from "@/context/AuthProvider";
 
 

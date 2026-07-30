@@ -8,9 +8,9 @@ import { PopupDialogue } from "@/components/PopupDialogue";
 import {
   productSchema,
   type ProductFormData,
-} from "@ecom/shared/src/productSchema";
+} from "@ecom/shared/productSchema";
 
-import { type ProductTypeEnum } from "@ecom/shared/src/type/product";
+import { type ProductTypeEnum } from "@ecom/shared/type/product";
 import type { UseMutateFunction } from "@tanstack/react-query";
 import { flashMessage_Failed } from "@/lib/flash";
 

@@ -1,14 +1,14 @@
 import { useForm, type FieldValues } from "react-hook-form";
 
 import LoginForm from "../../components/auth/login/LoginForm";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { useLogin } from "@/hooks/userAuthMutation";
 import { useState } from "react";
 import {
   loginDataSchema,
   type LoginData,
-} from "@ecom/shared/src/loginDataSchema";
+} from "@ecom/shared/loginDataSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
 import { Switch } from "@/components/ui/switch";
@@ -17,7 +17,7 @@ import { useAuth } from "@/context/AuthProvider";
 import { flashMessage_Failed } from "@/lib/flash";
 import { useCart } from "@/hooks/useCart";
 import { useGuestCartStore } from "@/hooks/useGuestCartStore";
-import type { UserLoginRespawn } from "@ecom/shared/src/type/user";
+import type { UserLoginRespawn } from "@ecom/shared/type/user";
 
 export default function Register() {
   const {
@@ -45,8 +45,7 @@ export default function Register() {
   const { items } = useGuestCartStore();
 
   const handleLogin = (data: FieldValues) => {
-    console.log("UserLoginInfo", data);
-
+    
     setDisableInput(true);
     loginMutation.mutate(
       { ...data },
@@ -114,18 +113,18 @@ export default function Register() {
                 <Switch id="rememberMe" onCheckedChange={()=>setValue("rememberMe", !watch('rememberMe'))} />
                 <Label htmlFor="rememberMe">Remember Me</Label>
               </div>
-              <div>
-                <p className="text-[12px] underline cursor-pointer my-2" onClick={()=>navigate("/register")}>Don't have an account?</p>
+              <div className="flex items-center justify-center my-2">
+                <p className="text-[12px] underline cursor-pointer w-35" onClick={()=>navigate("/register")}>Don't have an account?</p>
               </div>
-              <Button className="cursor-pointer" type="submit">
+              <Button className="cursor-pointer" type="submit" disabled={loginMutation.isPending}>
                 {loginMutation.isPending ? "Logging in..." : "Login"}
               </Button>
             </div>
             <div className="flex justify-center md:gap-5">
-              <Button className="cursor-pointer bg-green-500" onClick={()=>{fillInCustomerCredential()}}>
+              <Button className="cursor-pointer bg-green-500" disabled={loginMutation.isPending} onClick={()=>{fillInCustomerCredential()}}>
                 Fill customer demo
               </Button>
-              <Button className="cursor-pointer bg-yellow-500" onClick={()=>{fillInAdminCredential()}}>
+              <Button className="cursor-pointer bg-yellow-500" disabled={loginMutation.isPending} onClick={()=>{fillInAdminCredential()}}>
                 Fill admin demo
               </Button>
             </div>

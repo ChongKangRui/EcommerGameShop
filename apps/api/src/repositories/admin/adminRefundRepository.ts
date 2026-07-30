@@ -1,7 +1,7 @@
 import { pool } from "src/db/db";
 
-import { SearchQueryParams } from "@ecom/shared/src/type/search";
-import { RefundRow } from "@ecom/shared/src/type/refund";
+import { SearchQueryParams } from "@ecom/shared/type/search";
+import { RefundRow } from "@ecom/shared/type/refund";
 
 export const adminRefundRepository = {
   async getRefundTable(f: SearchQueryParams) {

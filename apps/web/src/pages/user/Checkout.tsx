@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Elements } from "@stripe/react-stripe-js";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 
 import Loading from "@/components/Loading";

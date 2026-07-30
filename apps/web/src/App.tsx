@@ -1,6 +1,5 @@
-
 //import "./App.css";
-import { Route, Routes } from "react-router";
+import { Route, Routes } from "react-router-dom";
 import Home from "./pages/shop/Home";
 import Layout from "./components/ShopLayout";
 import About from "./pages/shop/About";
@@ -16,21 +15,24 @@ import { PublicOnlyRoute } from "./route/PublicOnlyRoute";
 import Profile from "./pages/user/Profile";
 import { PrivateOnlyRoute } from "./route/PrivateOnlyRoute";
 import { AdminOnlyRoute } from "./route/AdminOnlyRoute";
-import AdminDashboard from "./pages/admin/AdminDashboard";
+import { lazy, Suspense } from "react";
+const AdminProductList = lazy(() => import("@/pages/admin/AdminProductList"));
+const AdminDashboard = lazy(() => import("@/pages/admin/AdminDashboard"));
 import AdminLayout from "./components/admin/AdminLayout";
 import AddProduct from "./pages/admin/AddProduct";
-import AdminProductList from "./pages/admin/AdminProductList";
+//import AdminProductList from "./pages/admin/AdminProductList";
 import UpdateProduct from "./pages/admin/UpdateProduct";
 import Checkout from "./pages/user/Checkout";
 import OrderConfirmation from "./pages/user/OrderConfirmation";
 import AdminOrderList from "./pages/admin/AdminOrderList";
 import AdminOrder from "./pages/admin/AdminOrder";
 
-
 import OrderHistory from "./pages/user/OrderHistory";
 import Order from "./pages/user/Order";
 import AdminRefundList from "./pages/admin/AdminRefundList";
 import AdminRefund from "./pages/admin/AdminRefund";
+import NotFound from "./pages/NotFound";
+import Loading from "./components/Loading";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,30 +51,27 @@ function App() {
           <Routes>
             {/* Putting layout for every page */}
             <Route element={<Layout />}>
-              <Route path="/" element={<Home />}/>
-              <Route path="/about" element={<About />}/>
-              <Route path="/collections" element={<Shop />}/>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/collections" element={<Shop />} />
+              <Route path="/collections/:id" element={<Product />} />
+              <Route path="/carts" element={<Cart />} />
               <Route
-                path="/collections/:id"
-                element={<Product />}
+                path="/orders"
+                element={
+                  <PrivateOnlyRoute>
+                    <OrderHistory />
+                  </PrivateOnlyRoute>
+                }
               />
-              <Route path="/carts" element={<Cart />}/>
               <Route
-              path="/orders"
-              element={
-                <PrivateOnlyRoute>
-                  <OrderHistory />
-                </PrivateOnlyRoute>
-              }
-            />
-            <Route
-              path="/order/:orderId"
-              element={
-                <PrivateOnlyRoute>
-                  <Order />
-                </PrivateOnlyRoute>
-              }
-            />
+                path="/order/:orderId"
+                element={
+                  <PrivateOnlyRoute>
+                    <Order />
+                  </PrivateOnlyRoute>
+                }
+              />
             </Route>
 
             {/* Profile */}
@@ -85,7 +84,7 @@ function App() {
               }
             ></Route>
 
-             <Route
+            <Route
               path="/checkout"
               element={
                 <PrivateOnlyRoute>
@@ -93,7 +92,7 @@ function App() {
                 </PrivateOnlyRoute>
               }
             ></Route>
-             <Route
+            <Route
               path="/order-confirmation/:orderId"
               element={
                 <PrivateOnlyRoute>
@@ -101,7 +100,6 @@ function App() {
                 </PrivateOnlyRoute>
               }
             ></Route>
-
 
             {/* Login */}
             <Route
@@ -131,9 +129,23 @@ function App() {
                 </AdminOnlyRoute>
               }
             >
-              <Route index element={<AdminDashboard />} />
+              <Route
+                index
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <AdminDashboard />
+                  </Suspense>
+                }
+              />
               <Route path="/admin/addproduct" element={<AddProduct />} />
-              <Route path="/admin/products" element={<AdminProductList />} />
+              <Route
+                path="/admin/products"
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <AdminProductList />
+                  </Suspense>
+                }
+              />
               <Route path="/admin/refunds" element={<AdminRefundList />} />
               <Route path="/admin/refund/:orderId" element={<AdminRefund />} />
               <Route path="/admin/products/:id" element={<UpdateProduct />} />
@@ -144,6 +156,8 @@ function App() {
               {/* <Route path="products" element={<AdminProductsPage />} /> */}
               {/* <Route path="orders" element={<AdminOrdersPage />} /> */}
             </Route>
+
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
       </QueryClientProvider>

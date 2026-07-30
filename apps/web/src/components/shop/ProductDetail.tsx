@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import QuantitySelector from "./QuantitySelector";
 import { Button } from "@/components/ui/button";
-import type { Product, ProductVariation } from "@ecom/shared/src/type/product";
+import type { Product, ProductVariation } from "@ecom/shared/type/product";
 
 import { useCart } from "@/hooks/useCart";
 

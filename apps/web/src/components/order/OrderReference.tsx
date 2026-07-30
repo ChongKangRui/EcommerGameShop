@@ -4,7 +4,7 @@ import { parseDateToLocal } from "@/lib/utils";
 import type {
  
   OrderWithCustomer,
-} from "@ecom/shared/src/type/order";
+} from "@ecom/shared/type/order";
 
 type CustomerInfoProps = {
   orderInfo: OrderWithCustomer;

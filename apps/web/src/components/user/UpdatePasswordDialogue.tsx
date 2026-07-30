@@ -15,12 +15,12 @@ import { Label } from "@/components/ui/label";
 import {
   passwordUpdateDataSchema,
   type PasswordData,
-} from "@ecom/shared/src/profileUpdateDataSchema";
+} from "@ecom/shared/profileUpdateDataSchema";
 
 import { useForm, type FieldValues } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePasswordUpdate } from "@/hooks/userAuthMutation";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { flashMessage_Failed, flashMessage_Success } from "@/lib/flash";
 

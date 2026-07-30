@@ -1,7 +1,7 @@
-import { registerDataSchema } from "@ecom/shared/src/registerDataSchema";
-import { loginDataSchema } from "@ecom/shared/src/loginDataSchema";
-import { type UserInfo } from "@ecom/shared/src/type/user";
-import { type ServiceResult } from "@ecom/shared/src/type/service";
+import { registerDataSchema } from "@ecom/shared/registerDataSchema";
+import { loginDataSchema } from "@ecom/shared/loginDataSchema";
+import { type UserInfo } from "@ecom/shared/type/user";
+import { type ServiceResult } from "@ecom/shared/type/service";
 import { userRepository } from "src/repositories/userRepository";
 import { passwordHelper } from "src/utils/passwordHelper";
 import { generateToken } from "src/utils/jwtHelper";

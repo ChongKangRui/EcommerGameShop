@@ -1,6 +1,6 @@
 import { pool } from "src/db/db";
-import { Product, ProductVariation } from "@ecom/shared/src/type/product";
-import { type ProductListRepositoryFilter } from "@ecom/shared/src/type/search";
+import { Product, ProductVariation } from "@ecom/shared/type/product";
+import { type ProductListRepositoryFilter } from "@ecom/shared/type/search";
 
 export const productRepository = {
   async getActiveProductById(productId: number, OnlyActiveProduct: boolean) {

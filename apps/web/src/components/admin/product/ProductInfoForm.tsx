@@ -13,7 +13,7 @@ import {
 import { type ValidationFormProps } from "@/lib/utils";
 import FormField from "@/components/FormField";
 
-import { type ProductTypeEnum } from "@ecom/shared/src/type/product";
+import { type ProductTypeEnum } from "@ecom/shared/type/product";
 
 interface ProductInfoProps extends ValidationFormProps {
   setProductType: (type: ProductTypeEnum) => void;

@@ -9,7 +9,7 @@ import OrderSummary from "@/components/checkout/OrderSummary";
 
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthProvider";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useCart } from "@/hooks/useCart";
 import Loading from "../Loading";
 

@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 
 type ShopItemProps = {

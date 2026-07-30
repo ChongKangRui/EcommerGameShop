@@ -8,9 +8,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 const failureMessage : Record<string, string> = {
-  card_declined:
-    "Your card was declined. Please try a different payment method.",
-  invalid_order: "Order is expired.",
+
+  invalid_order: "Order expired.",
 };
 
 export default function OrderConfirmation() {

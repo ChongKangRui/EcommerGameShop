@@ -8,11 +8,11 @@ import {
 } from "@/components/ui/select";
 
 
-import { getOrderStatusAvailableUpdateOptions } from "@ecom/shared/src/type/order";
+import { getOrderStatusAvailableUpdateOptions } from "@ecom/shared/type/order";
 import type {
   AdminOrderTypeEnum,
   OrderWithCustomer,
-} from "@ecom/shared/src/type/order";
+} from "@ecom/shared/type/order";
 
 
 type CustomerInfoProps = {

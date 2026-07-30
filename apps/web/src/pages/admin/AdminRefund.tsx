@@ -1,6 +1,6 @@
 
 import { flashMessage_Failed } from "@/lib/flash";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router-dom";
 
 import RefundInfo from "@/components/admin/refund/RefundInfo";
 

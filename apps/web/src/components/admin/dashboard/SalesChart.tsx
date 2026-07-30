@@ -16,7 +16,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import type { MonthlySalesData } from "@ecom/shared/src/type/order";
+import type { MonthlySalesData } from "@ecom/shared/type/order";
 
 export const description = "An interactive area chart";
 

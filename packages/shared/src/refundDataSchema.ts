@@ -9,10 +9,6 @@ export const refundDataSchema = z
           .max(1000, "Your refund reason is too long."),
  
   })
-  // .refine((data) => data.password === data.confirmPassword, {
-  //   message: "Passwords do not match",
-  //   path: ["confirmPassword"],
-  // });
 
 export type RefundData = z.infer<typeof refundDataSchema>;
 

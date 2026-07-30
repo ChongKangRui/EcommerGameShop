@@ -1,5 +1,5 @@
 
-import type {  CartItemResponse } from "@ecom/shared/src/type/cart";
+import type {  CartItemResponse } from "@ecom/shared/type/cart";
 
 
 type OrderItemProp = {

@@ -4,7 +4,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import Cell from "../table/Cell";
-import type { RefundRow } from "@ecom/shared/src/type/refund";
+import type { RefundRow } from "@ecom/shared/type/refund";
 
 export const refundColumn: ColumnDef<RefundRow>[] = [
   {

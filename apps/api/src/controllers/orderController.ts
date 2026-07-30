@@ -1,4 +1,4 @@
-import type { Request, Response } from "express";
+import type {Response } from "express";
 import { AuthRequest } from "src/middleWare/auth";
 
 import { orderService } from "src/services/orderService";
@@ -24,8 +24,9 @@ export const getUserOrder = async (req: AuthRequest, res: Response) => {
       .status(200)
       .json(await orderService.getCustomerOrder(String(orderId), String(userId), req.log));
   } catch (e) {
+    
     req.log.error(` Error in get order`, e);
-    return res.status(500).json({ error: "Invalid action" });
+    return res.status(403).json({ error: "Invalid action" });
   }
 };
 
@@ -87,6 +88,6 @@ export const createRefund = async (req: AuthRequest, res: Response) => {
     const message = error instanceof Error ? error.message : "Unknown error";
 
     req.log.error(`Error in update refund status`, message);
-    return res.status(500).json({ error: message });
+    return res.status(403).json({ error: message });
   }
 };

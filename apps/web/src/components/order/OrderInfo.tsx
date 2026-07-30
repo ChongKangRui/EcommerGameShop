@@ -6,7 +6,7 @@ import { PopupDialogue } from "@/components/PopupDialogue";
 
 import { useQueryClient } from "@tanstack/react-query";
 import { flashMessage_Failed, flashMessage_Success } from "@/lib/flash";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 import {
   useAdminOrderQuery,
   useAdminOrderUpdate,

@@ -13,7 +13,7 @@ import NavBarSheet from "./NavBarSheet";
 import { useState } from "react";
 
 import { productCategoryCollections } from "@/data/ProductCategoryCollections";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import ShoppingCartIcon from "./ShoppingCartIcon";
 
 export default function NavBar() {

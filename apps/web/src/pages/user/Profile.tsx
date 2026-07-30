@@ -1,11 +1,11 @@
 import { useForm, type FieldValues } from "react-hook-form";
 
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import {
   userInfoUpdateDataSchema,
   type UserData,
-} from "@ecom/shared/src/profileUpdateDataSchema";
+} from "@ecom/shared/profileUpdateDataSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useProfileUpdate } from "@/hooks/userAuthMutation";
 

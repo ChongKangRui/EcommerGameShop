@@ -2,7 +2,7 @@ import { SalesChart } from "@/components/admin/dashboard/SalesChart";
 import SectionCards from "@/components/admin/dashboard/SectionCards";
 import { useAdminFetchDashboardData } from "@/hooks/useOrder";
 import Loading from "@/components/Loading";
-import type { DashboardDataResponse } from "@ecom/shared/src/type/order";
+import type { DashboardDataResponse } from "@ecom/shared/type/order";
 
 function getDashboardMetrics(data: DashboardDataResponse | undefined) {
   const salesData = data?.salesData ?? [];

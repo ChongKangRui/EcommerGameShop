@@ -1,8 +1,8 @@
 import { useMutation } from "@tanstack/react-query";
 import api from "@/lib/api";
 
-import type { CartValidateResult } from "@ecom/shared/src/type/checkout";
-import type { CheckoutResponse } from "@ecom/shared/src/type/checkout";
+import type { CartValidateResult } from "@ecom/shared/type/checkout";
+import type { CheckoutResponse } from "@ecom/shared/type/checkout";
 
 export function useCartValidate() {
   return useMutation({
