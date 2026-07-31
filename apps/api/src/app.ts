@@ -48,11 +48,11 @@ app.get("/", async (req, res) => {
 
 // exclude express.json for stripe route
 app.use("/stripe", express.raw({ type: "application/json" }), stripeRoutes);
+app.use("/health-check", healthCheckRoutes)
 app.use(globalLimiter)
 
 app.use(express.json());
 app.use("/", userRoutes);
-app.use("/health-check", healthCheckRoutes)
 app.use("/admin",requireAuth, isAdmin, adminRoutes);
 app.use("/products", browsingLimiter, productRoutes);
 app.use("/cart", cartRoutes);
