@@ -59,7 +59,7 @@ export default function UserForm({
         id="register-password"
         label="Password"
         type="password"
-        placeholder="john@example.com"
+        placeholder="password"
         disabled={disableInput}
         register={register("password")}
         error={errors.password}
