@@ -15,5 +15,10 @@
     "jest": "^30.4.2",
     "ts-jest": "^29.4.11",
     "turbo": "^2.10.7"
+  },
+  "allowScripts": {
+    "bcrypt@6.0.0": true,
+    "esbuild@0.28.1": true,
+    "unrs-resolver@1.12.2": true
   }
 }

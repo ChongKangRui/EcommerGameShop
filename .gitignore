@@ -103,3 +103,5 @@ vite.config.ts.timestamp-*
 .tern-port
 
 .turbo
+.vercel
+.env*

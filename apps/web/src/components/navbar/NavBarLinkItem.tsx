@@ -13,7 +13,7 @@ export default function NavBarLinkItem({name, link, onClick} : NavBarLinkProps) 
   return (
    
         <NavigationMenuItem>
-          <NavigationMenuLink className={"hover:text-red-500"} render={<Link to={link}>{name}</Link>} onClick={onClick}/>
+          <NavigationMenuLink className={"hover:text-red-500"} render={<Link to={link ?? ""}>{name}</Link>} onClick={onClick}/>
         
         </NavigationMenuItem>
   );
