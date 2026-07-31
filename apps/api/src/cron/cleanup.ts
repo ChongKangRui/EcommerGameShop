@@ -8,7 +8,7 @@ import { logger } from "src/utils/loggerHelper";
 let isRunning = false; // guard against overlapping runs
 
 if (process.env.NODE_ENV !== "test") {
-  cron.schedule("*/15 * * * *", async () => {
+  cron.schedule("*/10 * * * *", async () => {
     if (isRunning) {
       logger.warn("Previous cron run still in progress — skipping this tick");
       return;
