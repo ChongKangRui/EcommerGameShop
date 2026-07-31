@@ -57,7 +57,7 @@ export default function Shop() {
         </div>
       )}
       {
-            data.products.length <= 0 && (<div className="flex items-center justify-center min-h-screen">No data found</div>)
+           !data.isLoading && data.products.length <= 0 && (<div className="flex items-center justify-center min-h-screen">No product found</div>)
       }
       <div className=" grid grid-cols-2 px-3 gap-2 w-12/12 md:grid-cols-4 md:gap-9 md:w-full md:px-40">
         {!data.isLoading &&

@@ -55,7 +55,7 @@ export default function AdminDashboard() {
     return <Loading />;
   }
 
-  if (!data.data) {
+  if (!data.isLoading && !data.data) {
     return (
       <div className="flex justify-center items-center min-h-[30rem] text-lg">
         No data found. Please refresh.
