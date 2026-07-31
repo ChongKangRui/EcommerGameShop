@@ -52,7 +52,7 @@ app.use(globalLimiter)
 
 app.use(express.json());
 app.use("/", userRoutes);
-app.use("/healthcheck", healthCheckRoutes)
+app.use("/health-check", healthCheckRoutes)
 app.use("/admin",requireAuth, isAdmin, adminRoutes);
 app.use("/products", browsingLimiter, productRoutes);
 app.use("/cart", cartRoutes);
