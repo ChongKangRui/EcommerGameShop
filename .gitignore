@@ -102,3 +102,4 @@ vite.config.ts.timestamp-*
 # TernJS
 .tern-port
 
+.turbo
