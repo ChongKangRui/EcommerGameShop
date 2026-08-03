@@ -99,7 +99,7 @@ export default function OrderInfo({
         flashMessage_Success("Update order status success");
       },
       onError: (err) => {
-        console.log(err);
+        //console.log(err);
         queryClient.invalidateQueries({ queryKey: ["admin", "order"] });
         flashMessage_Failed(err.message);
       },

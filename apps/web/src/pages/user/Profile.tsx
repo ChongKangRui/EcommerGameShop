@@ -60,8 +60,8 @@ export default function Profile() {
         //navigate("/profile");
       },
       onError: (error) => {
-        console.log("showing error");
-        console.log(error.message);
+        //console.log("showing error");
+        //console.log(error.message);
         // console.error(error.message);
         setIsEditing(false);
          flashMessage_Failed(error.message);

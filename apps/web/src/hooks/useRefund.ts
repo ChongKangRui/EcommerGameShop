@@ -41,7 +41,7 @@ export function useAdminRefundQuery(orderId: string) {
     queryKey: ["admin", "refund", orderId],
     queryFn: async () => {
       const { data } = await api.get<RefundRow>(`/admin/refund/${orderId}`);
-      console.log("Is refund data valid", data);
+      //console.log("Is refund data valid", data);
       return data;
     },
     staleTime: 2 * 60 * 1000,

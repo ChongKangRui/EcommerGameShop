@@ -7,10 +7,10 @@ import Loading from "@/components/Loading";
 export function PrivateOnlyRoute({children}: ChildrenOnlyProps){
     const {isLoading, isAuthenticated} = useAuth();
 
-    console.log("Private route trigger");
+    //console.log("Private route trigger");
 
     if(isLoading){
-        console.log("Still loading");
+       // console.log("Still loading");
         return (
             <Loading/>
         )

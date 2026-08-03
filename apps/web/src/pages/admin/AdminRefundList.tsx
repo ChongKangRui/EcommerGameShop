@@ -59,12 +59,12 @@ export default function AdminRefundList() {
   const onMassRejectConfirm = () => {
     // const id = selectedData.map((d)=>d.?product_id)
     const refundIds = getSelectedRowId();
-    console.log(refundIds);
+    //console.log(refundIds);
      setDialogueButtonDisable(true);
       
     bulkRejectRefundMutation.mutate(refundIds, {
       onSuccess: (data) => {
-        console.log(data.amount);
+       // console.log(data.amount);
         queryClient.invalidateQueries({ queryKey: ["admin", "refunds"] });
          
          setStatusDialogueOpen(false);

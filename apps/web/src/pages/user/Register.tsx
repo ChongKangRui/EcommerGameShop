@@ -28,15 +28,15 @@ export default function Register() {
   const [disableInput, setDisableInput] = useState(false);
 
   const handleRegistration = (data: FieldValues) => {
-    console.log("UserRegisterInfo", data);
+    //console.log("UserRegisterInfo", data);
     setDisableInput(true);
     registerMutation.mutate(data, {
       onSuccess: () => {
         navigate("/login");
       },
-      onError: (error) => {
-        console.log("showing error");
-        console.log(error.message);
+      onError: (_error) => {
+        //console.log("showing error");
+        //console.log(error.message);
         // console.error(error.message);
         setDisableInput(false);
       },

@@ -11,7 +11,7 @@ import { useInitCheckout } from "@/hooks/useCheckout";
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 export default function Checkout() {
-  console.log(stripePromise);
+ // console.log(stripePromise);
   const initCheckout = useInitCheckout();
   const hasInitiated = useRef(false);
   const navigate = useNavigate();
@@ -25,14 +25,14 @@ export default function Checkout() {
     
     initCheckout.mutate(undefined, {
       onSuccess:(data)=>{
-        console.log("Hi", data);
+       // console.log("Hi", data);
         if(data.ReconcileResult === 'paymentUnresolved'){
          navigate(`/order-confirmation/${data.orderId}`, {replace: true, state: {status: "last_pay_unresolved"}});
         }
       },
       onError: (err) => {
         hasInitiated.current = false; // allow retry
-        console.log(err);
+        //console.log(err);
       },
     });
   }, []);

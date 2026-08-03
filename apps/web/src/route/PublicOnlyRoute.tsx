@@ -5,7 +5,7 @@ import { type ChildrenOnlyProps } from "@/components/CommonType";
 // only guest is allow to access, such as login + register
 export function PublicOnlyRoute({ children }: ChildrenOnlyProps) {
   const { isLoading, isAuthenticated, user } = useAuth();
-  console.log("public route trigger");
+  //console.log("public route trigger");
   if (isLoading) {
     return <div></div>;
   }

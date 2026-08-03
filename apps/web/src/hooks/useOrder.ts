@@ -100,7 +100,7 @@ export function useAdminFetchDashboardData( {startYear, endYear, startMonth, end
       if (endMonth) params.set("endMonth", String(endMonth));
 
       const { data } = await api.get<DashboardDataResponse>(`/admin/dashboard-report?${params}`);
-      console.log(data);
+      //console.log(data);
       return data;
     },
   });

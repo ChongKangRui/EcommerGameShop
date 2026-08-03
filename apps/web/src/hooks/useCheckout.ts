@@ -9,8 +9,8 @@ export function useCartValidate() {
     mutationFn: () => {
       return api.get<CartValidateResult>("/cart/validate").then((r) => r.data);
     },
-    onError: (e) => {
-      console.log(e);
+    onError: (_e) => {
+     // console.log(e);
     },
   });
 }
@@ -18,7 +18,7 @@ export function useCartValidate() {
 export function useInitCheckout() {
   return useMutation({
     mutationFn: () => {
-      return api.post<CheckoutResponse>("/checkout/init").then((r) => {console.log(r);  return r.data});
+      return api.post<CheckoutResponse>("/checkout/init").then((r) => {  return r.data});
     },
   });
 }

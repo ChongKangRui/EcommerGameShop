@@ -11,7 +11,7 @@ export default function Order() {
   const { orderId } = useParams<{ orderId: string }>();
 
   const navigate =  useNavigate();
-    console.log(orderId);
+   // console.log(orderId);
   if(!orderId){
     flashMessage_Failed("Invalid order");
     navigate("/orders", {replace: true});

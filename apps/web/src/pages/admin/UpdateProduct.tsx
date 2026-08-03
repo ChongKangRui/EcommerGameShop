@@ -40,7 +40,7 @@ export default function UpdateProduct() {
     const year = parts[0];
     const month = parts[1];
     const day = parts[2];
-    console.log(parts);
+    //console.log(parts);
 
     return `${year}-${month}-${day}`;
   };

@@ -30,7 +30,7 @@ export default function RefundStatus({
   refundAmount,
   onRefundAmountChange,
 }: RefundStatusProps) {
-console.log(refundInfo.amount);
+
 
   return (
     <div className=" grid grid-cols-6 col-span-full text-center gap-5">

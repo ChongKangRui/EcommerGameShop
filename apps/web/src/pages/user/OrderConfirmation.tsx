@@ -49,10 +49,10 @@ const startCountDown = () =>
       timerRef.current = startCountDown();
       return;
     }
-    console.log("Status invalid");
+    //console.log("Status invalid");
     orderConfirm.mutate(orderId ?? "", {
       onSuccess: (d) => {
-        console.log(d.status);
+        //console.log(d.status);
         if (d.status === "paid") {
           queryClient.invalidateQueries({ queryKey: ["cart", "user"] });
           queryClient.invalidateQueries({ queryKey: ["products"] });
@@ -65,7 +65,7 @@ const startCountDown = () =>
         timerRef.current = startCountDown();
       },
       onError: (err)=>{
-        console.log(err);
+        //console.log(err);
       }
     });
     return () => clearInterval(timerRef.current);

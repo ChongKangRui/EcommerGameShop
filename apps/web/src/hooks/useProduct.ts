@@ -23,7 +23,7 @@ function convertFieldToForm(data: FieldValues): FormData {
   formData.append("description", data.description);
 
   // Variations — append text fields and image together, keeping same structure
-  console.log(data.variations);
+  //console.log(data.variations);
   data.variations.forEach((variation: any, index: number) => {
     formData.append(`variations[${index}][label]`, variation.label);
     formData.append(
@@ -56,7 +56,7 @@ export function useAddProductMutation() {
     mutationFn: async (data: FieldValues) => {
       // we need to use form data because backend only accept form data when it contain image file
       const formData = convertFieldToForm(data);
-      console.log(formData);
+     // console.log(formData);
       const res = await api.post("/admin/products", formData);
       return res.data;
     },
@@ -117,7 +117,7 @@ export function usePromotedProductQuery() {
     queryFn: async () => {
      
       const { data } = await api.get<ProductsResponse>(`/products/promoted`);
-      console.log(data);
+     // console.log(data);
      return data;
     },
     

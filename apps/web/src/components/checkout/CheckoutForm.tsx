@@ -80,8 +80,7 @@ export default function CheckoutForm({ orderId }: CheckoutFormProp) {
         // which could be card declined and it will be check at the order-confirmation pages
         orderValidation.mutate(orderId, {
           onSuccess: (data) => {
-            console.log("validate data success??", data);
-
+           
             if (!data.valid) {
               navigate(`/order-confirmation/${orderId}`, {
                 replace: true,

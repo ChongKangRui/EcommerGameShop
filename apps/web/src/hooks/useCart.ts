@@ -48,7 +48,7 @@ export const useCart = (): CartApi => {
   const guestQuery = useQuery({
     queryKey: ["cart", "guest"],
     queryFn: async () => {
-      console.log(isAuthenticated);
+      //console.log(isAuthenticated);
       const { data } = await api.post<CartItemsResponse>("/cart/guest", {
         cartItems: guestItems,
       });

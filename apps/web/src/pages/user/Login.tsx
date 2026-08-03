@@ -61,7 +61,7 @@ export default function Register() {
           //migrateItem(items);
         },
         onError: (error: Error) => {
-          console.log("Error", error);
+          //console.log("Error", error);
           setDisableInput(false);
           flashMessage_Failed(error.message);
         },

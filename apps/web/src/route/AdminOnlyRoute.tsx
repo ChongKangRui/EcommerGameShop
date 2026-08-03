@@ -2,11 +2,11 @@ import { useAuth } from "@/context/AuthProvider"
 import { Navigate } from "react-router-dom";
 import {type  ChildrenOnlyProps } from "@/components/CommonType";
 
+
+// protect admin only route
 export function AdminOnlyRoute({children}: ChildrenOnlyProps){
     const {isLoading, isAuthenticated,user} = useAuth();
   
-  //console.log("AdminOnlyRoute:", { isLoading, user }); 
- // console.log("ADmin only route trigger");
     if(isLoading){
         return (
             <div>
