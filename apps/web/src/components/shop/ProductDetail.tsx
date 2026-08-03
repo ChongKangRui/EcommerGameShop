@@ -53,7 +53,7 @@ export function ProductDetail({
         quantity: finalQuantity,
       });
     } else {
-      console.log(quantity, "+", cartItemQuantity);
+      
       addItem({
         variation_id: currentProductVariation?.variation_id ?? "",
         quantity: quantity,

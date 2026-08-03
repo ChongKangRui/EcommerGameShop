@@ -16,6 +16,7 @@ import OrderItemList from "@/components/order/OrderItemList";
 import { useAdminRefundQuery, useAdminRefundUpdate } from "@/hooks/useRefund";
 
 export default function RefundInfo({ orderId }: { orderId: string }) {
+  // require to show admin order/refund information
   const orderQuery = useAdminOrderQuery(orderId);
   const refundQuery = useAdminRefundQuery(orderId);
   const refundUpdateMutation = useAdminRefundUpdate();
@@ -29,6 +30,7 @@ export default function RefundInfo({ orderId }: { orderId: string }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  //once refund query success, set the defaults refund status and refundAmount
   useEffect(() => {
     setRefundStatus(refundData?.status ?? "");
     setRefundAmount(Number(refundData?.amount) ?? 0);
@@ -49,6 +51,7 @@ export default function RefundInfo({ orderId }: { orderId: string }) {
       {
         onSuccess: () => {
           flashMessage_Success("Update refund status success");
+           // Refund status changes affect dashboard metrics and order state too
           queryClient.invalidateQueries({
             queryKey: ["admin", "refund"],
           });
@@ -101,6 +104,7 @@ export default function RefundInfo({ orderId }: { orderId: string }) {
           </div>
         </div>
 
+      {/* only pending are allow to update refund status */}
         {refundData.status === "pending" && (
           <div className="text-center mt-10 flex flex-col justify-center items-center md:flex-row md:gap-5">
             <Button

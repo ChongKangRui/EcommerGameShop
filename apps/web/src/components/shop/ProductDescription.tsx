@@ -13,7 +13,6 @@ export function ProductDescription({ description }: ProductDescriptionProps) {
 
 
   const descriptionList = description.split("- ").filter(Boolean);
- // console.log(descriptionList);
 
   return (
     <div className="px-10 md:px-50 mt-10">

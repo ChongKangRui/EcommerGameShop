@@ -51,6 +51,7 @@ console.log(refundInfo.amount);
           }}
           disabled={refundInfo.status !== "pending"}
         >
+          {/* allow to select the refund approved or rejected */}
           <SelectTrigger id="orderStatus">
             <SelectValue className="text-black">{status}</SelectValue>
           </SelectTrigger>
@@ -60,6 +61,7 @@ console.log(refundInfo.amount);
           </SelectContent>
         </Select>
       </div>
+      {/* set refund amount */}
       <div className="col-span-3 flex justify-center items-center">
         <p>Refund Amount: </p>
         <Input type="number" disabled={refundInfo.status !== "pending"}

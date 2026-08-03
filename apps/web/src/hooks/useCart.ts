@@ -27,13 +27,13 @@ export interface CartApi {
   isSuccess: boolean;
 }
 
-// useCart will be the interface for all the cart feature, no matter it is guest or user
+// useCart will be the interface for all the cart feature,
+// whether it is guest or user
 export const useCart = (): CartApi => {
   const { isAuthenticated, user, isLoading: isAuthLoading } = useAuth();
   const queryClient = useQueryClient();
   const { items: guestItems, setItems } = useGuestCartStore();
-  //const debounceValue = useDebounce(, 700);
-
+  
   // update the local storage cart with new one
   const updateLocalCartstorage = (cartItems: CartItemsResponse) => {
     const newLocalCartItems = cartItems.cartItems.map((i) => {
@@ -68,10 +68,10 @@ export const useCart = (): CartApi => {
     queryKey: ["cart", "user"],
     queryFn: async () => {
       const { data } = await api.get<CartItemsResponse>("/cart/me");
-      console.log(data);
-      //if (data.adjusted) {
+      //console.log(data);
+     
       updateLocalCartstorage(data);
-      // }
+    
       
       return data;
     },
@@ -79,19 +79,6 @@ export const useCart = (): CartApi => {
     enabled: isAuthenticated && !!user && !isAuthLoading,
   });
 
-  // const clearAdjustedNotification = () => {
-  //   if (isAuthenticated) {
-  //     queryClient.setQueryData(["cart", "user"], (old: CartItemsResponse) => ({
-  //       ...old,
-  //       adjusted: false,
-  //     }));
-  //   } else {
-  //     queryClient.setQueryData(["cart", "guest"], (old: CartItemsResponse) => ({
-  //       ...old,
-  //       adjusted: false,
-  //     }));
-  //   }
-  // };
 
   // migrate guest cart to user cart db
   const migrateLocalCartMutation = useMutation({
@@ -100,7 +87,7 @@ export const useCart = (): CartApi => {
         .post<CartItemsResponse>("/cart/migrate", { cartItems: items })
         .then((r) => r.data),
     onSuccess: (updated: CartItemsResponse) => {
-      console.log("Migrate success");
+      //console.log("Migrate success");
       updateLocalCartstorage(updated);
       queryClient.setQueryData(["cart", "user"], updated);
     },
@@ -155,9 +142,6 @@ export const useCart = (): CartApi => {
     ? (serverQuery.data?.cartItems ?? [])
     : (guestQuery.data?.cartItems ?? []);
 
-  // const adjusted = isAuthenticated
-  //   ? (serverQuery.data?.adjusted ?? false)
-  //   : (guestQuery.data?.adjusted ?? false);
 
   // Combined states
   const isLoading =
@@ -227,8 +211,6 @@ export const useCart = (): CartApi => {
 
   return {
     items,
-    //adjusted,
-    //clearAdjustedNotification,
     addItem,
     updateItem,
     removeItem,

@@ -8,7 +8,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
 type AlertDangerousDialogueProps = {
@@ -48,7 +47,7 @@ export function PopupDialogue({
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
       <AlertDialogTrigger
-        render={<Button className={triggerClassName}>{trigger}</Button>}
+        render={<div className={triggerClassName}>{trigger}</div>}
       />
       <AlertDialogContent>
         <AlertDialogHeader>

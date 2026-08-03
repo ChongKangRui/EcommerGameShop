@@ -14,6 +14,8 @@ const MAX_CONFIRM_ORDER_WAIT_MS = 10_000;
 const POLL_INTERVAL_MS = 1000;
 
 export const orderService = {
+
+
   async getCustomerOrder(orderId: string, userId: string, log: Logger) {
     log.debug(`Fetching single order ${orderId}`);
     const { customer, items } = await orderRepository.getCustomerOrder(orderId, userId);
@@ -79,11 +81,15 @@ export const orderService = {
     const deadline = Date.now() + MAX_CONFIRM_ORDER_WAIT_MS;
     let pollCount = 0;
 
+    //confirm order will confirm the payment intent of stripe. 
+    // waiting the most for 10 seconds(MAX_CONFIRM_ORDER_WAIT_MS)
     const sleep = (ms: number) =>
       new Promise((resolve) => setTimeout(resolve, ms));
 
     while (true) {
       pollCount++;
+
+      // order expired cases
       const order = await orderRepository.getOrderStatusAndPaymentRef(orderId);
       if (!order) return { status: "notFound" } as const;
 
@@ -92,6 +98,9 @@ export const orderService = {
         return { status: "paid" } as const;
       }
 
+      // timeout can be due to processing for too long
+      // next time either they check again 
+      // or cron will do the job to set order status as 'paid'
       if (Date.now() >= deadline) {
         log.warn(` Confirmation timeout${orderId}, ${pollCount}`);
         return { status: order.status } as const;
@@ -121,6 +130,8 @@ export const orderService = {
       await sleep(POLL_INTERVAL_MS);
     }
   },
+
+  // check if pending order still exist
   async validatePendingOrder(orderId: string): Promise<boolean> {
     const result = await orderRepository.validateIfOrderPending(orderId);
     return (result?.rowCount ?? 0) > 0;
@@ -146,6 +157,8 @@ export const orderService = {
       log.debug(
         `Monthly sales insertion for ${order.order_id}, total ${items.length} had been updated`,
       );
+
+      // once order mark as paid, insert monthly sales record
       await Promise.all([
         ...items.map((i) => 
            orderRepository.updateMonthlySalesRecord({
@@ -191,6 +204,7 @@ export const orderService = {
       throw new Error("Order not found");
     }
 
+    // status that not allow to create refund request
     if(customer.status === 'pending' || customer.status === 'expired' || customer.status === 'canceled' || customer.status === 'refunded'){
       throw new Error("Unable to request refund");
       

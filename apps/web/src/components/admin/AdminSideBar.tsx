@@ -25,8 +25,7 @@ type collapseState = {
 }
 
  export function AdminSideBar({isCollapsed, setIsCollapsed}: collapseState) {
-   //const [isCollapsed, setIsCollapsed] = useState(false);
-
+  
    const isMobile = useIsMobile();
 
    return (

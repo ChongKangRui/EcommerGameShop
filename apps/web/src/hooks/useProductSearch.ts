@@ -89,7 +89,7 @@ export function useProductSearch(options: ProductSearchOptions = {}) {
   const totalPages = isLoading ? 0 : Math.ceil(totalCount / limit);
   const products = data?.products ?? [];
 
-  // 7. Return Grouped Values - Clean and intuitive
+ //return group value - more clean and intuitive
   return {
     data: {
       products,

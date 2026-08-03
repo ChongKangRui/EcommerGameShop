@@ -51,7 +51,7 @@ export function PaginationComponent({
     <Pagination className={className}>
       <PaginationContent>
         {/* Previous button */}
-        
+    
         <PaginationItem>
           <PaginationPrevious
             onClick={() => onPageChange(Math.max(0, activePage - 1))}

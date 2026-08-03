@@ -1,16 +1,15 @@
-
 import { AdminSideBar } from "./AdminSideBar";
-import {  Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useState } from "react";
 
 export default function AdminLayout() {
   const [isCollapsed, setIsCollapsed] = useState(false);
- 
+
   return (
-   
     <div className="flex flex-row min-h-screen w-full">
       <AdminSideBar isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
 
+{/* ensure the admin panel content respect the sidebar space */}
       <main
         className={`
     flex-1 p-6 overflow-y-scroll
@@ -24,7 +23,6 @@ export default function AdminLayout() {
       >
         <Outlet />
       </main>
-     
     </div>
   );
 }

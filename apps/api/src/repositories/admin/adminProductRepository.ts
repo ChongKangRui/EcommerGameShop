@@ -3,7 +3,7 @@ import { pool } from "src/db/db";
 import {type GrowthStatus} from "@ecom/shared/type/order"
 
 export const adminProductRepository = {
-  async exists(productId: number) {
+  async productExist(productId: number) {
     const r = await pool.query(
       "SELECT product_id FROM products WHERE product_id = $1",
       [productId],
@@ -43,18 +43,18 @@ export const adminProductRepository = {
     return r.rows.length > 0;
   },
 
-  async deactivate(productId: number) {
+  async deactivateProduct(productId: number) {
     await pool.query(
       "UPDATE products SET is_active = false WHERE product_id = $1",
       [productId],
     );
   },
 
-  async delete(productId: number) {
+  async deleteProduct(productId: number) {
     await pool.query("DELETE FROM products WHERE product_id = $1", [productId]);
   },
 
-  async bulkDelete(productIds: number[]) {
+  async bulkDeleteProduct(productIds: number[]) {
     await pool.query("DELETE FROM products WHERE product_id = ANY($1)", [
       productIds,
     ]);

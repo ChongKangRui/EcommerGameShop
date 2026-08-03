@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
+
 interface DataTableProps<TData> {
   table: TanStackTable<TData>;
   columnsLength: number;

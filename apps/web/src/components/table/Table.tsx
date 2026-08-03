@@ -21,6 +21,8 @@ interface DataTableProps<TData, TValue> {
   bulkAction?: React.ReactNode;
 }
 
+// using generic type, allow one single table 
+// used for every different column(product/order/refund/etc)
 export function Table<TData, TValue>({
   columns,
   data,

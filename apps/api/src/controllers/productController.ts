@@ -10,7 +10,7 @@ export const getProduct = async (req: AuthRequest, res: Response) => {
 
   try {
     const isAdmin = req.role === "admin";
-    const result = await productService.getProduct(productId, isAdmin, req.log);
+    const result = await productService.getProduct(productId, req.userId ?? "", isAdmin, req.log);
     if (!result.ok)
       return res.status(result.status).json({ error: result.error });
 

@@ -46,6 +46,7 @@ app.get("/", async (req, res) => {
   res.json({ message: "Server is working!" });
 });
 
+// exclude both stripe and health-check from apply the rate limiting
 // exclude express.json for stripe route
 app.use("/stripe", express.raw({ type: "application/json" }), stripeRoutes);
 app.use("/health-check", healthCheckRoutes)

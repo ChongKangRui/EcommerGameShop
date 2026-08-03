@@ -29,7 +29,7 @@ export default function CartProduct({
   imageUrl,
   
 }: CartItemProps) {
- //const [quantity, setQuantity] = useState(q);
+
   const {updateItem, removeItem} = useCart();
 
   const handleQuantityChange = (n: number)=>{
@@ -39,7 +39,7 @@ export default function CartProduct({
   }
 
   const navigate = useNavigate();
-  console.log(maxQuantity);
+
   return (
     <div className="grid grid-cols-8">
       <div className="col-span-6 md:col-span-4 flex">

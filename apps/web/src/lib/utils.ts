@@ -45,7 +45,6 @@ export function useIsXl() {
   return useMediaQuery("(min-width: 1280px)");
 }
 
-// Or "at least" helpers
 export function useIsMdUp() {
   return useMediaQuery("(min-width: 768px)");
 }

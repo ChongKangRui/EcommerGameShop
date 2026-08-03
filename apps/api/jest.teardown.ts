@@ -1,4 +1,4 @@
-import { pool } from "src/db/db";
+import { pool } from "./src/db/db";
 
 
 

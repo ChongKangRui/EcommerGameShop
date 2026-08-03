@@ -2,6 +2,7 @@ import { useAuth } from "@/context/AuthProvider";
 import { Navigate } from "react-router-dom";
 import { type ChildrenOnlyProps } from "@/components/CommonType";
 
+// only guest is allow to access, such as login + register
 export function PublicOnlyRoute({ children }: ChildrenOnlyProps) {
   const { isLoading, isAuthenticated, user } = useAuth();
   console.log("public route trigger");

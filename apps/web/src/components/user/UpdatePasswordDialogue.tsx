@@ -42,8 +42,7 @@ export default function UpdatePasswordDialogue() {
   const handleUpdate = (data: FieldValues) => {
     updatePasswordMutation.mutate(data, {
       onSuccess: () => {
-        // navigate("/login");
-        //navigate("/profile");
+      
         flashMessage_Success("Profile Update Success");
         localStorage.removeItem("token");
         navigate("/login", {replace:true});
@@ -51,8 +50,8 @@ export default function UpdatePasswordDialogue() {
 
       },
       onError: (error) => {
-        console.log("showing error");
-        console.log(error.message);
+        // console.log("showing error");
+        // console.log(error.message);
         flashMessage_Failed(error.message);
         // console.error(error.message);
       },

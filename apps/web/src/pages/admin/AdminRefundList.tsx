@@ -40,9 +40,6 @@ export default function AdminRefundList() {
   const isLgUp = useIsLgUp();
 
   const queryClient = useQueryClient();
-
-  //const bulkUpdateOrders = useAdminOrdersUpdate();
-
   const bulkRejectRefundMutation = useAdminBulkRejectRefund();
 
   const getSelectedRowId = () => {

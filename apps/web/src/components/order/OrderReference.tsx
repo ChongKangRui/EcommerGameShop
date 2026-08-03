@@ -1,18 +1,16 @@
-
 import { parseDateToLocal } from "@/lib/utils";
 
-import type {
- 
-  OrderWithCustomer,
-} from "@ecom/shared/type/order";
+import type { OrderWithCustomer } from "@ecom/shared/type/order";
 
 type CustomerInfoProps = {
   orderInfo: OrderWithCustomer;
-  isAdmin: boolean
+  isAdmin: boolean;
 };
 
-export default function OrderReference({ orderInfo, isAdmin }: CustomerInfoProps) {
-  console.log(orderInfo);
+export default function OrderReference({
+  orderInfo,
+  isAdmin,
+}: CustomerInfoProps) {
   return (
     <div className=" grid grid-cols-6 col-span-full text-center gap-5">
       <p className="col-span-6">Order Id: {orderInfo.order_id}</p>
@@ -30,10 +28,23 @@ export default function OrderReference({ orderInfo, isAdmin }: CustomerInfoProps
         Updated at: {parseDateToLocal(orderInfo.updated_at)}
       </p>
 
-      {!isAdmin && <p className="col-span-6">Order Status: {orderInfo.status} </p>}
-      {!isAdmin && <p className="col-span-6">Total: RM {orderInfo.total_amount} </p>}
-       {!isAdmin && orderInfo.refund_status && (<p className="col-span-6 text-red-500">Refund status: {orderInfo.refund_status} </p>)}
-      {!isAdmin && orderInfo.refund_status === 'approved' && (<p className="col-span-6 text-red-500">Refund amount: {orderInfo.refund_amount} </p>)}
+      {/* only show status, amount, refund status at non admin page. */}
+      {!isAdmin && (
+        <p className="col-span-6">Order Status: {orderInfo.status} </p>
+      )}
+      {!isAdmin && (
+        <p className="col-span-6">Total: RM {orderInfo.total_amount} </p>
+      )}
+      {!isAdmin && orderInfo.refund_status && (
+        <p className="col-span-6 text-red-500">
+          Refund status: {orderInfo.refund_status}{" "}
+        </p>
+      )}
+      {!isAdmin && orderInfo.refund_status === "approved" && (
+        <p className="col-span-6 text-red-500">
+          Refund amount: {orderInfo.refund_amount}{" "}
+        </p>
+      )}
 
       <hr className="col-span-6 my-2" />
     </div>

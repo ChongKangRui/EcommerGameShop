@@ -13,6 +13,8 @@ type UseBulkActionOptions<TValue, TVariables, TResult extends { message?: string
   setDialogueButtonDisable:(disable: boolean) => void;
 };
 
+// useBulkAction for those bulk action that require another pop up dialogue, 
+// state handling, error, value and query client invalidation
 export function useBulkAction<TValue, TVariables, TResult extends { message?: string }>({
   mutation,
   getSelectedProductID,

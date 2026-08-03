@@ -7,8 +7,7 @@ type OrderItemProp = {
 }
 
 export default function OrderSummary({items} : OrderItemProp) {
-  //const { items, isLoading } = useCart();
-
+  
   const totalPrice = items.reduce(
     (sum: number, i: CartItemResponse) => sum + i.quantity * i.final_price,
     0,

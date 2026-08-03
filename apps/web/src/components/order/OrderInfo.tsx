@@ -45,7 +45,7 @@ export default function OrderInfo({
 
   const navigate = useNavigate();
   const queryClient = useQueryClient();
- 
+
   const onRefundMessageChanged = (change: string) => {
     setRefundMessage(change);
 
@@ -55,6 +55,8 @@ export default function OrderInfo({
     } else if (change.length > 1000) {
       setRefundError("Refund reason must be under 1000 characters");
       //setRefundDialogue((prev) => ({ ...prev, disable: true }));
+    } else {
+      setRefundError("");
     }
   };
 
@@ -88,8 +90,7 @@ export default function OrderInfo({
 
   useEffect(() => {
     setStatus(data?.order.status ?? "");
-    console.log("effect came in");
-  }, [orderQuery.isSuccess]);
+  }, [data?.order.status]);
 
   const onUpdateStatusConfirm = () => {
     orderUpdate.mutate(status, {
@@ -115,7 +116,8 @@ export default function OrderInfo({
     return;
   }
 
-
+  // Refund only available to customers on completed orders that haven't
+  // already been refunded, canceled, or expired before payment
   const allowToRefund =
     !isAdmin &&
     !data.order.refund_status &&
@@ -147,6 +149,7 @@ export default function OrderInfo({
             <OrderItemList items={data.orderItems}></OrderItemList>
           </div>
         </div>
+        {/* only admin are allow to see the update status button */}
         {isAdmin && (
           <div className="text-center mt-10 flex flex-col justify-center items-center md:flex-row md:gap-5">
             <Button
@@ -167,6 +170,7 @@ export default function OrderInfo({
                 <Button
                   type="button"
                   className="cursor-pointer max-w-50"
+                  // close the refund dialogue right after request refund click
                   onClick={() =>
                     setRefundDialogue((prev) => ({ ...prev, open: false }))
                   }

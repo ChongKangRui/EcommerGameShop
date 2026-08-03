@@ -52,6 +52,8 @@ export default function CheckoutForm({ orderId }: CheckoutFormProp) {
     }
 
     if (stripe) {
+      // set redirect to if_required to ensure replaced the browser history
+      // make sure user are unable to going back the checkout page
       const { error } = await stripe.confirmPayment({
         elements,
         redirect: "if_required",
@@ -67,12 +69,15 @@ export default function CheckoutForm({ orderId }: CheckoutFormProp) {
       });
 
       if (!error) {
-        console.log("No error from stripe");
+       // console.log("No error from stripe");
         navigate(`/order-confirmation/${orderId}`, { replace: true });
       } else {
-        console.log(" error from stripe");
+       // console.log(" error from stripe");
 
-        // validate if order still valid, not expired
+        // stripe may return an error
+        // order may not expired but when it decline, first was to check if order expired
+        // if it is not, it is certainly mean stripe having problem with customer payment
+        // which could be card declined and it will be check at the order-confirmation pages
         orderValidation.mutate(orderId, {
           onSuccess: (data) => {
             console.log("validate data success??", data);
@@ -91,13 +96,13 @@ export default function CheckoutForm({ orderId }: CheckoutFormProp) {
              
             }
           },
-          onError: (err) => {
+          onError: (_err) => {
             
             navigate(`/order-confirmation/${orderId}`, {
                 replace: true,
                 state: { status: "invalid_order" },
               });
-            console.log(err);
+           // console.log(_err);
           },
         });
       }

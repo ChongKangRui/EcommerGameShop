@@ -26,6 +26,8 @@ type ProductFormProps = {
   onDeleteMutation?: UseMutateFunction<any, Error, void, unknown>;
   onDeleteCallback?: (message: string)=>void;
 };
+
+
 function getTodayDateString(): string {
   const today = new Date();
   const year = today.getFullYear();
@@ -33,6 +35,8 @@ function getTodayDateString(): string {
   const day = String(today.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
+
+
 const defaultProductValues: ProductFormData = {
   name: "",
   price: 1,
@@ -104,7 +108,7 @@ export default function ProductForm({
   }
 
   /////////////////////////////////////////////////////////////////////////
-  //set product variation 0 as cover is the selected cover variation was deleted
+  //set product variation 0 as cover when the selected cover variation(non 0 index) was deleted
   /////////////////////////////////////////////////////////////////////////
   useEffect(() => {
     const hasCover = fields.some((field) => field.is_cover);
@@ -234,6 +238,7 @@ export default function ProductForm({
             >
               Add new product variation
             </Button>
+            {/* Delete button is exclusive for existing product only */}
             {showDeleteButton && (
               <PopupDialogue
                 title="Warning"

@@ -89,6 +89,7 @@ export function SalesChart({ salesData }: SalesChartProps) {
         >
           <AreaChart data={chartData} margin={{ left: 30, right: 30 }}>
             <defs>
+              {/* revenue color */}
               <linearGradient id="fillRevenue" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"
@@ -101,6 +102,7 @@ export function SalesChart({ salesData }: SalesChartProps) {
                   stopOpacity={0.1}
                 />
               </linearGradient>
+              {/* unit color */}
               <linearGradient id="fillUnits" x1="0" y1="0" x2="0" y2="1">
                 <stop
                   offset="5%"

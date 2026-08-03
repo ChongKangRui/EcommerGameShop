@@ -11,7 +11,9 @@ const env = process.env.NODE_ENV;
 
 const CHECKOUT_EXPIRED_MINUTES = 10;
 
-/** Thrown to unwind the transaction (ROLLBACK) with a response already decided — success or error alike. */
+// CheckoutHalt was used to report the checkout stop status
+// throwing error within withTransaction can result in rollback
+// which is what I want as mean stock reservation unable to happen
 class CheckoutHalt extends Error {
   constructor(
     public status: number,
@@ -29,7 +31,8 @@ async function createNewOrder(
 ) {
   let totalAmount = 0;
 
-  // first check about the stock availability for reserved
+  // try to reserve the stock item
+  // if reserved fail, throw an error and roll back
   for (const row of cartRows) {
     const reserved = await checkoutRepository.decrementStock(
       client,
@@ -46,7 +49,8 @@ async function createNewOrder(
     totalAmount += row.quantity * row.final_price;
   }
 
-  // if all cart items allow to reserve, insert order items and set the expire time of order
+  // if all cart items allow to reserve, insert order items 
+  // and set the expire time of order
   const expiresAt = new Date(Date.now() + CHECKOUT_EXPIRED_MINUTES * 60 * 1000);
   const orderId = await checkoutRepository.insertOrder(
     client,
@@ -55,6 +59,7 @@ async function createNewOrder(
     expiresAt,
   );
 
+  // insert order item
   for (const row of cartRows) {
     await checkoutRepository.insertOrderItem(
       client,
@@ -86,6 +91,8 @@ async function syncExistingOrder(
     throw new CheckoutHalt(400, { error: "Invalid checkout items" });
   }
   console.log("Sync ORDER ITEM PROBLEM CHECKING",orderItems);
+
+  // from here, order item will start sync with possibly new cart item request
   // get the items to remove
   const removedItems = orderItems.filter(
     (oi) => !cartRows.some((ci) => ci.variation_id === oi.variation_id),
@@ -93,6 +100,7 @@ async function syncExistingOrder(
 
   // delete order items and going back to stock
   for (const ri of removedItems) {
+    
     await checkoutRepository.deleteOrderItem(client, ri.order_item_id);
     await checkoutRepository.incrementStock(
       client,
@@ -124,12 +132,19 @@ async function syncExistingOrder(
         cartItem.quantity,
       );
 
-      const delta = oldOrderItem.quantity - cartItem.quantity;
+      const delta = cartItem.quantity - oldOrderItem.quantity;
+      console.log("CART ITEM ",cartItem);
+      console.log("oldOrderItem.quantity=", delta);
+      console.log("  cartItem.quantity=", delta);
+    
+      console.log("Delta=", delta);
+      console.log("Adjust ", cartItem.name, "for delta", delta);
       const ok = await checkoutRepository.adjustStock(
         client,
         cartItem.variation_id,
         delta,
       );
+
       // failed which could happen due to stock went negative after adjustment
       if (!ok) {
         log.warn(
@@ -147,6 +162,7 @@ async function syncExistingOrder(
         cartItem.variation_id,
         cartItem.quantity,
       );
+
       if (!reserved) {
         log.warn(
           `Stock reservation failed for new variation ${cartItem.variation_id}`,
@@ -183,15 +199,18 @@ interface ReconcilableOrder {
   payment_ref: string | null;
 }
 
-// return if should create new order or use back the existing order
+// return if should create new order or use back the existing order based on condition or require to order confirmation
 async function reconcileOrderWithStripe(
   order: ReconcilableOrder,
 ): Promise<ReconcileResult> {
+
+ 
   if (!order.payment_ref || !order.order_id) {
     logger.info("Invalid payment_ref or order_id. Require createNewOrder");
     return "createNewOrder";
   }
 
+   // get the payment reference status
   let pi;
   try {
     pi = await stripeGateway.retrievePaymentIntent(order.payment_ref);
@@ -205,6 +224,8 @@ async function reconcileOrderWithStripe(
 
   logger.info(`Order Id ${order.order_id} PI status: ${pi.status}`);
 
+  // succeeded or processing consider paymentUnresolved because when reaching this stage, 
+  // it mean the database order still mark as pending
   if (pi.status === "succeeded" || pi.status === "processing") {
     return "paymentUnresolved";
   }
@@ -216,6 +237,7 @@ async function reconcileOrderWithStripe(
   return "reusePendingOrder";
 }
 
+
 async function resolvePaymentIntent(
   client: PoolClient,
   orderId: string,
@@ -223,7 +245,8 @@ async function resolvePaymentIntent(
   existingPaymentRef: string | null | undefined,
   log: Logger,
 ): Promise<string> {
-  //let createNewOrder = false;
+ 
+  // this is where the payment intent actually resolved and return client secret
   if (existingPaymentRef) {
     const existingPI =
       await stripeGateway.retrievePaymentIntent(existingPaymentRef);
@@ -290,6 +313,9 @@ export const checkoutService = {
       // return status and body from withTransaction.
       // At the end of try was the real return that return the actual status and body
       const {status, body} = await withTransaction(async (client) => {
+
+        // application level of advisory lock, ensure idempotency
+        // preventing create multiple stripe payment intent or reserve multiple order at once
         await checkoutRepository.acquireUserLock(
           client,
           useridToLockKey(userId),
@@ -309,7 +335,14 @@ export const checkoutService = {
         );
 
         // reconcileOrderWithStripe will ensure to check any existing pending order
-        // in case multiple edge case happen which could result user paid but database not yet update
+        // in case multiple edge case happen which could result user paid 
+        // but database not yet update
+        //--------------------------------------------
+        // payment unresolved = frontend redirect to order-confirmation page and 
+        //                      fetch order-confirmation API.
+        // createNewOrder = create new order intent from stripe
+        // reuseExistingOrder = reuse the existing order that is not yet expired
+         //--------------------------------------------
         let action = "createNewOrder";
         console.log(existingOrder);
         if (existingOrder) {

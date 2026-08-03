@@ -9,6 +9,7 @@
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
     "ignoreDeprecations": "6.0",
+    "isolatedModules": true,
     /* Remove these - they are for bundlers (Vite, esbuild, etc.) */
     // "allowImportingTsExtensions": true,   ← bundler only
     // "verbatimModuleSyntax": true,         ← forces ESM, breaks ts-node

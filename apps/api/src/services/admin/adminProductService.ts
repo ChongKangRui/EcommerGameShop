@@ -39,6 +39,7 @@ export const adminProductService = {
       };
     }
 
+    // extract the variation data
     const {
       name,
       price,
@@ -51,6 +52,9 @@ export const adminProductService = {
       variations,
     } = validation.data;
 
+    // upload the image first so later when product row insert
+    // cover image url was able to set as well
+    // uploaded image id should be collect into an array in case insertion failed
     try {
       const finalVariations = await Promise.all(
         variations.map(async (variation) => {
@@ -131,10 +135,12 @@ export const adminProductService = {
       };
     }
 
-    if (!(await adminProductRepository.exists(productId))) {
+    // check if product exist
+    if (!(await adminProductRepository.productExist(productId))) {
       return { ok: false, status: 404, error: "Product not found" };
     }
 
+    // extract the data
     const {
       name,
       price,
@@ -147,10 +153,14 @@ export const adminProductService = {
       variations: newVariations,
     } = validation.data;
 
+    // get product variation by product id
     const existingVariations =
       await adminProductRepository.findVariationsByProductId(productId);
 
     try {
+      // similar logic with addImage, upload the image first
+      // return a map with image link
+      // collect uploaded images in case rollback happen
       const finalVariations = await Promise.all(
         newVariations.map(async (variation) => {
           if (variation.image) {
@@ -165,6 +175,11 @@ export const adminProductService = {
               image_public_id: result.public_id,
             };
           }
+
+          // if no new image, assuming it was an old data.
+          // but if old data not found as well, throw an error immedially
+          // because it mean that this new variation is not an old data
+          // but also dont have a new image for upload
           const oldData = existingVariations.find(
             (old) => old.variation_id === variation.variation_id,
           );
@@ -180,12 +195,16 @@ export const adminProductService = {
         }),
       );
 
+      // get the cover image url
       const coverImageUrl =
         finalVariations.find((v) => v.is_cover)?.image_url ??
         finalVariations[0]?.image_url;
+
+      // get all the variations id that should updated into DB
       const incomingIds = new Set(
         finalVariations.map((v) => v.variation_id).filter(Boolean),
       );
+      // check which one require remove for variations
       const removedVariations = existingVariations.filter(
         (old) => !incomingIds.has(old.variation_id),
       );
@@ -203,6 +222,7 @@ export const adminProductService = {
           description: description ?? "",
         });
 
+        // once row was deleted, push the image to delete into an array
         if (removedVariations.length > 0) {
           await adminProductRepository.deleteVariations(
             client,
@@ -215,10 +235,14 @@ export const adminProductService = {
 
         await Promise.all(
           finalVariations.map((variation) => {
+            // if product variation exist
             if (variation.variation_id) {
               const oldData = existingVariations.find(
                 (old) => old.variation_id === variation.variation_id,
               );
+
+              // if image link is new, replace the old image with new image
+              // push the old image into imagesToDelete array for later deletion
               if (
                 oldData &&
                 oldData.image_public_id !== variation.image_public_id
@@ -234,6 +258,8 @@ export const adminProductService = {
                 priceOffset: variation.price_offset,
               });
             }
+
+            // otherwise, new variation require a new insertion
             return adminProductRepository.insertVariation(client, productId, {
               label: variation.label,
               imageUrl: variation.image_url,
@@ -245,7 +271,8 @@ export const adminProductService = {
         );
       });
 
-      // intentionally not awaited — respond first, clean up old images after (matches original behavior)
+      // intentionally not awaited
+      //  respond first, clean up old images after
       cleanupImages(imagesToDelete, Log);
 
       return { ok: true, data: { message: "Update product Success" } };
@@ -256,8 +283,9 @@ export const adminProductService = {
   },
 
   async deleteProduct(productId: number, Log: Logger) {
+    // if have order history, this shouldn't delete and instead, deactivated
     if (await adminProductRepository.hasOrderHistory(productId)) {
-      await adminProductRepository.deactivate(productId);
+      await adminProductRepository.deactivateProduct(productId);
       return {
         message: "Product has order history — deactivated instead of deleted",
       };
@@ -265,7 +293,7 @@ export const adminProductService = {
 
     const variations =
       await adminProductRepository.findVariationsByProductIdOrdered(productId);
-    await adminProductRepository.delete(productId);
+    await adminProductRepository.deleteProduct(productId);
 
     if (variations.length > 0) {
       await adminProductRepository.deleteCartByVariationIds(
@@ -280,15 +308,35 @@ export const adminProductService = {
     return { message: "Product delete success" };
   },
 
+  // bulk delete products
   async deleteProducts(productIds: number[], Log: Logger) {
+    // same thing with delete product, protect the product deletion
+    // in case it have order history
+    const results = await Promise.all(
+      productIds.map(async (id) => ({
+        id,
+        hasOrderHistory: await adminProductRepository.hasOrderHistory(id),
+      })),
+    );
+
+    // filter out the orderHistory
+    const finalProductIds = results
+      .filter((r) => !r.hasOrderHistory)
+      .map((r) => r.id);
+
+    // doing bulk delete
+    await adminProductRepository.bulkDeleteProduct(finalProductIds);
+
     const variations =
-      await adminProductRepository.findVariationsByProductIds(productIds);
-    await adminProductRepository.bulkDelete(productIds);
+      await adminProductRepository.findVariationsByProductIds(finalProductIds);
+
     await cleanupImages(
       variations.map((v) => v.image_public_id),
       Log,
     );
-    return { message: "Products delete success" };
+    return { message: finalProductIds.length === productIds.length ? 
+      "Products delete success" : `Deleted ${finalProductIds.length} of ${productIds.length} product(s). ` +
+        `Skipped ${productIds.length - finalProductIds.length} due to existing order history. You may try to deactivate it instead.` };
   },
 
   async discountProducts(productIds: number[], discountPercentage: number) {
@@ -308,11 +356,9 @@ export const adminProductService = {
     await adminProductRepository.bulkUpdateActive(productIds, active);
     return { message: "Products active state update success" };
   },
-   async getActiveProductCount(log: Logger) : Promise<number> {
-   
-   
+  async getActiveProductCount(log: Logger): Promise<number> {
     log.info(`Start getting active product count`);
-    const count  = await adminProductRepository.getActiveProductCount();
+    const count = await adminProductRepository.getActiveProductCount();
 
     log.info(`Query returned active product count = ${count} `);
 

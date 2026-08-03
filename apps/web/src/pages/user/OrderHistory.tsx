@@ -26,8 +26,6 @@ export default function OrderHistory() {
 
  const [rowSelection, setRowSelection] = useState<Record<number, boolean>>({});
 
- console.log("Order history goes wrong?");
-
   if (data.isError) {
     flashMessage_Failed(data.error ?? "Invalid action");
   }

@@ -68,7 +68,7 @@ export const checkoutRepository = {
     await client.query(`DELETE FROM order_items WHERE order_item_id = $1`, [orderItemId]);
   },
 
-  async updateOrderItemQuantity(client: PoolClient, variationId: string, order_id: string, quantity: number) {
+  async updateOrderItemQuantity(client: PoolClient, order_id: string, variationId: string, quantity: number) {
     await client.query(`UPDATE order_items SET quantity = $1 WHERE order_id = $2 AND variation_id = $3`, [quantity, order_id,variationId]);
   },
 
@@ -100,7 +100,7 @@ export const checkoutRepository = {
 
   async adjustStock(client: PoolClient, variationId: string, delta: number) {
     const result = await client.query(
-      `UPDATE product_variations SET stock = stock + $1 WHERE variation_id = $2 AND stock + $1 >= 0 RETURNING variation_id`,
+      `UPDATE product_variations SET stock = stock - $1 WHERE variation_id = $2 AND stock - $1 >= 0 RETURNING variation_id`,
       [delta, variationId],
     );
     return (result.rowCount ?? 0) > 0;

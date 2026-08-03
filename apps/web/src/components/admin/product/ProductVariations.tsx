@@ -30,6 +30,7 @@ interface ProductVariationProps extends ValidationFormProps {
   removeProductVariation: (index: number) => void;
 }
 
+// for product variation information input
 export default function ProductVariations({
   register,
   control,

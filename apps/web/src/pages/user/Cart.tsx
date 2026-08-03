@@ -14,8 +14,7 @@ import { type CartValidateResult } from "@ecom/shared/type/checkout";
 
 
 export default function Cart() {
-  //const [totalPrice, setTotalPrice] = useState(0);
-
+ 
   const { items, isLoading } = useCart();
   const queryClient = useQueryClient();
 
@@ -31,17 +30,11 @@ export default function Cart() {
     }
   }, []);
 
-  //   useEffect(() => {
-  //   if (adjusted) {
-  //     flashMessage_Failed("Some items were adjusted due to stock changes");
-  //     console.log("Adjusted trigger?", adjusted);
-  //     clearAdjustedNotification();
-
-  //   }
-  // }, [adjusted]);
 
   const onCheckout = () => {
-    console.log("Checkout");
+   // console.log("Checkout");
+   
+   // validate cart again, then only navigate to checkout to reserve product item
     cartValidate.mutate(undefined, {
       onSuccess: (result: CartValidateResult) => {
         const { validationPass, message } = result;

@@ -15,16 +15,21 @@ const getUserData = (row: any): UserInfo => {
 export const userService = {
   async register(body: unknown, log: Logger): Promise<ServiceResult<{ message: string }>> {
     const validationResult = registerDataSchema.safeParse(body);
+
+    // validation first
     if (!validationResult.success) {
       log.warn("Validation failed for registration", { errors: validationResult.error.issues });
       return { ok: false, status: 400, error: "Validation failed", details: validationResult.error.issues };
     }
 
+    // extract the variables
     const { firstName, lastName, email, password, streetAddress, city, postalCode } = validationResult.data;
     const address = `${streetAddress}, ${city}, ${postalCode}`;
     const passwordHash = await passwordHelper.hash(password);
 
     try {
+
+      // email unique will prevent it to insert into database from database level
       await userRepository.insertUser({ firstName, lastName, email, passwordHash, address, role: "customer" });
     } catch (e: any) {
       if (e.code === "23505") {

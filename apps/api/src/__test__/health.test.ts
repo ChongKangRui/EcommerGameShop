@@ -3,7 +3,7 @@ import request from "supertest";
 import app from "../app"; // adjust path/name to match your actual entry file export
 
 
-describe("smoke test — server boots and responds", () => {
+describe("test server boots and responds", () => {
   it("GET / returns 200 and the expected message", async () => {
     const res = await request(app).get("/");
     expect(res.status).toBe(200);

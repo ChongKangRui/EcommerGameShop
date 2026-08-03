@@ -86,17 +86,7 @@ export default function UserProfile({ register, errors, disableInput = false }: 
           </p>
         )}
       </Field>
-      {/* password */}
-      {/* <Field className="col-span-2">
-        <FieldLabel htmlFor="password">Password <span className="text-destructive">*</span></FieldLabel>
-        <FieldDescription>Must be at least 8 characters long.</FieldDescription>
-        <Input id="password" type="password" placeholder="••••••••"  disabled={disableInput} {...register("password")} />
-         {errors.password && (
-          <p className="text-destructive text-sm mt-1">
-            {errors.password.message as string}
-          </p>
-        )}
-      </Field> */}
+     
     </FieldGroup>
   );
 }

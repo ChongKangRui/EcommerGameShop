@@ -36,8 +36,7 @@ export default function HomeCarousell() {
           </CarouselItem>
         ))}
       </CarouselContent>
-      {/* <CarouselPrevious />
-      <CarouselNext /> */}
+     
     </Carousel>
   )
 }

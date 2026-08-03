@@ -28,6 +28,7 @@ export default function CommentCarousel() {
       }}
     >
       <CarouselContent>
+        
         {customerComments.map((comment, index) => (
           <CarouselItem key={index} >
             <div className="">

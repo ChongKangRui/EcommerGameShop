@@ -9,7 +9,7 @@ import {
 import {type ProductListRepositoryFilter}from "@ecom/shared/type/search";
 import { useAuth } from "@/context/AuthProvider";
 
-
+// specifically for backend to accept form data for product image
 function convertFieldToForm(data: FieldValues): FormData {
   const formData = new FormData();
 
@@ -45,7 +45,7 @@ function convertFieldToForm(data: FieldValues): FormData {
       String(variation.image_url),
     );
 
-    formData.append(`variations[${index}]`, variation.image); // ← image inside variation
+    formData.append(`variations[${index}]`, variation.image); 
   });
 
   return formData;
@@ -103,7 +103,7 @@ export function useProductQuery(productId: string) {
       // this is fine because even user modify the role from customer to admin
       // backend will still validate as backend is the single source of truth and never trust frontend.
       const { data } = await api.get<ProductResponse>(user?.role === 'admin' ? `/admin/products/${productId}` : `/products/${productId}`);
-      console.log(data);
+     // console.log(data);
       return { product: data.product, variations: data.variations };
     },
     enabled: !!productId,
@@ -115,8 +115,7 @@ export function usePromotedProductQuery() {
   return useQuery({
     queryKey: ["promoted"],
     queryFn: async () => {
-      // this is fine because even user modify the role from customer to admin
-      // backend will still validate as backend is the single source of truth and never trust frontend.
+     
       const { data } = await api.get<ProductsResponse>(`/products/promoted`);
       console.log(data);
      return data;

@@ -1,6 +1,9 @@
 import formidable from "formidable";
 import { logger } from "src/utils/loggerHelper";
 
+// primary used to parse variation from fields into correct type
+// as fields is gonna turn every variable
+// into a string to string pair.
 const parseVariations = (fields: formidable.Fields) => {
   const variations: Record<string, string>[] = [];
 
@@ -18,6 +21,8 @@ const parseVariations = (fields: formidable.Fields) => {
   return variations;
 };
 
+// same as parseVariations where parse all the string and string key value pair 
+// into the correct type of variable
 export const parseProductForm = (
   files: formidable.Files,
   fields: formidable.Fields,

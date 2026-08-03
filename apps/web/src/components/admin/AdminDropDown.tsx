@@ -15,6 +15,7 @@ type AdminDropdownProps = {
   isCollapsed: boolean;
 };
 
+// specifically fro admin panel dropdown
 export default function AdminDropDown({ isCollapsed }: AdminDropdownProps) {
   const { user, logout } = useAuth();
 
@@ -23,21 +24,17 @@ export default function AdminDropDown({ isCollapsed }: AdminDropdownProps) {
       <DropdownMenuTrigger
         render={
           <Button className="bg-black hover:bg-black cursor-pointer">
-           
-              <User className="shrink-0 h-5 w-5" />
-              {!isCollapsed && (
-                <span className="truncate text-sm ms-5">
-                  {user?.first_name} {user?.last_name}
-                </span>
-              )}
-           
+            <User className="shrink-0 h-5 w-5" />
+            {!isCollapsed && (
+              <span className="truncate text-sm ms-5">
+                {user?.first_name} {user?.last_name}
+              </span>
+            )}
           </Button>
         }
       />
-      <DropdownMenuContent className="bg-black" >
+      <DropdownMenuContent className="bg-black">
         <DropdownMenuGroup>
-          {/* <DropdownMenuLabel>Hi, {isAuthenticated ? `${user?.first_name} ${user?.last_name}` : "Guest"}</DropdownMenuLabel>
-           */}
 
           <div>
             <NavBarUserDropDownItem

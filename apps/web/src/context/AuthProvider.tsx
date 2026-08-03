@@ -34,7 +34,7 @@ export function AuthProvider({ children }: ChildrenOnlyProps) {
       setIsLoading(false);
       return;
     }
-    console.log("Run content authenticating");
+    
     // get the user data and store in the global context
     api
       .get("/auth/verify")

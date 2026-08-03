@@ -4,7 +4,6 @@ import {
   adminOrderTypeOptions,
   DashboardDataResponse,
   getOrderStatusAvailableUpdateOptions,
-  
 } from "@ecom/shared/type/order";
 import { adminOrderRepository } from "../../repositories/admin/adminOrderRepository";
 import { type ServiceResult } from "@ecom/shared/type/service";
@@ -37,6 +36,8 @@ export const adminOrderService = {
     newStatus: string,
     log: Logger,
   ): Promise<ServiceResult<{ message: string }>> {
+
+    // validate if order status are valid
     const validated = adminOrderTypeOptions.safeParse(
       newStatus as AdminOrderTypeEnum,
     );
@@ -48,12 +49,14 @@ export const adminOrderService = {
       return { ok: false, status: 400, error: "Invalid order status" };
     }
 
+    // if invalid order, return 400
     const order = await orderRepository.getOrderStatusAndPaymentRef(orderId);
     if (!order) {
       log.warn(`Order ${orderId} not found`);
       return { ok: false, status: 400, error: "Invalid order confirmation" };
     }
 
+    // if the status is not allowed to change
     const allowed = getOrderStatusAvailableUpdateOptions(
       order.status as AdminOrderTypeEnum,
     );
@@ -67,6 +70,8 @@ export const adminOrderService = {
         error: "Invalid order status update action",
       };
     }
+
+    // update status
     if (newStatus === "paid") {
       await orderService.markOrderAsPaid(order.payment_ref, log);
     } else {
@@ -82,6 +87,8 @@ export const adminOrderService = {
     newStatus: string,
     log: Logger,
   ): Promise<ServiceResult<{ message: string }>> {
+
+    // validate if order status are valid
     const validated = adminOrderTypeOptions.safeParse(
       newStatus as AdminOrderTypeEnum,
     );
@@ -92,6 +99,7 @@ export const adminOrderService = {
       return { ok: false, status: 400, error: "Invalid order status" };
     }
 
+    // get list of orders
     const rows = await adminOrderRepository.getStatusByIds(orderIds);
     if (rows.length === 0) {
       log.warn("Bulk status update found no matching orders", {
@@ -105,6 +113,8 @@ export const adminOrderService = {
     let successCount = 0;
     const skipped: string[] = [];
 
+    // bulk update the order
+    // check if the order status are allow to set to new status
     for (const row of rows) {
       const allowed = getOrderStatusAvailableUpdateOptions(
         row.status as AdminOrderTypeEnum,
@@ -145,6 +155,7 @@ export const adminOrderService = {
     endMonth = 12,
   ): Promise<DashboardDataResponse> {
     const date = new Date();
+
     const [salesData, activeProductCount, customerGrowthStat, orderGrowthStat] =
       await Promise.all([
         adminOrderRepository.getMonthlySalesRecord({
@@ -165,5 +176,4 @@ export const adminOrderService = {
       orderGrowthStat,
     };
   },
- 
 };

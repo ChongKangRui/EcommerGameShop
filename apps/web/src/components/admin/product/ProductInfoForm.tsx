@@ -21,6 +21,7 @@ interface ProductInfoProps extends ValidationFormProps {
 
 }
 
+// for product general information
 export default function ProductInfoForm({
   register,
   errors,
@@ -102,7 +103,7 @@ export default function ProductInfoForm({
       </Field>
 
 
-
+        {/* Is an active product, meaning visible to customer */}
       <FormField
         className="col-span-1 h-10"
         id="push-to-home"
@@ -115,7 +116,7 @@ export default function ProductInfoForm({
         required={false}
       ></FormField>
 
-       {/* Push to home page */}
+       {/* Push to home page, promote to home page */}
       <FormField
         className="col-span-1 h-10"
         id="push-to-home"
@@ -128,7 +129,7 @@ export default function ProductInfoForm({
         required={false}
       ></FormField>
 
-      {/* Date */}
+      {/* Release Date */}
       <FormField
         className="col-span-2"
         id="product-release-date"
@@ -156,23 +157,6 @@ export default function ProductInfoForm({
         )}
       </Field>
 
-      {/* <FormField
-        className="col-span-2"
-        inputClassname="h-30 md:h-50"
-        id="product-release-date"
-        label="Product description"
-        type="text"
-        placeholder=""
-        disabled={disableInput}
-        register={register("description")}
-        error={errors.description}
-        required={false}
-        onKeyDown={(e)=>{
-          if(e.key === 'Enter'){
-          e.preventDefault();
-          }
-        }}
-      ></FormField> */}
     </FieldGroup>
   );
 }

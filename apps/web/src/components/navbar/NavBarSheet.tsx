@@ -33,7 +33,7 @@ export default function NavBarSheet() {
     // Create event listener
     const listener = (event: MediaQueryListEvent) => {
       setIsDesktop(event.matches);
-      console.log("is desktop?", event.matches);
+      
     };
 
     // Add listener

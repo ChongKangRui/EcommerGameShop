@@ -1,6 +1,8 @@
 import { PoolClient } from "pg";
 import { pool } from "./db";
 
+// making this as an small closure function 
+// so it can be utilize anywhere who require transaction
 export async function withTransaction<T>(
   fn: (client: PoolClient) => Promise<T>,
 ): Promise<T> {

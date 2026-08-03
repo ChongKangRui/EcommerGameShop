@@ -20,17 +20,14 @@ export default function QuantitySelector({
   currentQuantity,
   disabled = false,
   setQuantity,
-  showOutOfStock
+  showOutOfStock,
 }: QuantitySelectorProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [draftValue, setDraftValue] = useState(String(initialQuantity));
   const inputRef = useRef(null);
 
   const isOutOfStock = max <= 0;
- 
-  // Bug fix: previously Math.min(max, Math.max(1, n)) forced a floor of 1
-  // before capping at max, so when max <= 0 the result became 0 and
-  // both +/- buttons ended up permanently disabled with no way out.
+
   const clamp = (n: number) => {
     if (isOutOfStock) return 0;
     return Math.min(max, Math.max(1, n));
@@ -38,9 +35,10 @@ export default function QuantitySelector({
 
   const decrement = () => {
     setIsEditing(false);
-    setQuantity(clamp(currentQuantity - 1))};
+    setQuantity(clamp(currentQuantity - 1));
+  };
   const increment = () => {
- setIsEditing(false);
+    setIsEditing(false);
     setQuantity(clamp(currentQuantity + 1));
   };
 
@@ -105,7 +103,6 @@ export default function QuantitySelector({
         <Button
           type="button"
           onClick={decrement}
-          
           disabled={currentQuantity <= 1 || disabled}
           aria-label="Decrease quantity"
           className="px-auto py-auto w-10 h-10 text-gray-600 text-base leading-none hover:bg-gray-50 active:bg-gray-100 disabled:opacity-40 disabled:hover:bg-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-gray-400"
@@ -115,6 +112,8 @@ export default function QuantitySelector({
 
         <div className="w-px bg-gray-300" />
 
+        {/* showing different html element based on 
+        whether it is editing or a button that show quantity */}
         {isEditing ? (
           <input
             ref={inputRef}

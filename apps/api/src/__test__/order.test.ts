@@ -4,7 +4,7 @@ import request from "supertest";
 import app from "../app";
 import { generateToken } from "src/utils/jwtHelper";
 
-describe("GET /order/me/:orderId — cross-user authorization", () => {
+describe("GET /order/me/:orderId - cross-user authorization", () => {
   it("blocks a customer from viewing another user's order", async () => {
     const customerToken = await generateToken(
       "00000000-0000-0000-0000-000000001001",
@@ -40,7 +40,7 @@ describe("GET /order/me/:orderId — cross-user authorization", () => {
   
 });
 
-describe("POST /order/refund/orderId — refund testing", () => {
+describe("POST /order/refund/orderId - refund testing", () => {
  
   it("trying to refund an order that is not belong to customer", async () => {
     const customerToken = await generateToken(

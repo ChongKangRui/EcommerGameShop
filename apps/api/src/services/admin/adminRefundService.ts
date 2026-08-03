@@ -82,12 +82,14 @@ export const adminRefundService = {
   ) {
     log.info(`Update refund detail for ${refundId} with status ${newStatus}`);
 
+    // validate refund
     const result = refundUpdateEnum.safeParse(newStatus);
 
     if (!result.success) {
       throw Error("Invalid enum type for newStatus");
     }
 
+    // chech if refund exist
     const existing = await adminRefundRepository.getRefundByRefundId(refundId);
     if (!existing) {
       throw Error(`Invalid refund Id ${refundId}`);
@@ -102,6 +104,7 @@ export const adminRefundService = {
     }
 
     let updateResult;
+
     // reject route, just simply update the status to reject
     if (result.data === "rejected") {
       updateResult = await adminRefundRepository.updateRefundStatus(
@@ -112,6 +115,7 @@ export const adminRefundService = {
         processed_by,
       );
     } else {
+      // approve route, require customer information and items
       const { customer, items } = await orderRepository.getCustomerOrder(
         existing.refundInfo.order_id,
         existing.refundInfo.requested_by,
@@ -121,12 +125,15 @@ export const adminRefundService = {
         throw Error("Invalid customer info");
       }
 
+      // require to throw an error
+      // in case payment was more than total amount of customer order
       if (paymentAmount > customer.total_amount) {
         throw Error(
           `Refund amount RM ${paymentAmount} exceeds order total RM ${customer.total_amount}`,
         );
       }
 
+      // stripe create refund intent
       const refund = await stripeGateway.createRefundIntent(
         Math.round(paymentAmount * 100),
         customer.payment_ref,
@@ -136,7 +143,12 @@ export const adminRefundService = {
       const year = now.getFullYear();
       const month = now.getMonth() + 1;
 
+      // use refund ratio to ensure the record was keep in track correctly 
+      // with partial refund.
+      const refundRatio = paymentAmount / customer.total_amount;
+
       const [outUpdateResult] = await Promise.all([
+        // update refund table status
         adminRefundRepository.updateRefundStatus(
           refundId,
           newStatus,
@@ -144,17 +156,24 @@ export const adminRefundService = {
           paymentAmount,
           processed_by,
         ),
-        adminOrderService.updateOrderStatus(existing.refundInfo.order_id, paymentAmount < customer.total_amount ? 'partially_refunded' : 'refunded', log)
-        ,
-        ...items.map((i) => {
+        // update order table status
+        adminOrderService.updateOrderStatus(
+          existing.refundInfo.order_id,
+          paymentAmount < customer.total_amount
+            ? "partially_refunded"
+            : "refunded",
+          log,
+        ),
+        // update the record sales for related product
+        ...items.map((i) =>
           orderRepository.updateMonthlySalesRecord({
             productId: i.product_id,
             year,
             month,
-            units_sold: -i.quantity,
-            revenue: -i.item_total_price,
-          });
-        }),
+            units_sold: -Math.round(i.quantity * refundRatio),
+            revenue: -(i.item_total_price * refundRatio),
+          }),
+        ),
       ]);
       updateResult = outUpdateResult;
       // updateResult = await adminRefundRepository.updateRefundStatus(

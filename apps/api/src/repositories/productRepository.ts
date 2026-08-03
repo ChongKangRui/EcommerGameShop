@@ -59,22 +59,29 @@ export const productRepository = {
       ":",
     );
 
-    const [productResults, countResult] = await Promise.all([
-      pool.query<Product>(
-        `SELECT p.*,
-           COALESCE(SUM(pv.stock), 0) as total_stock,
-           p.price * (1 - p.discount_percentage / 100.0) AS discounted_price,
-           COALESCE(SUM(mps.revenue), 0) as revenue
-         FROM products p
-         LEFT JOIN product_variations pv ON p.product_id = pv.product_id
-         LEFT JOIN monthly_product_sales mps on p.product_id = mps.product_id
-         ${whereClause}
-         GROUP BY p.product_id
-         ORDER BY ${column} ${sortDirection}
-         LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`,
-        [...values, f.limit, f.offset],
-      ),
-      pool.query(`SELECT COUNT(*) FROM products ${whereClause}`, values),
+   const [productResults, countResult] = await Promise.all([
+  pool.query<Product>(
+    `SELECT p.*,
+       COALESCE(stock_agg.total_stock, 0) as total_stock,
+       p.price * (1 - p.discount_percentage / 100.0) AS discounted_price,
+       COALESCE(sales_agg.revenue, 0) as revenue
+     FROM products p
+     LEFT JOIN (
+       SELECT product_id, SUM(stock) as total_stock
+       FROM product_variations
+       GROUP BY product_id
+     ) stock_agg ON p.product_id = stock_agg.product_id
+     LEFT JOIN (
+       SELECT product_id, SUM(revenue) as revenue
+       FROM monthly_product_sales
+       GROUP BY product_id
+     ) sales_agg ON p.product_id = sales_agg.product_id
+     ${whereClause}
+     ORDER BY ${column} ${sortDirection}
+     LIMIT $${paramIndex} OFFSET $${paramIndex + 1}`,
+    [...values, f.limit, f.offset],
+  ),
+  pool.query(`SELECT COUNT(*) FROM products ${whereClause}`, values),
     ]);
 
     return {

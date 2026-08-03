@@ -3,6 +3,7 @@ import { Navigate } from "react-router-dom";
 import {type  ChildrenOnlyProps } from "@/components/CommonType";
 import Loading from "@/components/Loading";
 
+// protect private(require login) only route
 export function PrivateOnlyRoute({children}: ChildrenOnlyProps){
     const {isLoading, isAuthenticated} = useAuth();
 
