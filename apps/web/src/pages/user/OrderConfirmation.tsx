@@ -64,7 +64,7 @@ const startCountDown = () =>
 
         timerRef.current = startCountDown();
       },
-      onError: (err)=>{
+      onError: (_err)=>{
         //console.log(err);
       }
     });

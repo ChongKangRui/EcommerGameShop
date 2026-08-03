@@ -30,7 +30,7 @@ export default function Checkout() {
          navigate(`/order-confirmation/${data.orderId}`, {replace: true, state: {status: "last_pay_unresolved"}});
         }
       },
-      onError: (err) => {
+      onError: (_err) => {
         hasInitiated.current = false; // allow retry
         //console.log(err);
       },
