@@ -21,7 +21,7 @@ export const webHookService = {
       event = stripeGateway.constructWebhookEvent(
         rawBody,
         signature,
-        process.env.STRIPE_WEBHOOK_KEY ?? "",
+        process.env.STRIPE_SECRET_KEY ?? "",
       );
     } catch (err) {
       log.error("Webhook signature verification failed", err);
