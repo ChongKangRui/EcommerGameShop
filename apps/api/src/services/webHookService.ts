@@ -12,6 +12,12 @@ export const webHookService = {
     let event: Stripe.Event;
 
     try {
+      log.info("Debug raw body", {
+        isBuffer: Buffer.isBuffer(rawBody),
+        length: rawBody?.length,
+        preview: rawBody?.toString("utf8").slice(0, 100),
+      });
+
       event = stripeGateway.constructWebhookEvent(
         rawBody,
         signature,
@@ -22,7 +28,10 @@ export const webHookService = {
       return { status: 400, body: { error: "Payment verification fail" } };
     }
 
-    log.info(`Stripe webhook event constructed`, { eventId: event.id, eventType: event.type });
+    log.info(`Stripe webhook event constructed`, {
+      eventId: event.id,
+      eventType: event.type,
+    });
 
     if (event.type === "payment_intent.succeeded") {
       const paymentIntent = event.data.object as Stripe.PaymentIntent;
