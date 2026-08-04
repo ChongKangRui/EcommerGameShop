@@ -105,3 +105,4 @@ vite.config.ts.timestamp-*
 .turbo
 .vercel
 .env*
+.secrets
