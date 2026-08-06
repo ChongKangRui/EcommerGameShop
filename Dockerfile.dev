@@ -1,0 +1,10 @@
+FROM node:24-alpine
+WORKDIR /app
+# satisfy node-gyp uses to compile native C/C++ addons during npm install
+RUN apk add --no-cache python3 make g++
+COPY package.json package-lock.json ./
+COPY apps/api/package.json apps/api/package.json
+COPY apps/web/package.json apps/web/package.json
+COPY packages/shared/package.json packages/shared/package.json
+RUN npm install
+COPY . .
