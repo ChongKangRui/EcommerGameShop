@@ -31,9 +31,15 @@ async function createNewOrder(
 ) {
   let totalAmount = 0;
 
+  // create a copy of the cart that sort the string.
+  // Ensure that no deadlock can happen during transaction
+  const sortedCartRows = [...cartRows].sort((a, b) =>
+    a.variation_id.localeCompare(b.variation_id),
+  );
+
   // try to reserve the stock item
   // if reserved fail, throw an error and roll back
-  for (const row of cartRows) {
+  for (const row of sortedCartRows) {
     const reserved = await checkoutRepository.decrementStock(
       client,
       row.variation_id,
@@ -49,7 +55,7 @@ async function createNewOrder(
     totalAmount += row.quantity * row.final_price;
   }
 
-  // if all cart items allow to reserve, insert order items 
+  // if all cart items allow to reserve, insert order items
   // and set the expire time of order
   const expiresAt = new Date(Date.now() + CHECKOUT_EXPIRED_MINUTES * 60 * 1000);
   const orderId = await checkoutRepository.insertOrder(
@@ -60,7 +66,7 @@ async function createNewOrder(
   );
 
   // insert order item
-  for (const row of cartRows) {
+  for (const row of sortedCartRows) {
     await checkoutRepository.insertOrderItem(
       client,
       orderId,
@@ -72,7 +78,7 @@ async function createNewOrder(
   }
 
   log.info(`New order ${orderId} created for user ${userId}`, {
-    itemCount: cartRows.length,
+    itemCount: sortedCartRows.length,
     totalAmount,
   });
   return { orderId, totalAmount };
@@ -90,7 +96,7 @@ async function syncExistingOrder(
   if (orderItems.length <= 0) {
     throw new CheckoutHalt(400, { error: "Invalid checkout items" });
   }
-  console.log("Sync ORDER ITEM PROBLEM CHECKING",orderItems);
+  console.log("Sync ORDER ITEM PROBLEM CHECKING", orderItems);
 
   // from here, order item will start sync with possibly new cart item request
   // get the items to remove
@@ -100,7 +106,6 @@ async function syncExistingOrder(
 
   // delete order items and going back to stock
   for (const ri of removedItems) {
-    
     await checkoutRepository.deleteOrderItem(client, ri.order_item_id);
     await checkoutRepository.incrementStock(
       client,
@@ -133,10 +138,10 @@ async function syncExistingOrder(
       );
 
       const delta = cartItem.quantity - oldOrderItem.quantity;
-      console.log("CART ITEM ",cartItem);
+      console.log("CART ITEM ", cartItem);
       console.log("oldOrderItem.quantity=", delta);
       console.log("  cartItem.quantity=", delta);
-    
+
       console.log("Delta=", delta);
       console.log("Adjust ", cartItem.name, "for delta", delta);
       const ok = await checkoutRepository.adjustStock(
@@ -203,14 +208,12 @@ interface ReconcilableOrder {
 async function reconcileOrderWithStripe(
   order: ReconcilableOrder,
 ): Promise<ReconcileResult> {
-
- 
   if (!order.payment_ref || !order.order_id) {
     logger.info("Invalid payment_ref or order_id. Require createNewOrder");
     return "createNewOrder";
   }
 
-   // get the payment reference status
+  // get the payment reference status
   let pi;
   try {
     pi = await stripeGateway.retrievePaymentIntent(order.payment_ref);
@@ -224,7 +227,7 @@ async function reconcileOrderWithStripe(
 
   logger.info(`Order Id ${order.order_id} PI status: ${pi.status}`);
 
-  // succeeded or processing consider paymentUnresolved because when reaching this stage, 
+  // succeeded or processing consider paymentUnresolved because when reaching this stage,
   // it mean the database order still mark as pending
   if (pi.status === "succeeded" || pi.status === "processing") {
     return "paymentUnresolved";
@@ -237,7 +240,6 @@ async function reconcileOrderWithStripe(
   return "reusePendingOrder";
 }
 
-
 async function resolvePaymentIntent(
   client: PoolClient,
   orderId: string,
@@ -245,7 +247,6 @@ async function resolvePaymentIntent(
   existingPaymentRef: string | null | undefined,
   log: Logger,
 ): Promise<string> {
- 
   // this is where the payment intent actually resolved and return client secret
   if (existingPaymentRef) {
     const existingPI =
@@ -259,7 +260,9 @@ async function resolvePaymentIntent(
       case "requires_confirmation":
       case "requires_action": {
         const newAmount = Math.round(totalAmount * 100);
-        log.info(`Stripe payment update for total amount ${newAmount} in ${orderId}`);
+        log.info(
+          `Stripe payment update for total amount ${newAmount} in ${orderId}`,
+        );
         if (existingPI.amount !== newAmount) {
           const updatedPI = await stripeGateway.updatePaymentIntentAmount(
             existingPI.id,
@@ -312,8 +315,7 @@ export const checkoutService = {
     try {
       // return status and body from withTransaction.
       // At the end of try was the real return that return the actual status and body
-      const {status, body} = await withTransaction(async (client) => {
-
+      const { status, body } = await withTransaction(async (client) => {
         // application level of advisory lock, ensure idempotency
         // preventing create multiple stripe payment intent or reserve multiple order at once
         await checkoutRepository.acquireUserLock(
@@ -335,14 +337,14 @@ export const checkoutService = {
         );
 
         // reconcileOrderWithStripe will ensure to check any existing pending order
-        // in case multiple edge case happen which could result user paid 
+        // in case multiple edge case happen which could result user paid
         // but database not yet update
         //--------------------------------------------
-        // payment unresolved = frontend redirect to order-confirmation page and 
+        // payment unresolved = frontend redirect to order-confirmation page and
         //                      fetch order-confirmation API.
         // createNewOrder = create new order intent from stripe
         // reuseExistingOrder = reuse the existing order that is not yet expired
-         //--------------------------------------------
+        //--------------------------------------------
         let action = "createNewOrder";
         console.log(existingOrder);
         if (existingOrder) {
@@ -372,18 +374,23 @@ export const checkoutService = {
                 log,
               )
             : await createNewOrder(client, userId, cartRows, log);
-            
-        const clientSecret = env === 'test' ? "p-test" : await resolvePaymentIntent(
-          client,
-          orderId,
-          totalAmount,
-          existingOrder?.payment_ref,
-          log,
-        );
-      
-        return {status:202,body:{orderId, clientSecret, ReconcileResult: action} };
-      });
 
+        const clientSecret =
+          env === "test"
+            ? "p-test"
+            : await resolvePaymentIntent(
+                client,
+                orderId,
+                totalAmount,
+                existingOrder?.payment_ref,
+                log,
+              );
+
+        return {
+          status: 202,
+          body: { orderId, clientSecret, ReconcileResult: action },
+        };
+      });
 
       return { status, body };
     } catch (e) {
