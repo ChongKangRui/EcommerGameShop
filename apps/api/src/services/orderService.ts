@@ -188,7 +188,22 @@ export const orderService = {
       return false;
     }
 
-    await checkoutRepository.incrementStockFromOrderItem(client, orderId); // await added, from before
+    // restore stock one variation at a time, sorted by variation_id.
+    // Keeps the same lock order as createNewOrder/syncExistingOrder so this
+    // transaction can't deadlock against a concurrent checkout transaction
+    // that shares one of these variations.
+    const orderItems = await checkoutRepository.getOrderItems(client, orderId);
+    const sortedOrderItems = [...orderItems].sort((a, b) =>
+      a.variation_id.localeCompare(b.variation_id),
+    );
+
+    for (const item of sortedOrderItems) {
+      await checkoutRepository.incrementStock(
+        client,
+        item.variation_id,
+        item.quantity,
+      );
+    }
 
     return true;
   },

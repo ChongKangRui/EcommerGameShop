@@ -104,90 +104,95 @@ async function syncExistingOrder(
     (oi) => !cartRows.some((ci) => ci.variation_id === oi.variation_id),
   );
 
-  // delete order items and going back to stock
-  for (const ri of removedItems) {
-    await checkoutRepository.deleteOrderItem(client, ri.order_item_id);
-    await checkoutRepository.incrementStock(
-      client,
-      ri.variation_id,
-      ri.quantity,
-    );
-  }
   if (removedItems.length > 0) {
     log.debug(
       `Removed ${removedItems.length} items no longer in cart from order ${orderId}`,
     );
   }
 
+  type SyncOp =
+    | { kind: "remove"; item: (typeof orderItems)[number] }
+    | { kind: "cart"; item: CartItemResponse };
+
+  const ops: SyncOp[] = [
+    ...removedItems.map((item) => ({ kind: "remove", item }) as const),
+    ...cartRows.map((item) => ({ kind: "cart", item }) as const),
+  ].sort((a, b) => a.item.variation_id.localeCompare(b.item.variation_id));
+
   let totalAmount = 0;
 
-  // recalculate the total amount
-  // adjusting old order items and add new order items
-  for (const cartItem of cartRows) {
-    const oldOrderItem = orderItems.find(
-      (oi) => cartItem.variation_id === oi.variation_id,
-    );
-
-    // adjusting the existing order
-    if (oldOrderItem) {
-      await checkoutRepository.updateOrderItemQuantity(
+  for (const op of ops) {
+    if (op.kind === "remove") {
+      const ri = op.item;
+      await checkoutRepository.deleteOrderItem(client, ri.order_item_id);
+      await checkoutRepository.incrementStock(
         client,
-        orderId,
-        cartItem.variation_id,
-        cartItem.quantity,
+        ri.variation_id,
+        ri.quantity,
+      );
+    } else if (op.kind === "cart") {
+      const cartItem = op.item;
+
+      const oldOrderItem = orderItems.find(
+        (oi) => cartItem.variation_id === oi.variation_id,
       );
 
-      const delta = cartItem.quantity - oldOrderItem.quantity;
-      console.log("CART ITEM ", cartItem);
-      console.log("oldOrderItem.quantity=", delta);
-      console.log("  cartItem.quantity=", delta);
-
-      console.log("Delta=", delta);
-      console.log("Adjust ", cartItem.name, "for delta", delta);
-      const ok = await checkoutRepository.adjustStock(
-        client,
-        cartItem.variation_id,
-        delta,
-      );
-
-      // failed which could happen due to stock went negative after adjustment
-      if (!ok) {
-        log.warn(
-          `Stock adjustment failed for variation ${cartItem.variation_id}`,
+      // adjusting the existing order
+      if (oldOrderItem) {
+        await checkoutRepository.updateOrderItemQuantity(
+          client,
+          orderId,
+          cartItem.variation_id,
+          cartItem.quantity,
         );
-        throw new CheckoutHalt(409, {
-          error: "Some items no longer have enough stock",
-          variation_id: cartItem.variation_id,
-        });
-      }
-    } else {
-      // adding new item and reserve it
-      const reserved = await checkoutRepository.decrementStock(
-        client,
-        cartItem.variation_id,
-        cartItem.quantity,
-      );
 
-      if (!reserved) {
-        log.warn(
-          `Stock reservation failed for new variation ${cartItem.variation_id}`,
+        const delta = cartItem.quantity - oldOrderItem.quantity;
+
+        const ok = await checkoutRepository.adjustStock(
+          client,
+          cartItem.variation_id,
+          delta,
         );
-        throw new CheckoutHalt(409, {
-          error: "Some items no longer have enough stock",
-          variation_id: cartItem.variation_id,
-        });
+
+        // failed which could happen due to stock went negative after adjustment
+        if (!ok) {
+          log.warn(
+            `Stock adjustment failed for variation ${cartItem.variation_id}`,
+          );
+          throw new CheckoutHalt(409, {
+            error: "Some items no longer have enough stock",
+            variation_id: cartItem.variation_id,
+          });
+        }
+      } else {
+        // adding new item and reserve it
+        const reserved = await checkoutRepository.decrementStock(
+          client,
+          cartItem.variation_id,
+          cartItem.quantity,
+        );
+
+        if (!reserved) {
+          log.warn(
+            `Stock reservation failed for new variation ${cartItem.variation_id}`,
+          );
+          throw new CheckoutHalt(409, {
+            error: "Some items no longer have enough stock",
+            variation_id: cartItem.variation_id,
+          });
+        }
+        await checkoutRepository.insertOrderItem(
+          client,
+          orderId,
+          cartItem.product_id,
+          cartItem.variation_id,
+          cartItem.quantity,
+          cartItem.final_price,
+        );
       }
-      await checkoutRepository.insertOrderItem(
-        client,
-        orderId,
-        cartItem.product_id,
-        cartItem.variation_id,
-        cartItem.quantity,
-        cartItem.final_price,
-      );
+
+      totalAmount += cartItem.quantity * cartItem.final_price;
     }
-
-    totalAmount += cartItem.quantity * cartItem.final_price;
   }
 
   await checkoutRepository.updateOrderTotal(client, orderId, totalAmount);
