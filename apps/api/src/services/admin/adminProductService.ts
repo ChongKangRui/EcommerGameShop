@@ -1,3 +1,4 @@
+import fs from "fs/promises";
 import formidable from "formidable";
 import cloudinary from "../../gateways/cloudinary";
 import { withTransaction } from "../../db/withTransaction";
@@ -19,6 +20,23 @@ async function cleanupImages(publicIds: string[], Log: Logger) {
   }
 }
 
+// formidable writes uploaded files to a local temp dir and never removes
+// them itself, so once we're done with a file (uploaded to Cloudinary, or
+// gave up trying) we need to unlink it ourselves, success or failure.
+async function cleanupLocalFiles(filepaths: string[], Log: Logger) {
+  const paths = filepaths.filter(Boolean);
+  if (paths.length === 0) return;
+  await Promise.all(
+    paths.map(async (filepath) => {
+      try {
+        await fs.unlink(filepath);
+      } catch (e) {
+        Log.error(`Failed to cleanup local temp file: ${filepath}`, e);
+      }
+    }),
+  );
+}
+
 export const adminProductService = {
   async addProduct(
     fields: formidable.Fields,
@@ -26,6 +44,7 @@ export const adminProductService = {
     Log: Logger,
   ): Promise<ServiceResult<{ message: string }>> {
     const uploadedImages: string[] = [];
+    const localFilePaths: string[] = [];
     const product = parseProductForm(files, fields);
     const validation = productServerSchema.safeParse(product);
 
@@ -62,10 +81,12 @@ export const adminProductService = {
             throw new Error(
               `Variation "${variation.label}" is missing an image`,
             );
+          localFilePaths.push(variation.image.filepath);
           const result = await cloudinary.uploader.upload(
             variation.image.filepath,
             { folder: "RedfieldGaming" },
           );
+          console.log( variation.image.filepath);
           uploadedImages.push(result.public_id);
           return {
             image_url: result.secure_url,
@@ -112,6 +133,8 @@ export const adminProductService = {
     } catch (e) {
       await cleanupImages(uploadedImages, Log);
       throw e;
+    } finally {
+      await cleanupLocalFiles(localFilePaths, Log);
     }
   },
 
@@ -123,6 +146,7 @@ export const adminProductService = {
   ): Promise<ServiceResult<{ message: string }>> {
     const uploadedImages: string[] = [];
     const imagesToDelete: string[] = [];
+    const localFilePaths: string[] = [];
 
     const product = parseProductForm(files, fields);
     const validation = productServerSchema.safeParse(product);
@@ -164,6 +188,7 @@ export const adminProductService = {
       const finalVariations = await Promise.all(
         newVariations.map(async (variation) => {
           if (variation.image) {
+            localFilePaths.push(variation.image.filepath);
             const result = await cloudinary.uploader.upload(
               variation.image.filepath,
               { folder: "RedfieldGaming" },
@@ -279,6 +304,8 @@ export const adminProductService = {
     } catch (e) {
       await cleanupImages(uploadedImages, Log);
       throw e;
+    } finally {
+      await cleanupLocalFiles(localFilePaths, Log);
     }
   },
 
