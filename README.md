@@ -30,7 +30,7 @@ A full-stack e-commerce platform for gaming gear and peripherals, built as a Typ
 
 ### Platform / Infrastructure
 
-- **Stock-safe checkout** — A scheduled cron job (every 10 min) expires unpaid pending orders, restores stock, and reconciles order status against Stripe's PaymentIntent state
+- **Stock-safe checkout** — A scheduled cron job (every 1 hours) expires unpaid pending orders, restores stock, and reconciles order status against Stripe's PaymentIntent state
 - **Rate limiting** — Separate limits for auth, checkout, admin actions and general browsing (`express-rate-limit`)
 - **Image uploads** — Product images stored via Cloudinary
 - **Security** — Helmet-hardened HTTP headers, origin-restricted CORS, centralized error handling
