@@ -13,6 +13,7 @@ import checkoutRoutes from "./routes/checkout";
 import orderRoutes from "./routes/order";
 import stripeRoutes from "./routes/stripe";
 import healthCheckRoutes from "./routes/healthCheck"
+import internalRoutes from "./routes/internal"
 
 import { Response, Request, NextFunction } from "express";
 import ExpressError from "./utils/expressError";
@@ -50,6 +51,8 @@ app.get("/", async (req, res) => {
 // exclude express.json for stripe route
 app.use("/stripe", express.raw({ type: "application/json" }), stripeRoutes);
 app.use("/health-check", healthCheckRoutes)
+// secret-guarded, called by an external scheduler — keep it out of the rate limiter
+app.use("/internal", internalRoutes)
 app.use(globalLimiter)
 
 app.use(express.json());
